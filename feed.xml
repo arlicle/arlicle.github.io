@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss version='2.0' xmlns:atom='http://www.w3.org/2005/Atom'>
+<channel>
+<atom:link href='http://debugmyself.com' rel='self' type='application/rss+xml'/>
+<title>
+Debug Myself
+</title>
+<link>
+http://debugmyself.com
+</link>
+<description>
+存疑、思考、行动、改进
+</description>
+<lastBuildDate>
+Sat, 25 Nov 2017 17:16:45 +0800
+</lastBuildDate>
+<generator>
+clj-rss
+</generator>
+<item>
+<guid>
+http://debugmyself.com/post/2017-11-25-second-post/
+</guid>
+<link>
+http://debugmyself.com/post/2017-11-25-second-post/
+</link>
+<title>
+The second test
+</title>
+<description>
+&lt;h1 id=&quot;哈哈&quot;&gt;哈哈&lt;/h1&gt;&lt;p&gt;第二次发表测试啰&lt;/p&gt;
+</description>
+<pubDate>
+Sat, 25 Nov 2017 00:00:00 +0800
+</pubDate>
+</item>
+<item>
+<guid>
+http://debugmyself.com/post/2017-11-25-first-post/
+</guid>
+<link>
+http://debugmyself.com/post/2017-11-25-first-post/
+</link>
+<title>
+Hello World
+</title>
+<description>
+&lt;h1 id=&quot;hello&amp;#95;world&quot;&gt;Hello World&lt;/h1&gt;&lt;p&gt;第一次发表测试 😂&lt;/p&gt;
+</description>
+<pubDate>
+Sat, 25 Nov 2017 00:00:00 +0800
+</pubDate>
+</item>
+</channel>
+</rss>
