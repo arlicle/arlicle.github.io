@@ -2,7 +2,7 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url>
 <loc>
-http://debugmyself.com/blog/page/about/index.html
+http://debugmyself.com/page/about/index.html
 </loc>
 <lastmod>
 2017-11-25
@@ -10,7 +10,7 @@ http://debugmyself.com/blog/page/about/index.html
 </url>
 <url>
 <loc>
-http://debugmyself.com/blog/page/another-page/index.html
+http://debugmyself.com/page/another-page/index.html
 </loc>
 <lastmod>
 2017-11-25
@@ -18,7 +18,7 @@ http://debugmyself.com/blog/page/another-page/index.html
 </url>
 <url>
 <loc>
-http://debugmyself.com/blog/index.html
+http://debugmyself.com/index.html
 </loc>
 <lastmod>
 2017-11-25
@@ -26,7 +26,7 @@ http://debugmyself.com/blog/index.html
 </url>
 <url>
 <loc>
-http://debugmyself.com/blog/post/2014-03-10-first-post/index.html
+http://debugmyself.com/post/2014-03-10-first-post/index.html
 </loc>
 <lastmod>
 2017-11-25
@@ -34,7 +34,7 @@ http://debugmyself.com/blog/post/2014-03-10-first-post/index.html
 </url>
 <url>
 <loc>
-http://debugmyself.com/blog/post/2014-11-04-second-post/index.html
+http://debugmyself.com/post/2014-11-04-second-post/index.html
 </loc>
 <lastmod>
 2017-11-25
@@ -42,7 +42,7 @@ http://debugmyself.com/blog/post/2014-11-04-second-post/index.html
 </url>
 <url>
 <loc>
-http://debugmyself.com/blog/post/2016-01-07-docs/index.html
+http://debugmyself.com/post/2016-01-07-docs/index.html
 </loc>
 <lastmod>
 2017-11-25
@@ -50,7 +50,7 @@ http://debugmyself.com/blog/post/2016-01-07-docs/index.html
 </url>
 <url>
 <loc>
-http://debugmyself.com/blog/authors/叫兽 Arlicle/index.html
+http://debugmyself.com/authors/叫兽 Arlicle/index.html
 </loc>
 <lastmod>
 2017-11-25
@@ -58,7 +58,7 @@ http://debugmyself.com/blog/authors/叫兽 Arlicle/index.html
 </url>
 <url>
 <loc>
-http://debugmyself.com/blog/404.html
+http://debugmyself.com/404.html
 </loc>
 <lastmod>
 2017-11-25
@@ -66,7 +66,7 @@ http://debugmyself.com/blog/404.html
 </url>
 <url>
 <loc>
-http://debugmyself.com/blog/archives/index.html
+http://debugmyself.com/archives/index.html
 </loc>
 <lastmod>
 2017-11-25
@@ -74,7 +74,7 @@ http://debugmyself.com/blog/archives/index.html
 </url>
 <url>
 <loc>
-http://debugmyself.com/blog/tags/index.html
+http://debugmyself.com/tags/index.html
 </loc>
 <lastmod>
 2017-11-25
@@ -82,7 +82,7 @@ http://debugmyself.com/blog/tags/index.html
 </url>
 <url>
 <loc>
-http://debugmyself.com/blog/tags/very fetch/index.html
+http://debugmyself.com/tags/very fetch/index.html
 </loc>
 <lastmod>
 2017-11-25
@@ -90,7 +90,7 @@ http://debugmyself.com/blog/tags/very fetch/index.html
 </url>
 <url>
 <loc>
-http://debugmyself.com/blog/tags/not fetch/index.html
+http://debugmyself.com/tags/not fetch/index.html
 </loc>
 <lastmod>
 2017-11-25
@@ -98,7 +98,7 @@ http://debugmyself.com/blog/tags/not fetch/index.html
 </url>
 <url>
 <loc>
-http://debugmyself.com/blog/tags/cryogen/index.html
+http://debugmyself.com/tags/cryogen/index.html
 </loc>
 <lastmod>
 2017-11-25
@@ -106,7 +106,7 @@ http://debugmyself.com/blog/tags/cryogen/index.html
 </url>
 <url>
 <loc>
-http://debugmyself.com/blog/p/2/index.html
+http://debugmyself.com/p/2/index.html
 </loc>
 <lastmod>
 2017-11-25

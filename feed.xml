@@ -12,17 +12,17 @@ http://debugmyself.com/
 Debug myself ，自我思考，自我修正，存疑和解决方案，有生之年，用行动成为更好的自己
 </description>
 <lastBuildDate>
-Sat, 25 Nov 2017 16:04:40 +0800
+Sat, 25 Nov 2017 16:31:08 +0800
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
 <item>
 <guid>
-http://debugmyself.com/blog/post/2016-01-07-docs/
+http://debugmyself.com/post/2016-01-07-docs/
 </guid>
 <link>
-http://debugmyself.com/blog/post/2016-01-07-docs/
+http://debugmyself.com/post/2016-01-07-docs/
 </link>
 <title>
 Quick Start Guide
@@ -102,7 +102,7 @@ Quick Start Guide
 &lt;div class=&quot;sourceLine&quot; id=&quot;cb4-5&quot; data-line-number=&quot;5&quot;&gt;    &lt;span class=&quot;kw&quot;&gt;&amp;lt;ul&amp;gt;&lt;/span&gt;&lt;/div&gt;
 &lt;div class=&quot;sourceLine&quot; id=&quot;cb4-6&quot; data-line-number=&quot;6&quot;&gt;    {% for post in posts %}&lt;/div&gt;
 &lt;div class=&quot;sourceLine&quot; id=&quot;cb4-7&quot; data-line-number=&quot;7&quot;&gt;        &lt;span class=&quot;kw&quot;&gt;&amp;lt;li&amp;gt;&lt;/span&gt;&lt;/div&gt;
-&lt;div class=&quot;sourceLine&quot; id=&quot;cb4-8&quot; data-line-number=&quot;8&quot;&gt;            &lt;span class=&quot;kw&quot;&gt;&amp;lt;a&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; href=&lt;/blog/span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;{{post.uri}}&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;{{post.title}}&lt;span class=&quot;kw&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;&lt;/div&gt;
+&lt;div class=&quot;sourceLine&quot; id=&quot;cb4-8&quot; data-line-number=&quot;8&quot;&gt;            &lt;span class=&quot;kw&quot;&gt;&amp;lt;a&lt;/span&gt;&lt;span class=&quot;ot&quot;&gt; href=&lt;//span&gt;&lt;span class=&quot;st&quot;&gt;&amp;quot;{{post.uri}}&amp;quot;&lt;/span&gt;&lt;span class=&quot;kw&quot;&gt;&amp;gt;&lt;/span&gt;{{post.title}}&lt;span class=&quot;kw&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;&lt;/div&gt;
 &lt;div class=&quot;sourceLine&quot; id=&quot;cb4-9&quot; data-line-number=&quot;9&quot;&gt;        &lt;span class=&quot;kw&quot;&gt;&amp;lt;/li&amp;gt;&lt;/span&gt;&lt;/div&gt;
 &lt;div class=&quot;sourceLine&quot; id=&quot;cb4-10&quot; data-line-number=&quot;10&quot;&gt;    {% endfor %}&lt;/div&gt;
 &lt;div class=&quot;sourceLine&quot; id=&quot;cb4-11&quot; data-line-number=&quot;11&quot;&gt;    &lt;span class=&quot;kw&quot;&gt;&amp;lt;/ul&amp;gt;&lt;/span&gt;&lt;/div&gt;
@@ -153,10 +153,10 @@ Thu, 07 Jan 2016 00:00:00 +0800
 </item>
 <item>
 <guid>
-http://debugmyself.com/blog/post/2016-01-07-docs/
+http://debugmyself.com/post/2016-01-07-docs/
 </guid>
 <link>
-http://debugmyself.com/blog/post/2016-01-07-docs/
+http://debugmyself.com/post/2016-01-07-docs/
 </link>
 <title>
 Quick Start Guide
@@ -231,10 +231,10 @@ Thu, 07 Jan 2016 00:00:00 +0800
 </item>
 <item>
 <guid>
-http://debugmyself.com/blog/post/2014-11-04-second-post/
+http://debugmyself.com/post/2014-11-04-second-post/
 </guid>
 <link>
-http://debugmyself.com/blog/post/2014-11-04-second-post/
+http://debugmyself.com/post/2014-11-04-second-post/
 </link>
 <title>
 Yet Another Post
@@ -250,10 +250,10 @@ Tue, 04 Nov 2014 00:00:00 +0800
 </item>
 <item>
 <guid>
-http://debugmyself.com/blog/post/2014-11-04-second-post/
+http://debugmyself.com/post/2014-11-04-second-post/
 </guid>
 <link>
-http://debugmyself.com/blog/post/2014-11-04-second-post/
+http://debugmyself.com/post/2014-11-04-second-post/
 </link>
 <title>
 Yet Another Post
@@ -267,10 +267,10 @@ Tue, 04 Nov 2014 00:00:00 +0800
 </item>
 <item>
 <guid>
-http://debugmyself.com/blog/post/2014-03-10-first-post/
+http://debugmyself.com/post/2014-03-10-first-post/
 </guid>
 <link>
-http://debugmyself.com/blog/post/2014-03-10-first-post/
+http://debugmyself.com/post/2014-03-10-first-post/
 </link>
 <title>
 A Post
@@ -289,10 +289,10 @@ Mon, 10 Mar 2014 00:00:00 +0800
 </item>
 <item>
 <guid>
-http://debugmyself.com/blog/post/2014-03-10-first-post/
+http://debugmyself.com/post/2014-03-10-first-post/
 </guid>
 <link>
-http://debugmyself.com/blog/post/2014-03-10-first-post/
+http://debugmyself.com/post/2014-03-10-first-post/
 </link>
 <title>
 A Post
