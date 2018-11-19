@@ -14,7 +14,7 @@
     <h1 class="post-title">js和css刷新缓存不会更新问题解决</h1>
     <p class="post-date">2018-11-16</p>
     <p>最近开发继承计算系统，经常会遇到客户端刷新、强制刷新以后js和css缓存没有更新的情况，导致开发端和测试端的代码不一致。有的 bug 开发端已经解决了，但是测试那边还是处问题。</p><p>我已经使用使用了动态给js代码和css代码加参数了，但是有时候还是出这个问题。</p><pre><code class=".language-html">&lt;script type=&quot;text/javascript&quot; src=&quot;main.js?t=201809251408&quot;&gt;&lt;/script&gt;
-</code></pre><p>后来查到是因为有时候 cdn 会忽略动态参数，所以我把方案改为动态生成新的文件名。</p><pre><code class=".language-html">&lt;script type=&quot;text/javascript&quot; src=&quot;main1542361151254.js&quot;&gt;&lt;/script&gt;
+</code></pre><p>后来查到是因为有时候 浏览器或者 cdn 会忽略动态参数，缓存整个 js 文件，强刷也不会更新，所以我把方案改为动态生成新的文件名。</p><pre><code class=".language-html">&lt;script type=&quot;text/javascript&quot; src=&quot;main1542361151254.js&quot;&gt;&lt;/script&gt;
 </code></pre><p>问题终于得以解决, 优秀！ </p><p>PS. 增加了漂亮的代码语法高亮，嗨森 ^_^ !</p>
   </div>
 
