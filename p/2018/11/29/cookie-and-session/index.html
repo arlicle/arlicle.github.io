@@ -1,18 +1,17 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="zh-CN">
   <head>
-    <meta charset="utf-8" />
-    <title>cookie and session - 叫兽</title>
-    <meta name="renderer" content="webkit">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css?t=20181127">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="/js/prism.css">
+    <title>cookie and session - 叫兽</title>
   </head>
-  <body class="body-post">
-  <div class="post-wrapper">
-    <h1 class="post-title">cookie and session</h1>
-    <p class="post-date">2018-11-29</p>
-    <h2>cookie</h2><p>cookie 本质上完全是由浏览器客户端来管理的一种数据，这种方式的发明最开始主要是为了记录客户端的用户信息，做用户身份识别，为了让服务器端知道现在的请求和昨天的请求是不是同一个人，他是那一个人。由浏览器创建，保存于浏览器，由浏览器管理他的生命周期。只要在合法的域下面，有相关的 cookie 设置，浏览器会自动把 cookie 带上 Request Headers 提交到服务器端。</p><p>用户在同一个域下访问网站，客户端浏览器会始终 通过Requet Headers 带着 cookie到服务器端，用户在同一个浏览器上打开多个 tab 访问同一个网址，也会这样做，浏览器会带着样 cookie 到后端。</p><p><img src="/static/2018/11/img/094333.png" alt="" /></p><p>虽然cookie是由浏览器端生成，但也可以由服务器端通过Respoinse Headers传给浏览器操作cookie的命令来生成，这样后端也可以通过Response Headers来创建、修改、删除客户端的cookie，然后保存于客户端浏览器。</p><p><img src="/static/2018/11/img/095641.png" alt="" /></p><h3>cookie域限制</h3><p>由于cookie有很强大域限制，因此不管是客户端 js 操作 cookie 还是服务器端通过Respoinse Headers来操作cookie，cookie的生成必须符合域的合法范围，否则会生成失败。同时如果跨域获取 cookie 也会失败。</p><p>比如，在域名www.b.com和www.a.com下：</p><p>b.com<br /> hello.b.com<br /> cool.b.com<br /></p><p>在b.com下，可以设置b.com下的 cookie，不可以设置二级域名的cookie，设置了也是失败。</p><p><strong>子域名共享顶级域名的cookie</strong></p><p>在hello.b.com下，可以设置hello.b.com下的cookie，也可以设置b.com下的cookie。同时也可以获取hello.b.com下的cookie和b.com下的cookie。</p><p><strong>path限制</strong><br /> 同一个域名下www.b.com(path为/), www.b.com/hello(path为/hello), www.b.com/cool(path为/cool), 和域名限制类似，/hello下可以访问/hello 下的cookie和/下的cookie，访问不到/cool下的cookie。</p><pre><code class=".language-javascript">
+  <body style="background-color:#f5f5f5">
+        <div class="container bg-white pb-5 px-5">
+            <h1 class="pt-5 mb-4 text-center">cookie and session</h1>
+            
+            <h2>cookie</h2><p>cookie 本质上完全是由浏览器客户端来管理的一种数据，这种方式的发明最开始主要是为了记录客户端的用户信息，做用户身份识别，为了让服务器端知道现在的请求和昨天的请求是不是同一个人，他是那一个人。由浏览器创建，保存于浏览器，由浏览器管理他的生命周期。只要在合法的域下面，有相关的 cookie 设置，浏览器会自动把 cookie 带上 Request Headers 提交到服务器端。</p><p>用户在同一个域下访问网站，客户端浏览器会始终 通过Requet Headers 带着 cookie到服务器端，用户在同一个浏览器上打开多个 tab 访问同一个网址，也会这样做，浏览器会带着样 cookie 到后端。</p><p><img src="/static/2018/11/img/094333.png" alt="" /></p><p>虽然cookie是由浏览器端生成，但也可以由服务器端通过Respoinse Headers传给浏览器操作cookie的命令来生成，这样后端也可以通过Response Headers来创建、修改、删除客户端的cookie，然后保存于客户端浏览器。</p><p><img src="/static/2018/11/img/095641.png" alt="" /></p><h3>cookie域限制</h3><p>由于cookie有很强大域限制，因此不管是客户端 js 操作 cookie 还是服务器端通过Respoinse Headers来操作cookie，cookie的生成必须符合域的合法范围，否则会生成失败。同时如果跨域获取 cookie 也会失败。</p><p>比如，在域名www.b.com和www.a.com下：</p><p>b.com<br /> hello.b.com<br /> cool.b.com<br /></p><p>在b.com下，可以设置b.com下的 cookie，不可以设置二级域名的cookie，设置了也是失败。</p><p><strong>子域名共享顶级域名的cookie</strong></p><p>在hello.b.com下，可以设置hello.b.com下的cookie，也可以设置b.com下的cookie。同时也可以获取hello.b.com下的cookie和b.com下的cookie。</p><p><strong>path限制</strong><br /> 同一个域名下www.b.com(path为/), www.b.com/hello(path为/hello), www.b.com/cool(path为/cool), 和域名限制类似，/hello下可以访问/hello 下的cookie和/下的cookie，访问不到/cool下的cookie。</p><pre><code class=".language-javascript">
 // 在www.b.com下
 document.cookie=&quot;root=123;&quot;;
 // 在Application/Storage/Cookies中，可以看到cookie root创建成功，它path是/
@@ -71,17 +70,28 @@ document.cookie
 // 证明 /hello 下可以设置 / 下的 cookie，也可以在/cool中拿到
 
 </code></pre><p><br></p><h2>session</h2>
-  </div>
+            <p class="text-left text-muted">2018-11-29 12:57</p>
+        </div>
+        <div class="container">
+            <div class="row mt-4 pb-5">
+                <div class="col-6 text-left"></div>
+                <div class="col-6 text-right"><a href="/p/2018/11/27/clojure-future-promise/">下一篇: future and promise in clojure</a></div>
+            </div>
+        </div>
 
-  <ul class="pager">
-    
-    
-    <li class="next"><a href="/p/2018/11/27/clojure-future-promise/">下一篇: future and promise in clojure</a></li>
-    
-  </ul>
-
-<div class="footer">滇ICP备10201832号-3</div>
-
-<script src="/js/prism.js"></script>
-</body>
+        <footer class="footer mt-5">
+                <div class="container text-center">
+                  <span class="text-black-50">滇ICP备10201832号-3</span>
+                </div>
+        </footer>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="/js/prism.js"></script>
+        <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+        </script>
+  </body>
 </html>
