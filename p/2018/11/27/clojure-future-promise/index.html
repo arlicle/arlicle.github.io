@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>future and promise in clojure - 叫兽</title>
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css?t=20181127">
+    <link rel="stylesheet" href="/js/prism.css">
+  </head>
+  <body class="body-post">
+  <div class="post-wrapper">
+    <h1 class="post-title">future and promise in clojure</h1>
+    <p class="post-date">2018-11-27</p>
+    <h2>future</h2><p>future函数可以接受一段代码，并在一段单独的线程中执行这段代码，最后返回一个future对象。</p><p>使用future创建一个线程，然后相关的执行就都放到这个线程中去执行</p><pre><code class=".language-clojure">&#40;def a &#40;future &#40;+ 1 2 3 4&#41;&#41;&#41;
+</code></pre><p>这个时候future返回的不是执行结果，只是一个future对象。使用(deref a) 或者 @a 来获取其代表的值。</p><pre><code class=".language-clojure">user=&gt; &#40;deref a&#41;
+10
+
+user=&gt; @a
+10
+</code></pre><p>对future对象解引用会阻塞当前线程，直到future 收到的代码在另外的线程中执行结束获得结果。</p><p>我们可以使用future来进行数据流式编程(dataflow programming)</p><p><img src="/static/2018/11/img/100806.png" alt="" /></p><pre><code class=".language-clojure">&#40;let &#91;a &#40;future &#40;+ 1 2&#41;&#41;
+      b &#40;future &#40;+ 3 4&#41;&#41;&#93;
+      &#40;+ @a @b&#41;
+      &#41;
+</code></pre><p>这段代码先将(future (+ 1 2))赋值给a, 然后将(future (+ 3 4))赋值给b, 然后分别在不同的线程中并行的去执行(+ 1 2)和(+ 3 4)，当前线程(+ @a @b)将一直阻塞，直到两个线程中的加法完成。</p><h2>promise</h2><p>promise和future一样，也是在一个线程中去跑，异步求值。通过deref或@求值，获得值前也会阻塞线程。但是不一样的是，promise不会立即执行，直到 deliver为promise对象赋值后他才会执行。</p><pre><code class=".language-clojure">&#40;def b &#40;promise&#41;&#41; ; 如果这个时候@b，那么会发生阻塞，直到 b 获得值
+
+&#40;future &#40;println &quot;hello a value is: &quot; @b&#41;&#41; ; 把@b放到另外一个线程中去，这样阻塞不会影响当前线程
+
+&#40;deliver b &quot;cool&quot;&#41;;
+Hello b value is: cool
+
+</code></pre><p>当promise对象被赋值后，再次调用deliver进行赋值将不会触发任何动作。</p><pre><code class=".language-clojure">&#40;deliver b &quot;hey&quot;&#41;
+nil
+</code></pre>
+  </div>
+
+  <ul class="pager">
+    
+    <li class="previous"><a href="/p/2018/11/29/cookie-and-session/">上一篇: cookie and session</a></li>
+    
+    
+    <li class="next"><a href="/p/2018/11/19/评论程序分析展示排序与交互/">下一篇: 评论程序分析展示排序与交互</a></li>
+    
+  </ul>
+
+<div class="footer">滇ICP备10201832号-3</div>
+
+<script src="/js/prism.js"></script>
+</body>
+</html>
