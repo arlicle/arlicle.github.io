@@ -1,36 +1,46 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="zh-CN">
   <head>
-    <meta charset="utf-8" />
-    <title>感知机 - 叫兽</title>
-    <meta name="renderer" content="webkit">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css?t=20181127">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="/js/prism.css">
+    <link rel="stylesheet" href="/css/app.css">
+    <title>感知机 - 叫兽</title>
   </head>
-  <body class="body-post">
-  <div class="post-wrapper">
-    <h1 class="post-title">感知机</h1>
-    <p class="post-date">2018-01-02</p>
-    <h2>感知机</h2><p>在许多神经网络的工作里，主要使用的是一种叫做sigmoid神经元(sigmoid neuron)的神经元模型。</p><p>感知机是怎么工作的呢？</p><p>感知机的输入是几个二进制，$x<i>1$,$x</i>2$,...,$，输出是一位单独的二进制：</p><pre><code class="mermaid">graph LR;
+  <body style="background-color:#f5f5f5">
+        <div class="container bg-white pb-5 px-5 spx-0">
+            
+            <h1 class="post-title">感知机</h1>
+
+            <h2>感知机</h2><p>在许多神经网络的工作里，主要使用的是一种叫做sigmoid神经元(sigmoid neuron)的神经元模型。</p><p>感知机是怎么工作的呢？</p><p>感知机的输入是几个二进制，$x<i>1$,$x</i>2$,...,$，输出是一位单独的二进制：</p><pre><code class="mermaid">graph LR;
 X1--&gt;C&#40;&#40;neuron&#41;&#41;;
 X2--&gt;C;
 X3--&gt;C;
 C--&gt;Output;
 </code></pre><p>本例中的感知机有三个输入：通常，它可以有更多或更少的输入，但是只有一个输出。</p><p>Rosenblatt提出了一种计算输出的简单的规则。他引入了权重(weight)，$w<i>1,w</i>2,...$，等实数来表示各个输入对于输出的重要程度，神经元的输出是0还是1，由加权和$\sum<i>jw</i>jx_j$是否小于或者大于某一个阀值(threshold value)。和权重一样，阀值也是一个实数，同时它是神经元的一个参数。使用更严格的代数形式来表示：</p><p>$$ output=\begin{cases} 0 \quad if\sum<i>jw</i>jx_j \leq threshold&#92; 1 \quad if\sum<i>jw</i>jx_j > threshold \end{cases} $$</p><p>这就是感知机的工作方式！</p><p>举个例子：</p><p>假设你非常喜欢奶酪，你所在的城市举办一个奶酪节，你正在犹豫是否去参加这个节日 你需要权衡以下几个因素来作决定：</p><ol><li>天气好不好？</li><li>你的男朋友或者女朋友会陪你去吗？</li><li>坐公共交通方便去吗？</li></ol><p>我们使用x1,x2,x3这几个二进制变量来表示这三个因素。</p><p>天气很好 x1 = 1 天气不好 x1 = 0</p><p>你女朋友也想去 x2 = 1 你女朋友不想去 x2 = 0</p><p>坐公共交通方便去 x3 = 1 坐公共交通不方便去 x3 = 0</p><p>假设你超级喜欢奶酪，即便是你的男朋友或者女朋友对此没兴趣，并且交通也不方便的情况下，你也依然很想去。不过，你非常在意天气状况，如果天气不好的话你就不会去参加了。你可以用感知机来为这样的决策建立模型。</p><p>w1 = 6<br /> w2 = 2<br /> w3 = 2</p><p>一种方式是，为天气赋予权重w1=6, 为另外两个条件赋予权重w2=2和w3=2，相对来说，值比较大的w1表明了天气情况对你的决策影响更大，胜过了你的男朋友或者女朋友是否会陪你去，以及交通的便捷程度。最后，假设选择5作为感知机的阀值。这样，这个感知机就构建起了一个决策模型。</p><p>$$ ouput=\begin{cases} 0\quad if \sum&#92; 1 \end{cases} $$</p><p>只要天气好，$\sum<i>jw</i>jx_j$就一定大于5，那么就输出1 (w1 <em> x1 + w2 </em> x2 + w3 * x3)<br /> = 6 <em> 1 + 2 </em> 0 + 2 * 0 = 6 > 5<br /> output = 1</p><p>只要天气不好，$\sum<i>jw</i>jx_j$就一定小于5，那么就输出0 (w1 <em> x1 + w2 </em> x2 + w3 * x3)<br /> = 0 <em> 1 + 2 </em> 1 + 2 * 1 = 4 < 5<br /> output = 0</p><p>通过调整权重和阀值的大小，我们可以得到不同的决策模型。例如。假设我们选择的阀值为3，那么此时，如果要让感知机做出你应该去参加这个节日的决策，就需要满足天气很好或者交通方便的同时你女朋友也会陪你去。也就是说，这个决策模型与之前不同了。阀值降低意味着你参加这个节目的意愿越强。</p><p>这个例子阐明的是感知机如何赋予不同evidence权重来达到做出决策的目的。一个由感知机构成的复杂网络能够做出更加精细的决策。</p><p>我们来简化一下对感知机的描述,第一我们用点乘来代替$\sum<i>jw</i>jx<i>j$，$w*x=\sum</i>jw<i>jx</i>j$，其中w和x都是向量，它们的元素分别代表了权重和输入。第二是将阀值移到不等号的另一侧，并使用偏移(bias)来代替阀值threshold, b = -threshold，于是感知机的规则可以重写为：</p><p>$$ output=\begin{cases} 0 \quad if w*x+b\leq0&#92; 1 \quad if w*x+b>0 \end{cases} $$</p><p>我们可以把偏移(bias)理解为感知机为了得到输出为1的容易度的度量。如果一个感知机的偏移非常大，那么这个感知机输出就很容易为1，相反如果偏移非常小，那么输出1就很困难。</p><p>感知机就是通过权衡evidence做出决策的一种方法。感知机的另一种用途是计算初等逻辑函数。我们可以设计学习算法，使得能够自动地调整人工神经元网络的权重和偏移。</p>
-  </div>
+            <p class="text-left text-muted">2018-04-15 12:56</p>
+        </div>
+        <div class="container">
+            <div class="row mt-4 pb-5">
+                <div class="col-6 text-left"><a href="/p/2018/1/3/Beginner&#39;s_mind-3/">上一篇: 禅者的初心 读书笔记三</a></div>
+                <div class="col-6 text-right"><a href="/p/2018/1/2/sigmoid-neuron/">下一篇: sigmoid神经元</a></div>
+            </div>
+        </div>
 
-  <ul class="pager">
-    
-    <li class="previous"><a href="/p/2018/1/3/Beginner&#39;s_mind-3/">上一篇: 禅者的初心 读书笔记三</a></li>
-    
-    
-    <li class="next"><a href="/p/2018/1/2/sigmoid-neuron/">下一篇: sigmoid神经元</a></li>
-    
-  </ul>
-
-<div class="footer">滇ICP备10201832号-3</div>
-
-<script src="/js/prism.js"></script>
-</body>
+        <footer class="footer mt-5 pb-2">
+                <div class="container text-center">
+                  <span class="text-black-50">滇ICP备10201832号-3</span>
+                </div>
+        </footer>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="/js/prism.js"></script>
+        <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+        </script>
+  </body>
 </html>

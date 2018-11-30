@@ -1,18 +1,19 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="zh-CN">
   <head>
-    <meta charset="utf-8" />
-    <title>Clojure 解构 - 叫兽</title>
-    <meta name="renderer" content="webkit">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css?t=20181127">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="/js/prism.css">
+    <link rel="stylesheet" href="/css/app.css">
+    <title>Clojure 解构 - 叫兽</title>
   </head>
-  <body class="body-post">
-  <div class="post-wrapper">
-    <h1 class="post-title">Clojure 解构</h1>
-    <p class="post-date">2018-04-26</p>
-    <h3>what & why</h3><p>相关网址: https://book.2cto.com/201304/20377.html</p><p>解构是用来方便赋值的，否则获取值的时候就要使用大量的next ,first 之类的 seq 操作，不方便，尤其是嵌套的 collection，取值就更麻烦。</p><p>有了解构以后，把collection 的值取出来就非常的简单和方便，除了可以用于let以外，还可以用于函数参数的赋值等地方</p><p>Clojure的解构特性提供了一种简洁的语法来声明式地从一个集合里面选取某些元素，并且把这些元素绑定到一个本地let绑定上去。并且因为解构这个特性是由let提供的， 它可以在任何间接使用了let的地方使用，比如fn、defn、loop。</p><h3>how</h3><p>1  list或vector解构</p><pre><code class=".language-clojure">&#40;let &#91;&#91;a b c&#93; &#91;1 2 3&#93;&#93;
+  <body style="background-color:#f5f5f5">
+        <div class="container bg-white pb-5 px-5 spx-0">
+            
+            <h1 class="post-title">Clojure 解构</h1>
+
+            <h3>what & why</h3><p>相关网址: https://book.2cto.com/201304/20377.html</p><p>解构是用来方便赋值的，否则获取值的时候就要使用大量的next ,first 之类的 seq 操作，不方便，尤其是嵌套的 collection，取值就更麻烦。</p><p>有了解构以后，把collection 的值取出来就非常的简单和方便，除了可以用于let以外，还可以用于函数参数的赋值等地方</p><p>Clojure的解构特性提供了一种简洁的语法来声明式地从一个集合里面选取某些元素，并且把这些元素绑定到一个本地let绑定上去。并且因为解构这个特性是由let提供的， 它可以在任何间接使用了let的地方使用，比如fn、defn、loop。</p><h3>how</h3><p>1  list或vector解构</p><pre><code class=".language-clojure">&#40;let &#91;&#91;a b c&#93; &#91;1 2 3&#93;&#93;
     &#40;println a &quot;, &quot; b &quot;, &quot; c&#41;&#41;
 ;=&gt; 1, 2, 3
 ;你可以看到let的中括号中对应的关系
@@ -75,19 +76,28 @@
 &#40;format &quot;%s is in %s&quot; name city&#41;&#41;
 ;=&quot;Bob is in Boston&quot;
 </code></pre>
-  </div>
+            <p class="text-left text-muted">2018-11-16 20:07</p>
+        </div>
+        <div class="container">
+            <div class="row mt-4 pb-5">
+                <div class="col-6 text-left"><a href="/p/2018/5/21/story-little-sheep-cross-river/">上一篇: 小羊过河</a></div>
+                <div class="col-6 text-right"><a href="/p/2018/4/20/thinking-in-product-desgin/">下一篇: 产品设计的一些心得</a></div>
+            </div>
+        </div>
 
-  <ul class="pager">
-    
-    <li class="previous"><a href="/p/2018/5/21/story-little-sheep-cross-river/">上一篇: 小羊过河</a></li>
-    
-    
-    <li class="next"><a href="/p/2018/4/20/thinking-in-product-desgin/">下一篇: 产品设计的一些心得</a></li>
-    
-  </ul>
-
-<div class="footer">滇ICP备10201832号-3</div>
-
-<script src="/js/prism.js"></script>
-</body>
+        <footer class="footer mt-5 pb-2">
+                <div class="container text-center">
+                  <span class="text-black-50">滇ICP备10201832号-3</span>
+                </div>
+        </footer>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="/js/prism.js"></script>
+        <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+        </script>
+  </body>
 </html>
