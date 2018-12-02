@@ -14,7 +14,7 @@
             
             <h1 class="post-title">mac制作ubuntu系统安装U盘</h1>
 
-            <h2>下载ubuntu操作系统</h2><p> desktop 或者 server版的都可以，这里我用的是ubuntu-16.04.4-server-amd64.iso  </p><h2>把文件转换为mac下的dmg文件</h2><p><code>hdiutil convert -format UDRW -o ubuntu ubuntu-16.04.4-server-amd64.iso</code></p><pre><code>Reading Driver Descriptor Map &#40;DDM : 0&#41;…
+            <h2>下载ubuntu操作系统</h2><p> desktop 或者 server版的都可以，这里我用的是ubuntu-16.04.4-server-amd64.iso  </p><h2>把文件转换为mac下的dmg文件</h2><p><code>hdiutil convert -format UDRW -o ubuntu ubuntu-16.04.4-server-amd64.iso</code></p><pre><code class=".language-bash">Reading Driver Descriptor Map &#40;DDM : 0&#41;…
 Reading Ubuntu-Server 16.04.4 LTS amd64  &#40;Apple&#95;ISO : 1&#41;…
 Reading Apple &#40;Apple&#95;partition&#95;map : 2&#41;…
 Reading Ubuntu-Server 16.04.4 LTS amd64  &#40;Apple&#95;ISO : 3&#41;…
@@ -27,7 +27,7 @@ Elapsed Time:  3.047s
 Speed: 278.2Mbytes/sec
 Savings: 0.0%
 created: /Users/edison/Downloads/ubuntu.dmg
-</code></pre><p>生成<code>ubuntu.dmg</code>文件</p><p>-format为生成文件的权限,UDRW表示转换成有read/write的权限的镜像。</p><h2>查看U盘信息</h2><p><code>diskutil list</code></p><pre><code>/dev/disk0 &#40;internal&#41;:
+</code></pre><p>生成<code>ubuntu.dmg</code>文件</p><p>-format为生成文件的权限,UDRW表示转换成有read/write的权限的镜像。</p><h2>查看U盘信息</h2><p><code>diskutil list</code></p><pre><code class=".language-bash">/dev/disk0 &#40;internal&#41;:
    #:                       TYPE NAME                    SIZE       IDENTIFIER
    0:      GUID&#95;partition&#95;scheme                         500.3 GB   disk0
    1:                        EFI EFI                     314.6 MB   disk0s1
@@ -47,11 +47,11 @@ created: /Users/edison/Downloads/ubuntu.dmg
    0:      GUID&#95;partition&#95;scheme                        &#42;8.0 GB     disk2
    1:                        EFI EFI                     209.7 MB   disk2s1
    2:       Microsoft Basic Data UNTITLED                7.8 GB     disk2s2
-</code></pre><h2>卸载U盘</h2><p>/dev/disk2 就是 U 盘，需要先unmount掉 U 盘，注意不是弹出。然后把安装文件写入 U 盘</p><p><code>diskutil unmountDisk /dev/disk2</code></p><p>unmount后，电脑上就看不到这个 U 盘了</p><h2>把安装文件写入 U 盘</h2><p>先把ubuntu.dmg改为ubuntu.iso，方便安装的时候识别。</p><p><code>mv ubuntu.dmg ubuntu.iso</code></p><p>把安装文件写入到U盘中</p><p><code>sudo dd if=./ubuntu.iso of=/dev/rdisk2 bs=1m</code></p><p>这行命令必须使用root权限，</p><ul><li>if : 输入文件名</li><li>of : 输出的文件名地址</li><li>bs : 是块大小,氛围1m 的块大小</li><li>慢慢等写完会有提示...</li></ul><h2>弹出 U盘，然后安全拔出</h2><p>结束后，终端会显示</p><pre><code>848+0 records in
+</code></pre><h2>卸载U盘</h2><p>/dev/disk2 就是 U 盘，需要先unmount掉 U 盘，注意不是弹出。然后把安装文件写入 U 盘</p><p><code>diskutil unmountDisk /dev/disk2</code></p><p>unmount后，电脑上就看不到这个 U 盘了</p><h2>把安装文件写入 U 盘</h2><p>先把ubuntu.dmg改为ubuntu.iso，方便安装的时候识别。</p><p><code>mv ubuntu.dmg ubuntu.iso</code></p><p>把安装文件写入到U盘中</p><p><code>sudo dd if=./ubuntu.iso of=/dev/rdisk2 bs=1m</code></p><p>这行命令必须使用root权限，</p><ul><li>if : 输入文件名</li><li>of : 输出的文件名地址</li><li>bs : 是块大小,氛围1m 的块大小</li><li>慢慢等写完会有提示...</li></ul><h2>弹出 U盘，然后安全拔出</h2><p>结束后，终端会显示</p><pre><code class=".language-bash">848+0 records in
 848+0 records out
 889192448 bytes transferred in 203.405350 secs &#40;4371529 bytes/sec&#41;
 </code></pre><p>同时系统会弹出eject U 盘的对话框，点击eject，然后就可以安全拔出 U 盘。</p><p>如果没有弹出，就在终端执行eject命令</p><p><code>sudo eject /dev/rdisk2</code></p><h2>把安装 U盘，恢复为普通U 盘</h2><p>插入系统安装 U 盘的时候，可能系统里面会弹出一个对话框</p><p><img src="/static/2018/4/img/eject.png" alt="" /></p><p>不用管它，直接在终端执行：</p><p><code>sudo dd if=/dev/urandom of=/dev/rdisk2</code></p><p>使用随机数据来填充 U 盘，然后就可以随意在苹果磁盘工具里面格式化为自己想要的任何格式了。</p>
-            <p class="text-left text-muted">2018-04-15 12:56</p>
+            <p class="text-left text-muted">2018-12-03 00:53</p>
         </div>
         <div class="container">
             <div class="row mt-4 pb-5">
