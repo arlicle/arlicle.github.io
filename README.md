@@ -8,6 +8,10 @@
 ### 最新     
 
 
+[how to lazy seq](https://www.debugmyself.com/p/2018/12/10/how-to-lazy-seq/)  
+
+[函数式编程理念](https://www.debugmyself.com/p/2018/12/10/函数式编程理念/)  
+
 [客观的对待自己和他人](https://www.debugmyself.com/p/2018/12/6/客观的对待自己和他人/)  
 
 [做一个和骚扰电话聊天的机器人](https://www.debugmyself.com/p/2018/12/4/做一个和骚扰电话聊天的机器人/)  

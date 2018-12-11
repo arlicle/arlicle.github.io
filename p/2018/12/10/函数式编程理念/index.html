@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="/js/prism.css">
+    <link rel="stylesheet" href="/css/app.css">
+    <title>函数式编程理念 - 叫兽</title>
+    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+  </head>
+  <body style="background-color:#f5f5f5">
+
+        <div class="container bg-white pb-5 px-5 spx-0">
+            
+            <h1 class="post-title">函数式编程理念</h1>
+
+            <p>函数式编程使得代码的编写、阅读、测试和重用都变得更容易了。</p><h2>纯函数</h2><p>纯函数没有副作用，它不依赖于除参数以外的其他任何东西，也就是说，相同的参数输入，纯函数永远返回相同的值。</p><p>数学函数都是纯函数。无论何时何地，2+2始终都等于4。而且，除了返回结果以外，求解过程也不会做其它任何事情。</p><p>纯函数影响外部世界的唯一途径，就是它的返回值。</p><p>如果你在函数中使用了println，把数据推送给了输出流，外部世界就因此发生了改变。这样就不是纯函数</p><h2>持久性数据结构</h2><p><a href='https://en.wikipedia.org/wiki/Persistent_data_structure'>https://en.wikipedia.org/wiki/Persistent<i>data</i>structure</a></p><p><code>注意，不要与持久存储混淆</code></p><p>在计算中，持久数据结构是一种数据结构，它在修改时始终保留自身的先前版本。这样的数据结构实际上是不可变的，因为它们的操作不会（可见地）就地更新结构，而是总是产生新的结构。</p><p>如果可以访问所有版本但只能修改最新版本，则数据结构部分持久。如果可以访问和修改每个版本，则数据结构是完全持久的。如果还有一个可以从两个先前版本创建新版本的合并或合并操作，则数据结构被称为<strong>confluently persistent</strong>(汇合的,融合性的)。非持久性的结构称为<strong>ephemeral</strong>(短暂的，无常的事物)</p><p>不变性和持久性是非常相似的术语，它们经常互相替代。在Scala中的immutable vector相当于在Clojure中的persistent vector，两种实现都基于相同的抽象数据结构Bit-Mapped Vector Trie，只是命名不同。尽管不变性和持久性之间在应用于数据结构时，存在细微差别。</p><ul><li>Persistent data structures support multiple versions</li><li>Immutable data structures aren't changeable</li></ul><h3>What is the benefit of purely functional data structure?</h3><p>纯函数（也称为持久性或不可变）数据结构提供了以下几个优点：</p><ol><li>you never have to lock them, which extremely improves concurrency. <br>你永远不必锁定它们，这极大地提高了并发性。</li><li>they can share structure, which reduces memory usage. For example, consider list [1, 2, 3, 4] in Haskell and some imperative language like Java. To produce new list in Haskell you only have to create new cons (pair of value and reference-to-next-element) and connect it to the previous list. In Java you have to create completely new list not to damage the previous one.<br>他们可以共享结构，从而减少内存使用量。例如，考虑Haskell中的列表[1,2,3,4]和Java等命令式语言。要在Haskell中生成新列表，您只需创建新的cons（值对和reference-to-next-element）并将其连接到上一个列表。在Java中，您必须创建全新的列表，以免损坏前一个列表。</li><li>you can make persistent data structures lazy.<br>你可以使持久数据结构变得lazy(惰性)。</li><li>also, if you use functional style, you can avoid thinking of time and sequence of operations, and so, make your programs more declarative.<br>如果你使用函数式编程，你可以避免考虑时间和操作顺序，从而使程序更具声明性。</li><li>fact, that the data structure is immutable, allows you to make some more assumptions and so expand capabilities of language. For example, Clojure uses the fact of immutability to correctly provide implementations of hashCode() method on each object, so any object may be used as a key in a map.<br>事实上，数据结构是不可变的，允许您做出一些更多的假设，从而扩展语言的功能。例如，Clojure使用不变性的事实来正确地为每个对象提供hashCode（）方法的实现，因此任何对象都可以用作映射中的键。</li><li>with immutable data and functional style you can also freely use memoization.<br>使用不可变数据和功能样式，您还可以自由使用memoization。</li></ol><p>一般来说，它有更多的优点，它是对现实世界进行建模的另一种方式。来自SICP的这一章和其他章节将为您提供更准确的不可变结构编程视图，优缺点。</p><p>Erlang程序几乎完全使用纯功能数据结构，并且通过几乎无缝扩展到多个内核，它们获得了巨大的好处。由于永远不会修改共享数据（主要是二进制文件和位字符串），因此无需锁定此类数据。</p><p>您可以100％确定地说这是整数1到5的不可变列表。您可以传递对该列表的引用，并且永远不必担心列表可能已被修改。这足以让我使用它。</p><p><a href='https://stackoverflow.com/questions/4399837/what-is-the-benefit-of-purely-functional-data-structure/4400389#4400389'>what-is-the-benefit-of-purely-functional-data-structure</a></p><h3>劣势</h3><ul><li>使用门槛</li><li>需要编程语言实现好的 GC</li></ul><h2>惰性和递归</h2><p>惰性：对表达式的求值会被推迟至实际需要时才真正进行。对一个惰性表达式进行求值，也被称作表达式的变现(realizing)。</p><p>在Clojure中，函数和表达式都不是惰性化的，序列则一般都是惰性的。</p><p>使用Clojure，可以获得一门全惰性语言的诸多益处，尤其是，可以使用惰性序列创建复杂的表达式，然后仅当确实需要其中的某些元素时，才会付出相应的代价。</p><p>惰性技术还意味着纯函数。因为作为一个纯函数，无论什么时候被调用，返回的总是同样的东西。反过来，非纯函数就无法充分发挥惰性技术的作用。</p><h2>引用透明性</h2><p>惰性依赖于这样一种能力：在任何时刻，都可以用函数的结果来取代对其的调用。具备这种能力的函数就被成为引用透明（Referential transparency）, 因为对该函数的调用可被替换，却不会影响程序的行为。除了惰性，引用透明的函数还有两个好处：<br /></p><ul><li>Memoization, 自动缓存结果</li><li>自动并行化，将函数转移至另外一个处理器，甚至另外一台机器进行求值</li></ul><h2>Clojure FP六大规则：</h2><ol><li>避免直接递归。Java虚拟机无法优化递归调用，Clojure的递归程序会撑爆它们的栈空间。</li><li>当产生的是标量(scalar values)，或是体积小还数量固定的序列时，可以使用recur。Clojure会对显式的recur进行优化。(尾递归调用)</li><li>当产生个头大，或是大小可变的序列时，让它成为惰性的，而不要用递归。这样，你的调用者就只需要为他们实际需要的那一部分买单</li><li>不要让一个惰性序列变现的太多，多的超出你的需要。</li><li>熟悉序列库，这样你就能写出完全用不着recur或者惰性API的代码</li><li>细分。把看似简单的问题也尽可能划分为更小的块。这样你就能发现蕴藏于序列库中的解决方案。于是代码更通用，可重用性也会更好。</li></ol>
+            <p class="text-left text-muted">2018-12-11 06:28</p>
+        </div>
+        <div class="container">
+            <div class="row mt-4">
+                <div class="col-6 text-left"><a href="/p/2018/12/10/how-to-lazy-seq/">上一篇: how to lazy seq</a></div>
+                <div class="col-6 text-right"><a href="/p/2018/12/6/客观的对待自己和他人/">下一篇:客观的对待自己和他人</a></div>
+            </div>
+        </div>
+
+        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+        </button>
+        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+            <li class="nav-item">
+                <a class="nav-link" href="/">首页</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/p/list/">所有文章</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/p/about-me/">关于我</a>
+            </li>
+        </ul>
+
+        
+    <div class="container mt-5">
+        <h3>留言</h3>
+        <div id="commentApp"></div>
+    </div>
+    <script type="text/javascript">
+        var AL_configs = {
+            "post_id":"/p/2018/12/10/函数式编程理念/",
+            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
+        };
+        </script>
+    <script src="https://comment.debugmyself.com/sc.js"></script>
+
+        <footer class="footer mt-5 pb-2">
+        <div class="container text-center">
+          <span class="text-black-50">滇ICP备10201832号-3</span>
+        </div>
+        </footer>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="/js/prism.js"></script>
+        <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+        </script>
+  </body>
+</html>
