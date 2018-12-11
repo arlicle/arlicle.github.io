@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[今天](https://www.debugmyself.com/p/2018/12/11/poetry/)  
+
 [how to lazy seq](https://www.debugmyself.com/p/2018/12/10/how-to-lazy-seq/)  
 
 [函数式编程理念](https://www.debugmyself.com/p/2018/12/10/函数式编程理念/)  
