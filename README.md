@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[Clojure惰性序列的头保持问题](https://www.debugmyself.com/p/2018/12/12/clojure-drop-head/)  
+
 [今天](https://www.debugmyself.com/p/2018/12/11/poetry/)  
 
 [how to lazy seq](https://www.debugmyself.com/p/2018/12/10/how-to-lazy-seq/)  
