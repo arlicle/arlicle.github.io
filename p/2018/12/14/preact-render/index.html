@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="/js/prism.css">
+    <link rel="stylesheet" href="/css/app.css">
+    <title>preact 虚拟dom学习 - 叫兽</title>
+    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+  </head>
+  <body style="background-color:#f5f5f5">
+
+        <div class="container bg-white pb-5 px-5 spx-0">
+            
+            <h1 class="post-title">preact 虚拟dom学习</h1>
+
+            <p>创建一个虚拟节点vnode，然后渲染到目标节点上</p><pre><code class=".language-javascript">class Clock extends Component {
+    render&#40;&#41; {
+        let time = new Date&#40;&#41;.toLocaleTimeString&#40;&#41;;
+        return &lt;span&gt;{ time }&lt;/span&gt;;
+    }
+}
+// 将一个时钟渲染到 &lt;body &gt; 标签:
+render&#40;&lt;Clock /&gt;, document.body&#41;;
+</code></pre><pre><code class=".language-javascript">export function render&#40;vnode, parent, merge&#41; {
+	return diff&#40;merge, vnode, {}, false, parent, false&#41;;
+}
+</code></pre><p>虚拟dom 的核心是比较虚拟结点和实际结点的差异，然后把差异的部分更新到实际dom中，所以先看<code>preact</code>的diff算法</p><pre><code class=".language-javascript">export function diff&#40;dom, vnode, context, mountAll, parent, componentRoot&#41; {
+	// diffLevel having been 0 here indicates initial entry into the diff &#40;not a subdiff&#41;
+	if &#40;!diffLevel++&#41; {
+		// when first starting the diff, check if we're diffing an SVG or within an SVG
+		isSvgMode = parent!=null &amp;&amp; parent.ownerSVGElement!==undefined;
+
+		// hydration is indicated by the existing element to be diffed not having a prop cache
+		hydrating = dom!=null &amp;&amp; !&#40;ATTR&#95;KEY in dom&#41;;
+	}
+
+	let ret = idiff&#40;dom, vnode, context, mountAll, componentRoot&#41;;
+
+	// append the element if its a new parent
+	if &#40;parent &amp;&amp; ret.parentNode!==parent&#41; parent.appendChild&#40;ret&#41;;
+
+	// diffLevel being reduced to 0 means we're exiting the diff
+	if &#40;!--diffLevel&#41; {
+		hydrating = false;
+		// invoke queued componentDidMount lifecycle methods
+		if &#40;!componentRoot&#41; flushMounts&#40;&#41;;
+	}
+
+	return ret;
+}
+</code></pre><pre><code class=".language-javascript">function idiff&#40;dom, vnode, context, mountAll, componentRoot&#41; {
+	let out = dom,
+		prevSvgMode = isSvgMode;
+
+	// empty values &#40;null, undefined, booleans&#41; render as empty Text nodes
+	if &#40;vnode==null || typeof vnode==='boolean'&#41; vnode = '';
+
+
+	// Fast case: Strings &amp; Numbers create/update Text nodes.
+	if &#40;typeof vnode==='string' || typeof vnode==='number'&#41; {
+
+		// update if it's already a Text node:
+		if &#40;dom &amp;&amp; dom.splitText!==undefined &amp;&amp; dom.parentNode &amp;&amp; &#40;!dom.&#95;component || componentRoot&#41;&#41; {
+			/&#42; istanbul ignore if &#42;/ /&#42; Browser quirk that can't be covered: https://github.com/developit/preact/commit/fd4f21f5c45dfd75151bd27b4c217d8003aa5eb9 &#42;/
+			if &#40;dom.nodeValue!=vnode&#41; {
+				dom.nodeValue = vnode;
+			}
+		}
+		else {
+			// it wasn't a Text node: replace it with one and recycle the old Element
+			out = document.createTextNode&#40;vnode&#41;;
+			if &#40;dom&#41; {
+				if &#40;dom.parentNode&#41; dom.parentNode.replaceChild&#40;out, dom&#41;;
+				recollectNodeTree&#40;dom, true&#41;;
+			}
+		}
+
+		out&#91;ATTR&#95;KEY&#93; = true;
+
+		return out;
+	}
+
+
+	// If the VNode represents a Component, perform a component diff:
+	let vnodeName = vnode.nodeName;
+	if &#40;typeof vnodeName==='function'&#41; {
+		return buildComponentFromVNode&#40;dom, vnode, context, mountAll&#41;;
+	}
+
+
+	// Tracks entering and exiting SVG namespace when descending through the tree.
+	isSvgMode = vnodeName==='svg' ? true : vnodeName==='foreignObject' ? false : isSvgMode;
+
+
+	// If there's no existing element or it's the wrong type, create a new one:
+	vnodeName = String&#40;vnodeName&#41;;
+	if &#40;!dom || !isNamedNode&#40;dom, vnodeName&#41;&#41; {
+		out = createNode&#40;vnodeName, isSvgMode&#41;;
+
+		if &#40;dom&#41; {
+			// move children into the replacement node
+			while &#40;dom.firstChild&#41; out.appendChild&#40;dom.firstChild&#41;;
+
+			// if the previous Element was mounted into the DOM, replace it inline
+			if &#40;dom.parentNode&#41; dom.parentNode.replaceChild&#40;out, dom&#41;;
+
+			// recycle the old element &#40;skips non-Element node types&#41;
+			recollectNodeTree&#40;dom, true&#41;;
+		}
+	}
+
+
+	let fc = out.firstChild,
+		props = out&#91;ATTR&#95;KEY&#93;,
+		vchildren = vnode.children;
+
+	if &#40;props==null&#41; {
+		props = out&#91;ATTR&#95;KEY&#93; = {};
+		for &#40;let a=out.attributes, i=a.length; i--; &#41; props&#91;a&#91;i&#93;.name&#93; = a&#91;i&#93;.value;
+	}
+
+	// Optimization: fast-path for elements containing a single TextNode:
+	if &#40;!hydrating &amp;&amp; vchildren &amp;&amp; vchildren.length===1 &amp;&amp; typeof vchildren&#91;0&#93;==='string' &amp;&amp; fc!=null &amp;&amp; fc.splitText!==undefined &amp;&amp; fc.nextSibling==null&#41; {
+		if &#40;fc.nodeValue!=vchildren&#91;0&#93;&#41; {
+			fc.nodeValue = vchildren&#91;0&#93;;
+		}
+	}
+	// otherwise, if there are existing or new children, diff them:
+	else if &#40;vchildren &amp;&amp; vchildren.length || fc!=null&#41; {
+		innerDiffNode&#40;out, vchildren, context, mountAll, hydrating || props.dangerouslySetInnerHTML!=null&#41;;
+	}
+
+
+	// Apply attributes/props from VNode to the DOM Element:
+	diffAttributes&#40;out, vnode.attributes, props&#41;;
+
+
+	// restore previous SVG mode: &#40;in case we're exiting an SVG namespace&#41;
+	isSvgMode = prevSvgMode;
+
+	return out;
+}
+</code></pre>
+            <p class="text-left text-muted">2018-12-14 23:56</p>
+        </div>
+        <div class="container">
+            <div class="row mt-4">
+                <div class="col-6 text-left"><a href="/p/2018/12/17/fighting/">上一篇: Keep Learning，Keep Running</a></div>
+                <div class="col-6 text-right"><a href="/p/2018/12/14/simple-comment-api/">下一篇:评论系统接口文档</a></div>
+            </div>
+        </div>
+
+        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+        </button>
+        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+            <li class="nav-item">
+                <a class="nav-link" href="/">首页</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/p/list/">所有文章</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/p/about-me/">关于我</a>
+            </li>
+        </ul>
+
+        
+    <div class="container mt-5">
+        <h3>留言</h3>
+        <div id="commentApp"></div>
+    </div>
+    <script>
+        var AL_configs = {
+            "post_id":"/p/2018/12/14/preact-render/",
+            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
+        };
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://comment.debugmyself.com/sc.js";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+        <footer class="footer mt-5 pb-2">
+        <div class="container text-center">
+          <span class="text-black-50">滇ICP备10201832号-3</span>
+        </div>
+        </footer>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="/js/prism.js"></script>
+        <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+        </script>
+  </body>
+</html>

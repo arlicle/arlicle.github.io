@@ -8,11 +8,13 @@
 ### 最新     
 
 
+[Keep Learning，Keep Running](https://www.debugmyself.com/p/2018/12/17/fighting/)  
+
+[preact 虚拟dom学习](https://www.debugmyself.com/p/2018/12/14/preact-render/)  
+
 [评论系统接口文档](https://www.debugmyself.com/p/2018/12/14/simple-comment-api/)  
 
 [Clojure: rest vs next](https://www.debugmyself.com/p/2018/12/12/rest-vs-next/)  
-
-[Clojure惰性序列的头保持问题](https://www.debugmyself.com/p/2018/12/12/clojure-drop-head/)  
 
 [今天](https://www.debugmyself.com/p/2018/12/11/poetry/)  
 
