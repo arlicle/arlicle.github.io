@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[关于Bug](https://www.debugmyself.com/p/2018/12/18/bug/)  
+
 [Keep Learning，Keep Running](https://www.debugmyself.com/p/2018/12/17/fighting/)  
 
 [preact 虚拟dom学习](https://www.debugmyself.com/p/2018/12/14/preact-render/)  
