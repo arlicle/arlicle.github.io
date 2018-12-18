@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[对失败的思考](https://www.debugmyself.com/p/2018/12/18/对失败的思考/)  
+
 [关于Bug](https://www.debugmyself.com/p/2018/12/18/bug/)  
 
 [Keep Learning，Keep Running](https://www.debugmyself.com/p/2018/12/17/fighting/)  
