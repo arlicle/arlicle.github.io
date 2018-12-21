@@ -1,5 +1,7 @@
 pom.xml
 pom.xml.asc
+/private-posts/
+/private-p/
 settings.ini
 .DS_Store
 .nrepl-history
