@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[说谎](https://www.debugmyself.com/p/2018/12/25/说谎/)  
+
 [增加了markdown写数学公式的功能](https://www.debugmyself.com/p/2018/12/19/支持markdown写数学公式/)  
 
 [对失败的思考](https://www.debugmyself.com/p/2018/12/18/对失败的思考/)  
