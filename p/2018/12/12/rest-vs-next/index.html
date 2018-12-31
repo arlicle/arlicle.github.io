@@ -15,6 +15,9 @@
             
             <h1 class="post-title">Clojure: rest vs next</h1>
 
+
+
+
             <p><code>next</code> is stricter than (the new behaviour of) <code>rest</code> because it needs to evaluate the structure of the lazy cons to know whether to return <code>nil</code> or a seq.</p><p><code>rest</code> on the other hand always returns a seq, so nothing needs to be evaluated until you actually use the result of <code>rest</code>. In other words, <code>rest</code> is more lazy than next.</p><p><code>next</code> is like <code>&#40;seq &#40;rest ...&#41;&#41;</code>.</p><p><code>rest</code> will return the remaining piece of a sequence. If that piece of the sequence has not yet been realized, rest doesn't force it. It won't even tell you if there are more elements left in the sequence.</p><p><code>next</code> does the same thing but then forces at least one element of the sequence to be realized. So if <code>next</code> returns <code>nil</code>, you know there aren't any more elements left in the sequence.</p><p><code>next</code>会去实例化第一个元素，然后返回第一个实例化元素+剩余序列，如果没有元素了，<code>next</code>会告诉你没有剩余元素了，就会返回<code>nil</code></p><p><code>rest</code>会返回剩余序列，<code>rest</code>不回去实例化序列的任何一个元素，也不会告诉你剩余序列还有没有元素。</p>
             <p class="text-left text-muted">2018-12-13 07:54</p>
         </div>

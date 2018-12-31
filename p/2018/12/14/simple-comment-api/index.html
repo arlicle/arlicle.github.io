@@ -15,6 +15,9 @@
             
             <h1 class="post-title">评论系统接口文档</h1>
 
+
+
+
             <h2>接口地址</h2><p>https://comment.debugmyself.com</p><h2>微信API接口</h2><h3>获取微信登录的二维码</h3><p>GET /login/qrcode  <code>无需登录</code></p><p>返回结果为：<pre><code class=".language-html">&lt;img class=&quot;qrcode lightBorder&quot; src=&quot;/connect/qrcode/`qrcode`&quot; /&gt;
 </code></pre></p><p>需要用正则把<code>qrcode</code>拿出来</p><h3>检查用户是否扫码或者是否点击确认登录</h3><p>GET /login/qrcode/check  <code>无需登录</code></p><p>返回结果为：<pre><code class=".language-html">window.wx&#95;errcode=`408`;window.wx&#95;code=`wx&#95;code`;
 </code></pre></p><p><code>408</code> 这里表示返回扫码结果的状态嘛，<code>wx&#95;code</code>表示获取到的权限code</p><p>返回结果格式为</p><p><table class="table"> <thead><tr> <th>状态码</th> <th>说明</th> </tr> </thead> <tbody> <tr> <td>404</td> <td>用户扫码成功，等待用户点击确认登录</td> </tr> <tr> <td>405</td> <td>用户点击确认登录了，获取到wx_code</td> </tr> <tr> <td>403</td> <td>用户点击取消登录</td> </tr> <tr> <td>402 或 500</td> <td>超时或获取失败，需要重新获取二维码，然后继续获取二维码状态</td> </tr> <tr> <td>408</td> <td>表示用户一直没有扫码，一直未获取到用户扫码信息，需要重新发起请求</td> </tr> </tbody> </table></p><h2>根据微信 wx_code获取用户微信信息</h2><p>GET /user/data/wechat  <code>无需登录</code></p><p>参数         <br /><pre><code class=".language-javascript">{
@@ -46,7 +49,7 @@
     &quot;last&#95;comment&#95;id&quot;:&quot;&quot;, // 最后一条评论的id
 }
 </code></pre><p>如果请求带着token 信息，会返回用户信息和评论列表</p><p>如果请求没有带着 token 信息，只会返回评论列表</p><p>每次请求会返回15条评论</p>
-            <p class="text-left text-muted">2018-12-14 12:46</p>
+            <p class="text-left text-muted">2018-12-30 16:06</p>
         </div>
         <div class="container">
             <div class="row mt-4">

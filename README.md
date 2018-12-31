@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[极速成长](https://www.debugmyself.com/p/2018/12/31/极速成长/)  
+
 [说谎](https://www.debugmyself.com/p/2018/12/25/说谎/)  
 
 [增加了markdown写数学公式的功能](https://www.debugmyself.com/p/2018/12/19/支持markdown写数学公式/)  

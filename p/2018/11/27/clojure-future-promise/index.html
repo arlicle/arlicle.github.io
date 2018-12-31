@@ -15,6 +15,9 @@
             
             <h1 class="post-title">future and promise in clojure</h1>
 
+
+
+
             <h2>future</h2><p>future函数可以接受一段代码，并在一段单独的线程中执行这段代码，最后返回一个future对象。</p><p>使用future创建一个线程，然后相关的执行就都放到这个线程中去执行</p><pre><code class=".language-clojure">&#40;def a &#40;future &#40;+ 1 2 3 4&#41;&#41;&#41;
 </code></pre><p>这个时候future返回的不是执行结果，只是一个future对象。使用(deref a) 或者 @a 来获取其代表的值。</p><pre><code class=".language-clojure">user=&gt; &#40;deref a&#41;
 10

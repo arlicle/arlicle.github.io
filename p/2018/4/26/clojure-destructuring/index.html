@@ -15,7 +15,10 @@
             
             <h1 class="post-title">Clojure 解构</h1>
 
-            <h3>what & why</h3><p>相关网址: https://book.2cto.com/201304/20377.html</p><p>解构是用来方便赋值的，否则获取值的时候就要使用大量的next ,first 之类的 seq 操作，不方便，尤其是嵌套的 collection，取值就更麻烦。</p><p>有了解构以后，把collection 的值取出来就非常的简单和方便，除了可以用于let以外，还可以用于函数参数的赋值等地方</p><p>Clojure的解构特性提供了一种简洁的语法来声明式地从一个集合里面选取某些元素，并且把这些元素绑定到一个本地let绑定上去。并且因为解构这个特性是由let提供的， 它可以在任何间接使用了let的地方使用，比如fn、defn、loop。</p><h3>how</h3><p>1  list或vector解构</p><pre><code class=".language-clojure">&#40;let &#91;&#91;a b c&#93; &#91;1 2 3&#93;&#93;
+
+
+
+            <h3>what & why</h3><p>解构是用来方便赋值的，否则获取值的时候就要使用大量的next ,first 之类的 seq 操作，不方便，尤其是嵌套的 collection，取值就更麻烦。</p><p>有了解构以后，把collection 的值取出来就非常的简单和方便，除了可以用于let以外，还可以用于函数参数的赋值等地方</p><p>Clojure的解构特性提供了一种简洁的语法来声明式地从一个集合里面选取某些元素，并且把这些元素绑定到一个本地let绑定上去。并且因为解构这个特性是由let提供的， 它可以在任何间接使用了let的地方使用，比如fn、defn、loop。</p><h3>how</h3><p>1  list或vector解构</p><pre><code class=".language-clojure">&#40;let &#91;&#91;a b c&#93; &#91;1 2 3&#93;&#93;
     &#40;println a &quot;, &quot; b &quot;, &quot; c&#41;&#41;
 ;=&gt; 1, 2, 3
 ;你可以看到let的中括号中对应的关系
@@ -78,7 +81,7 @@
 &#40;format &quot;%s is in %s&quot; name city&#41;&#41;
 ;=&quot;Bob is in Boston&quot;
 </code></pre>
-            <p class="text-left text-muted">2018-11-16 20:07</p>
+            <p class="text-left text-muted">2018-12-30 16:55</p>
         </div>
         <div class="container">
             <div class="row mt-4">
