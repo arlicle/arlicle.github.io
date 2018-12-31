@@ -8,7 +8,7 @@
 ### 最新     
 
 
-[极速成长](https://www.debugmyself.com/p/2018/12/31/极速成长/)  
+[做对的事情还是容易的事情？](https://www.debugmyself.com/p/2018/12/31/极速成长/)  
 
 [说谎](https://www.debugmyself.com/p/2018/12/25/说谎/)  
 
