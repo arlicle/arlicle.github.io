@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[The road not taken](https://www.debugmyself.com/p/2019/1/3/The-road-not-taken/)  
+
 [数据库连接的left join, right join, inner join](https://www.debugmyself.com/p/2019/1/2/mysql-join/)  
 
 [做对的事情还是容易的事情？](https://www.debugmyself.com/p/2018/12/31/极速成长/)  
