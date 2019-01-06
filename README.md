@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[使用model来定义数据库和操作数据](https://www.debugmyself.com/p/2019/1/6/orm-with-model/)  
+
 [The road not taken](https://www.debugmyself.com/p/2019/1/3/The-road-not-taken/)  
 
 [数据库连接的left join, right join, inner join](https://www.debugmyself.com/p/2019/1/2/mysql-join/)  
