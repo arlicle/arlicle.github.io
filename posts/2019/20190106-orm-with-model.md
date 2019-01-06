@@ -1,5 +1,5 @@
 {
-    :title "使用model来定义数据库和操作数据"
+    :title "一个更好用的Clojure ORM库"
 }
 
 如果你使用过 Django，你会享受在Django model ORM中。
