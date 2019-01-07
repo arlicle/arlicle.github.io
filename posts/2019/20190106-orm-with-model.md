@@ -33,6 +33,8 @@
 
 [https://github.com/arlicle/laniu](https://github.com/arlicle/laniu)
 
+Laniu can help you rapid development and clean.
+
 It’s django model for clojure
 
 A Clojure library designed to normal human that don't like SQL, well, if you don't like SQL , that part is up to you.
