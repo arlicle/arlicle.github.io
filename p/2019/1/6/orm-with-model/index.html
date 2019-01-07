@@ -194,12 +194,71 @@
 ;=&gt; 
 &#40;{:id 9, :name &quot;IT&quot;} {:id 12, :name &quot;IT&quot;}&#41;
 
-</code></pre><h3>select with field alias</h3><pre><code class="language-clojure">&#40;select category
+</code></pre><h3>select with field alias</h3><pre><code>clojure
+&#40;select category
         :fields &#91;:id &#91;:name :category&#95;name&#93;&#93;
         :where &#91;:name &quot;IT&quot;&#93;
         &#41;
 ;=&gt; 
 &#40;{:id 9, :category&#95;name &quot;IT&quot;} {:id 12, :category&#95;name &quot;IT&quot;}&#41;
+</code></pre><h3>select with or/and</h3><p>The default is and<pre><code>clojure
+&#40;select article
+        :fields &#91;:id :headline :category.name :reporter.full&#95;name&#93;
+        :where &#91;:category.name &quot;IT&quot; :reporter.full&#95;name &quot;Edison Rao&quot;&#93;
+        :debug? true
+        &#41;
+&#91;&quot;select ceshi&#95;article.id, ceshi&#95;article.headline, ceshi&#95;category.name, ceshi&#95;reporter.full&#95;name from ceshi&#95;article  INNER JOIN ceshi&#95;reporter ON &#40;ceshi&#95;article.reporter&#95;id = ceshi&#95;reporter.id&#41; INNER JOIN ceshi&#95;category ON &#40;ceshi&#95;article.category&#95;id = ceshi&#95;category.id&#41; where ceshi&#95;category.name= ? and ceshi&#95;reporter.full&#95;name= ?&quot; &quot;IT&quot; &quot;Edison Rao&quot;&#93;
+=&gt; 
+&#40;{:id 7, :headline &quot;Apple make a phone&quot;, :name &quot;IT&quot;, :full&#95;name &quot;Edison Rao&quot;}&#41;
+
+;It's the same to 
+&#40;select article
+        :fields &#91;:id :headline :category.name :reporter.full&#95;name&#93;
+        :where &#40;and :category.name &quot;IT&quot; :reporter.full&#95;name &quot;Edison Rao&quot;&#41;
+        :debug? true
+        &#41;
+&#91;&quot;select ceshi&#95;article.id, ceshi&#95;article.headline, ceshi&#95;category.name, ceshi&#95;reporter.full&#95;name from ceshi&#95;article  INNER JOIN ceshi&#95;reporter ON &#40;ceshi&#95;article.reporter&#95;id = ceshi&#95;reporter.id&#41; INNER JOIN ceshi&#95;category ON &#40;ceshi&#95;article.category&#95;id = ceshi&#95;category.id&#41; where &#40;ceshi&#95;category.name= ? and ceshi&#95;reporter.full&#95;name= ?&#41;&quot; &quot;IT&quot; &quot;Edison Rao&quot;&#93;
+=&gt; 
+&#40;{:id 7, :headline &quot;Apple make a phone&quot;, :name &quot;IT&quot;, :full&#95;name &quot;Edison Rao&quot;}&#41;
+</code></pre></p><p>with or</p><pre><code>clojure
+&#40;select article
+        :fields &#91;:id :headline :category.name :reporter.full&#95;name&#93;
+        :where &#40;or :category.name &quot;IT&quot; :reporter.full&#95;name &quot;Edison Rao&quot;&#41;
+        :debug? true
+        &#41;
+&#91;&quot;select ceshi&#95;article.id, ceshi&#95;article.headline, ceshi&#95;category.name, ceshi&#95;reporter.full&#95;name from ceshi&#95;article  INNER JOIN ceshi&#95;reporter ON &#40;ceshi&#95;article.reporter&#95;id = ceshi&#95;reporter.id&#41; INNER JOIN ceshi&#95;category ON &#40;ceshi&#95;article.category&#95;id = ceshi&#95;category.id&#41; where &#40;ceshi&#95;category.name= ? or ceshi&#95;reporter.full&#95;name= ?&#41;&quot; &quot;IT&quot; &quot;Edison Rao&quot;&#93;
+=&gt;
+&#40;{:id 7, :headline &quot;Apple make a phone&quot;, :name &quot;IT&quot;, :full&#95;name &quot;Edison Rao&quot;}
+ {:id 13, :headline &quot;just a test&quot;, :name &quot;Fun&quot;, :full&#95;name &quot;Edison Rao&quot;}
+ {:id 14, :headline &quot;Apple make a phone&quot;, :name &quot;IT&quot;, :full&#95;name &quot;aaa&quot;}
+ {:id 15, :headline &quot;A good movie recommend&quot;, :name &quot;Movie&quot;, :full&#95;name &quot;Edison Rao&quot;}&#41;
+</code></pre><p>with and & or</p><pre><code>clojure
+&#40;select article
+        :fields &#91;:id :headline :category.name :reporter.full&#95;name&#93;
+        :where &#40;or &#91;:category.name &quot;IT&quot; :reporter.full&#95;name &quot;Edison Rao&quot;&#93; &#91;:category.name &quot;Fun&quot; :reporter.full&#95;name &quot;Chris Zheng&quot;&#93;&#41;
+        :debug? true
+        &#41;
+&#91;&quot;select ceshi&#95;article.id, ceshi&#95;article.headline, ceshi&#95;category.name, ceshi&#95;reporter.full&#95;name from ceshi&#95;article  INNER JOIN ceshi&#95;reporter ON &#40;ceshi&#95;article.reporter&#95;id = ceshi&#95;reporter.id&#41; INNER JOIN ceshi&#95;category ON &#40;ceshi&#95;article.category&#95;id = ceshi&#95;category.id&#41; where &#40;ceshi&#95;category.name= ? and ceshi&#95;reporter.full&#95;name= ?&#41; or &#40;ceshi&#95;category.name= ? and ceshi&#95;reporter.full&#95;name= ?&#41;&quot; &quot;IT&quot; &quot;Edison Rao&quot; &quot;Fun&quot; &quot;Chris Zheng&quot;&#93;
+=&gt;
+&#40;{:id 7, :headline &quot;Apple make a phone&quot;, :name &quot;IT&quot;, :full&#95;name &quot;Edison Rao&quot;}
+ {:id 16, :headline &quot;A funny joke&quot;, :name &quot;Fun&quot;, :full&#95;name &quot;Chris Zheng&quot;}&#41;
+
+;It's the same to 
+&#40;select article
+        :fields &#91;:id :headline :category.name :reporter.full&#95;name&#93;
+        :where &#40;or &#40;and :category.name &quot;IT&quot; :reporter.full&#95;name &quot;Edison Rao&quot;&#41; &#40;and :category.name &quot;Fun&quot; :reporter.full&#95;name &quot;Chris Zheng&quot;&#41;&#41;
+        :debug? true
+        &#41;
+
+
+; another and/or select
+&#40;select article
+        :fields &#91;:id :headline :category.name :reporter.full&#95;name&#93;
+        :where &#40;and &#40;or :category.name &quot;IT&quot; :reporter.full&#95;name &quot;Edison Rao&quot;&#41; &#40;or :category.name &quot;Fun&quot; :reporter.full&#95;name &quot;Chris Zheng&quot;&#41;&#41;
+        :debug? true
+        &#41;
+&#91;&quot;select ceshi&#95;article.id, ceshi&#95;article.headline, ceshi&#95;category.name, ceshi&#95;reporter.full&#95;name from ceshi&#95;article  INNER JOIN ceshi&#95;reporter ON &#40;ceshi&#95;article.reporter&#95;id = ceshi&#95;reporter.id&#41; INNER JOIN ceshi&#95;category ON &#40;ceshi&#95;article.category&#95;id = ceshi&#95;category.id&#41; where &#40;ceshi&#95;category.name= ? or ceshi&#95;reporter.full&#95;name= ?&#41; and &#40;ceshi&#95;category.name= ? or ceshi&#95;reporter.full&#95;name= ?&#41;&quot; &quot;IT&quot; &quot;Edison Rao&quot; &quot;Fun&quot; &quot;Chris Zheng&quot;&#93;
+=&gt; &#40;{:id 13, :headline &quot;just a test&quot;, :name &quot;Fun&quot;, :full&#95;name &quot;Edison Rao&quot;}&#41;
 </code></pre><h3>select foreignkey field</h3><pre><code class="language-clojure">&#40;select article
         :fields &#91;:id :headline :category.name&#93;
         :where &#91;:id 7&#93;&#41;
@@ -253,7 +312,7 @@
 
 &#40;raw-execute! &#91;&quot;update ceshi&#95;article set view&#95;count = &#40; 2 &#42; view&#95;count &#41; where view&#95;count &lt; ?&quot; 50&#93;&#41;
 </code></pre></p><h2>To do list</h2><h4>Document</h4><h4>Create table</h4><h4>Migration</h4><h4>Insert or update</h4><h4>Interacting with multiple databases</h4>
-            <p class="text-left text-muted">2019-01-07 16:40</p>
+            <p class="text-left text-muted">2019-01-07 16:59</p>
         </div>
         <div class="container">
             <div class="row mt-4">
