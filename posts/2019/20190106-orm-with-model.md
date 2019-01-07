@@ -46,6 +46,9 @@ PS. It's provide connection pooling by `c3p0` library
 Requires Clojure 1.9 or later!
 
 ## Usage
+```language-clojure
+(require '[laniu.core :refer :all])
+```
 
 ### config the database connection
 
