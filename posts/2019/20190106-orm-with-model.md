@@ -370,7 +370,7 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 
 Returns the aggregate values (avg, sum, count, min, max), the aggregate field will return count__id, max__view_count.
 
-``` clojure
+```language-clojure
 (aggregate article
            :fields [(count :id) (max :view_count) (min :view_count) (avg :view_count) (sum :view_count)])
 => 
