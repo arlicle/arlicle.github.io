@@ -247,8 +247,14 @@
 
 ; count
 
-</code></pre><h2>To do list</h2><h4>Document</h4><h4>Create table</h4><h4>Migration</h4><h4>Insert or update</h4><h4>Interacting with multiple databases</h4>
-            <p class="text-left text-muted">2019-01-07 10:02</p>
+</code></pre><h3>run raw sql</h3><p>If you need a more complex form of sql, you can use <code>raw-query</code> and <code>raw-execute!</code></p><p><code>raw-query</code> for select</p><pre><code class="language-sql">&#40;raw-query &#91;&quot;SELECT &#42; FROM ceshi&#95;article where id=?&quot; 15&#93;&#41;
+
+&#40;raw-query &#91;&quot;SELECT &#42; FROM ceshi&#95;reporter where id=?&quot; 15&#93; {:as-arrays? true}&#41;
+</code></pre><p><code>raw-execute!</code> for insert, update, delete ...<pre><code class="language-sql">&#40;raw-execute! &#91;&quot;update ceshi&#95;article set content='jjjjj' where id=?&quot; 15&#93;&#41;
+
+&#40;raw-execute! &#91;&quot;update ceshi&#95;article set view&#95;count = &#40; 2 &#42; view&#95;count &#41; where view&#95;count &lt; ?&quot; 50&#93;&#41;
+</code></pre></p><h2>To do list</h2><h4>Document</h4><h4>Create table</h4><h4>Migration</h4><h4>Insert or update</h4><h4>Interacting with multiple databases</h4>
+            <p class="text-left text-muted">2019-01-07 15:25</p>
         </div>
         <div class="container">
             <div class="row mt-4">
