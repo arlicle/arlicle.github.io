@@ -241,8 +241,6 @@
          :values {:view&#95;count &#40;&#42; :view&#95;count a&#41;}
          :where &#91;:id 7&#93;&#41;
 </code></pre><h3>delete data</h3><pre><code class="language-clojure">&#40;delete! article :where &#91;:id 3&#93;&#41;
-
-
 </code></pre><h3>aggregate</h3><p>Returns the aggregate values (avg, sum, count, min, max), the aggregate field will return count<b>id, max</b>view_count.</p><pre><code>clojure
 &#40;aggregate article
            :fields &#91;&#40;count :id&#41; &#40;max :view&#95;count&#41; &#40;min :view&#95;count&#41; &#40;avg :view&#95;count&#41; &#40;sum :view&#95;count&#41;&#93;&#41;

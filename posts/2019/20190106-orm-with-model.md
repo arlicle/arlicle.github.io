@@ -358,8 +358,6 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 
 ```language-clojure
 (delete! article :where [:id 3])
-
-
 ```
 
 
