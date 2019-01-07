@@ -58,13 +58,13 @@ And I Just test mysql 5.7.20 now, It will support more database later.
 
 ## Usage
 
-``` clojure
+```language-clojure
 (require '[laniu.core :refer :all])
 ```
 
 ### config the database connection
 
-``` clojure
+```language-clojure
 (defdb
   {:default {
              :classname   "com.mysql.jdbc.Driver"
@@ -77,7 +77,7 @@ And I Just test mysql 5.7.20 now, It will support more database later.
 
 ### Multiple databases
 This setting maps database aliases, which are a way to refer to a specific database throughout query, to a dictionary of settings for that specific connection. 
-``` clojure
+```language-clojure
 (defdb
   {:default {
              :classname   "com.mysql.jdbc.Driver"
@@ -100,7 +100,7 @@ This setting maps database aliases, which are a way to refer to a specific datab
 ```
 
 ### define a model
-``` clojure
+```language-clojure
 
 (defmodel reporter
           :fields {:full_name {:type :char-field :max-length 70}}
@@ -127,7 +127,7 @@ when you define a model , It's automatic create the data spec.
 ### insert data
 If the field has :default config, It will auto fill the default value to the field.
 
-``` clojure
+```language-clojure
 (insert! reporter :values {:full_name "edison"})
 ;=> ({:generated_key 45})
 
@@ -151,7 +151,7 @@ If the field has :default config, It will auto fill the default value to the fie
 ### insert with default value
 :created field and :view_count field will auto fill the default value
 
-``` clojure
+```language-clojure
 (insert! article
          :values {:headline "just a test"
                   :content  "hello world"
@@ -163,7 +163,7 @@ If the field has :default config, It will auto fill the default value to the fie
 ### insert wrong data with spec error
 When you define a model, the defmodel will auto define a data spec, when you insert data or update data, the spec will valid the data.
 
-``` clojure
+```language-clojure
 (insert! reporter :values {:full_name2 "chris"})
 ;=>
 #:clojure.spec.alpha{:problems ({:path [],
@@ -188,7 +188,7 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 
 ### field with choices valid
 
-``` clojure
+```language-clojure
 (defmodel user
           :fields {
                    :first-name {:type :char-field :verbose-name "First name" :max-length 30}
@@ -215,7 +215,7 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 ```
 ### insert multi rows
 
-``` clojure
+```language-clojure
 (insert-multi! article
                :values [{:headline "Apple make a phone"
                          :content  "bala babla ...."
@@ -236,7 +236,7 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 
 ### update data
 
-``` clojure
+```language-clojure
 ; update
 (update! reporter
          :values {:full_name "Edison Rao"}
@@ -264,7 +264,7 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 ```
 
 ### select data
-``` clojure
+```language-clojure
 
 ; select
 (select category)
@@ -295,7 +295,7 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 
 ### select with field alias
 
-``` clojure
+```language-clojure
 (select category
         :fields [:id [:name :category_name]]
         :where [:name "IT"]
@@ -310,7 +310,7 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 ### select with or/and 
 
 The default is and
-``` clojure
+```language-clojure
 (select article
         :fields [:id :headline :category.name :reporter.full_name]
         :where [:category.name "IT" :reporter.full_name "Edison Rao"]
@@ -333,7 +333,7 @@ The default is and
 
 with or
 
-``` clojure
+```language-clojure
 (select article
         :fields [:id :headline :category.name :reporter.full_name]
         :where (or :category.name "IT" :reporter.full_name "Edison Rao")
@@ -349,7 +349,7 @@ with or
 
 with and & or
 
-``` clojure
+```language-clojure
 (select article
         :fields [:id :headline :category.name :reporter.full_name]
         :where (or [:category.name "IT" :reporter.full_name "Edison Rao"] [:category.name "Fun" :reporter.full_name "Chris Zheng"])
@@ -390,7 +390,7 @@ It's same to
 
 ### select foreignkey field
 
-``` clojure
+```language-clojure
 (select article
         :fields [:id :headline :category.name]
         :where [:id 7])
@@ -407,7 +407,7 @@ It's same to
 
 ### select foreignkey condition
 
-``` clojure
+```language-clojure
 ; select with foreignkey condition
 (select article
         :fields [:id :headline :content :category.name [:reporter.full_name :reporter_full_name]]
@@ -427,7 +427,7 @@ It's same to
 
 ### select with function
 
-``` clojure
+```language-clojure
 ; select with function
 (select article
         :where [:id [> 7]])
@@ -440,7 +440,7 @@ It's same to
 
 ### update with function
 
-``` clojure
+```language-clojure
 (update! article
          :values {:view_count (+ :view_count 10)})
 
@@ -453,7 +453,7 @@ It's same to
 
 ###  delete data
 
-``` clojure
+```language-clojure
 (delete! article :where [:id 3])
 ```
 
@@ -461,7 +461,7 @@ It's same to
 
 Returns the aggregate values (avg, sum, count, min, max), the aggregate field will return count__id, max__view_count.
 
-``` clojure
+```language-clojure
 (aggregate article
            :fields [(count :id) (max :view_count) (min :view_count) (avg :view_count) (sum :view_count)]
            :debug? true)
@@ -475,14 +475,14 @@ If you need a more complex form of sql, you can use `raw-query` and `raw-execute
 
 `raw-query` for select
 
-``` sql
+```language-sql
 (raw-query ["SELECT * FROM ceshi_article where id=?" 15])
 
 (raw-query ["SELECT * FROM ceshi_reporter where id=?" 15] {:as-arrays? true})
 ```
 
 `raw-execute!` for insert, update, delete ...
-``` sql
+```language-sql
 (raw-execute! ["update ceshi_article set content='jjjjj' where id=?" 15])
 
 (raw-execute! ["update ceshi_article set view_count = ( 2 * view_count ) where view_count < ?" 50])
