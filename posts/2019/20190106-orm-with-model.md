@@ -28,36 +28,39 @@
 
 没办法了，自己造轮子吧。
 
-## Laniu
-
 我开发的最初目的就只有一个：为了快速的开发, 快速快速的开发。
 
 我为他设计了非常漂亮的操作语法，很多地方反复的打磨。
 
-[https://github.com/arlicle/laniu](https://github.com/arlicle/laniu)
+# laniu
 
 Laniu can help you rapid development and clean.
 
-It’s django model for clojure
+It’s django model for clojure.
 
 A Clojure library designed to normal human that don't like SQL, well, if you don't like SQL , that part is up to you.
 
+
 PS. It's provide connection pooling by `c3p0` library
 
-## Leiningen/Boot
+### Leiningen/Boot
 [![Clojars Project](https://clojars.org/laniu/latest-version.svg)](https://clojars.org/laniu)
 
-## Dependency Information
+### Dependency Information
+
 Requires Clojure 1.9 or later!
 
+And I Just test mysql 5.7.20 now, It will support more database later.
+
 ## Usage
-```language-clojure
+
+``` clojure
 (require '[laniu.core :refer :all])
 ```
 
 ### config the database connection
 
-```language-clojure
+``` clojure
 (defdb
   {:default {
              :classname   "com.mysql.jdbc.Driver"
@@ -65,14 +68,12 @@ Requires Clojure 1.9 or later!
              :subname     "//127.0.0.1:3306/projectx2"
              :user        "root"
              :password    "123"
-             :useSSL      false
-             }})
+             :useSSL      false}})
 ```
 
 ### Multiple databases
 This setting maps database aliases, which are a way to refer to a specific database throughout query, to a dictionary of settings for that specific connection. 
-
-```language-clojure
+``` clojure
 (defdb
   {:default {
              :classname   "com.mysql.jdbc.Driver"
@@ -90,13 +91,12 @@ This setting maps database aliases, which are a way to refer to a specific datab
              :password    "123"
              :useSSL      false
              :operation   :read
-             }
-   })
-; the default :poeratin is :read_and_write
+             }})
+; the default :operation is :read_and_write
 ```
 
 ### define a model
-```language-clojure
+``` clojure
 
 (defmodel reporter
           :fields {:full_name {:type :char-field :max-length 70}}
@@ -123,7 +123,7 @@ when you define a model , It's automatic create the data spec.
 ### insert data
 If the field has :default config, It will auto fill the default value to the field.
 
-```language-clojure
+``` clojure
 (insert! reporter :values {:full_name "edison"})
 ;=> ({:generated_key 45})
 
@@ -136,7 +136,9 @@ If the field has :default config, It will auto fill the default value to the fie
 (insert! category :values {:name "Movie" :sort_order 2})
 ;=> ({:generated_key 10})
 
-(insert! category :values {:name "Fun" :sort_order 3})
+; add :debug? true will print the sql info
+(insert! category :values {:name "Fun" :sort_order 3} :debug? true)
+"insert data to db " :ceshi_category " : " {"ceshi_category.name" "Fun", "ceshi_category.sort_order" 3}
 ;=> ({:generated_key 11})
 ```
 
@@ -145,7 +147,7 @@ If the field has :default config, It will auto fill the default value to the fie
 ### insert with default value
 :created field and :view_count field will auto fill the default value
 
-```language-clojure
+``` clojure
 (insert! article
          :values {:headline "just a test"
                   :content  "hello world"
@@ -157,7 +159,7 @@ If the field has :default config, It will auto fill the default value to the fie
 ### insert wrong data with spec error
 When you define a model, the defmodel will auto define a data spec, when you insert data or update data, the spec will valid the data.
 
-```language-clojure
+``` clojure
 (insert! reporter :values {:full_name2 "chris"})
 ;=>
 #:clojure.spec.alpha{:problems ({:path [],
@@ -182,7 +184,7 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 
 ### field with choices valid
 
-```language-clojure
+``` clojure
 (defmodel user
           :fields {
                    :first-name {:type :char-field :verbose-name "First name" :max-length 30}
@@ -209,7 +211,7 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 ```
 ### insert multi rows
 
-```language-clojure
+``` clojure
 (insert-multi! article
                :values [{:headline "Apple make a phone"
                          :content  "bala babla ...."
@@ -230,7 +232,7 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 
 ### update data
 
-```language-clojure
+``` clojure
 ; update
 (update! reporter
          :values {:full_name "Edison Rao"}
@@ -240,7 +242,9 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 ; update with multi conditions
 (update! reporter
          :values {:full_name "Chris Zheng"}
-         :where [:id 46 :full_name "chris"])
+         :where [:id 46 :full_name "chris"]
+         :debug? true)
+["update ceshi_reporter   set ceshi_reporter.full_name=? where ceshi_reporter.id= ? and ceshi_reporter.full_name= ?" "Chris Zheng" 46 "chris"]
 ; => (1)
 
 ; update value , search with foreignkey model
@@ -256,7 +260,7 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 ```
 
 ### select data
-```language-clojure
+``` clojure
 
 ; select
 (select category)
@@ -291,7 +295,9 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 (select category
         :fields [:id [:name :category_name]]
         :where [:name "IT"]
+        :debug? true
         )
+["select ceshi_category.id, ceshi_category.name as category_name from ceshi_category   where ceshi_category.name= ?" "IT"]
 ;=> 
 ({:id 9, :category_name "IT"} {:id 12, :category_name "IT"})
 ```
@@ -376,9 +382,11 @@ It's same to
         )
 ```
 
+
+
 ### select foreignkey field
 
-```language-clojure
+``` clojure
 (select article
         :fields [:id :headline :category.name]
         :where [:id 7])
@@ -395,7 +403,7 @@ It's same to
 
 ### select foreignkey condition
 
-```language-clojure
+``` clojure
 ; select with foreignkey condition
 (select article
         :fields [:id :headline :content :category.name [:reporter.full_name :reporter_full_name]]
@@ -415,7 +423,7 @@ It's same to
 
 ### select with function
 
-```language-clojure
+``` clojure
 ; select with function
 (select article
         :where [:id [> 7]])
@@ -428,7 +436,7 @@ It's same to
 
 ### update with function
 
-```language-clojure
+``` clojure
 (update! article
          :values {:view_count (+ :view_count 10)})
 
@@ -441,21 +449,20 @@ It's same to
 
 ###  delete data
 
-```language-clojure
+``` clojure
 (delete! article :where [:id 3])
 ```
-
 
 ### aggregate
 
 Returns the aggregate values (avg, sum, count, min, max), the aggregate field will return count__id, max__view_count.
 
-```language-clojure
+``` clojure
 (aggregate article
-           :fields [(count :id) (max :view_count) (min :view_count) (avg :view_count) (sum :view_count)])
-=> 
-({:count__id 13, :max__view_count 600, :min__view_count 20, :avg__view_count 67.6923M, :sum__view_count 880M})
-
+           :fields [(count :id) (max :view_count) (min :view_count) (avg :view_count) (sum :view_count)]
+           :debug? true)
+["select count(ceshi_article.id) as count__id, max(ceshi_article.view_count) as max__view_count, min(ceshi_article.view_count) as min__view_count, avg(ceshi_article.view_count) as avg__view_count, sum(ceshi_article.view_count) as sum__view_count from ceshi_article  "]
+=> ({:count__id 13, :max__view_count 600, :min__view_count 20, :avg__view_count 67.6923M, :sum__view_count 880M})
 ```
 
 ### run raw sql
@@ -464,14 +471,14 @@ If you need a more complex form of sql, you can use `raw-query` and `raw-execute
 
 `raw-query` for select
 
-```language-sql
+``` sql
 (raw-query ["SELECT * FROM ceshi_article where id=?" 15])
 
 (raw-query ["SELECT * FROM ceshi_reporter where id=?" 15] {:as-arrays? true})
 ```
 
 `raw-execute!` for insert, update, delete ...
-```language-sql
+``` sql
 (raw-execute! ["update ceshi_article set content='jjjjj' where id=?" 15])
 
 (raw-execute! ["update ceshi_article set view_count = ( 2 * view_count ) where view_count < ?" 50])
@@ -483,3 +490,10 @@ If you need a more complex form of sql, you can use `raw-query` and `raw-execute
 #### Migration
 #### Insert or update
 #### Interacting with multiple databases
+
+## License
+
+Copyright © 2018
+
+Distributed under the Eclipse Public License, the same as Clojure.
+

@@ -18,17 +18,19 @@
 
 
 
-            <p>如果你使用过 Django，你会享受在Django model ORM中。</p><p>通过model 层分离了数据库，可以让我们把时间花在更高层次的抽象上，更多的时间用来思考如何解决复杂业务场景，几乎不用花费时间和心力去关注底层运作。</p><p>随着时间的推移，我们能够专注于更重要的问题，使得开发变得更为高效和容易维护。</p><p>简单列举几点使用 Model的优点：</p><ol><li><strong>简单</strong> 因为简单，所以可以让你快速的开发，而且代码变得更干净</li><li><strong>数据库创建</strong> 使用代码来定义数据库，更容易阅读和维护，用过代码自动来进行数据的创建</li><li><strong>Migration</strong> 数据库变动的时候，通过代码自动的进行Migration，无需关心实现细节。</li><li><strong>多种数据库支持</strong> 可以灵活切换各种数据库，无需再去修改程序</li><li><strong>多个数据库支持</strong> 可以很方便的支持读写分离，同时增加多个读库与多个写库</li><li><strong>操作更容易</strong> 非常简单的进行数据的操作：插入，更新，查找，删除</li><li><strong>自动数据验证</strong> 在进行数据插入和更新到时候，可以自动对数据进行验证</li><li><strong>关联字段查询</strong> 对数据查询可以自动进行 ORM， 自动关联Foreignkey相关字段的表进行查询，非常方便</li><li><strong>默认值字段</strong> 可以对定义字段的默认值，这样像创建时间，等的字段就可以自动默认有值，无需在插入数据时手动维护</li><li><strong>支持连接池</strong></li></ol><p>互联网项目，开发速度非常关键，需要快速的出最低可用版本，无需性能，只需要专注于业务。这时候 model 就能大显身手了。</p><p>但是我们可爱的Clojure居然没有ORM的库，最像orm的一个库是Korma，我在两个项目中使用了Korma, 说实话，使用起来很不方便。 好多地方不够人性化，经常出问题一调试就是好几个小时，真实脑阔疼。</p><p>没办法了，自己造轮子吧。</p><h2>Laniu</h2><p>我开发的最初目的就只有一个：为了快速的开发, 快速快速的开发。</p><p>我为他设计了非常漂亮的操作语法，很多地方反复的打磨。</p><p><a href='https://github.com/arlicle/laniu'>https://github.com/arlicle/laniu</a></p><p>Laniu can help you rapid development and clean.</p><p>It’s django model for clojure</p><p>A Clojure library designed to normal human that don't like SQL, well, if you don't like SQL , that part is up to you.</p><p>PS. It's provide connection pooling by <code>c3p0</code> library</p><h2>Leiningen/Boot</h2><p><a href='https://clojars.org/laniu'><img src="https://clojars.org/laniu/latest-version.svg" alt="Clojars Project" /></a></p><h2>Dependency Information</h2><p>Requires Clojure 1.9 or later!</p><h2>Usage</h2><pre><code class="language-clojure">&#40;require '&#91;laniu.core :refer :all&#93;&#41;
-</code></pre><h3>config the database connection</h3><pre><code class="language-clojure">&#40;defdb
+            <p>如果你使用过 Django，你会享受在Django model ORM中。</p><p>通过model 层分离了数据库，可以让我们把时间花在更高层次的抽象上，更多的时间用来思考如何解决复杂业务场景，几乎不用花费时间和心力去关注底层运作。</p><p>随着时间的推移，我们能够专注于更重要的问题，使得开发变得更为高效和容易维护。</p><p>简单列举几点使用 Model的优点：</p><ol><li><strong>简单</strong> 因为简单，所以可以让你快速的开发，而且代码变得更干净</li><li><strong>数据库创建</strong> 使用代码来定义数据库，更容易阅读和维护，用过代码自动来进行数据的创建</li><li><strong>Migration</strong> 数据库变动的时候，通过代码自动的进行Migration，无需关心实现细节。</li><li><strong>多种数据库支持</strong> 可以灵活切换各种数据库，无需再去修改程序</li><li><strong>多个数据库支持</strong> 可以很方便的支持读写分离，同时增加多个读库与多个写库</li><li><strong>操作更容易</strong> 非常简单的进行数据的操作：插入，更新，查找，删除</li><li><strong>自动数据验证</strong> 在进行数据插入和更新到时候，可以自动对数据进行验证</li><li><strong>关联字段查询</strong> 对数据查询可以自动进行 ORM， 自动关联Foreignkey相关字段的表进行查询，非常方便</li><li><strong>默认值字段</strong> 可以对定义字段的默认值，这样像创建时间，等的字段就可以自动默认有值，无需在插入数据时手动维护</li><li><strong>支持连接池</strong></li></ol><p>互联网项目，开发速度非常关键，需要快速的出最低可用版本，无需性能，只需要专注于业务。这时候 model 就能大显身手了。</p><p>但是我们可爱的Clojure居然没有ORM的库，最像orm的一个库是Korma，我在两个项目中使用了Korma, 说实话，使用起来很不方便。 好多地方不够人性化，经常出问题一调试就是好几个小时，真实脑阔疼。</p><p>没办法了，自己造轮子吧。</p><p>我开发的最初目的就只有一个：为了快速的开发, 快速快速的开发。</p><p>我为他设计了非常漂亮的操作语法，很多地方反复的打磨。</p><h1>laniu</h1><p>Laniu can help you rapid development and clean.</p><p>It’s django model for clojure.</p><p>A Clojure library designed to normal human that don't like SQL, well, if you don't like SQL , that part is up to you.</p><p>PS. It's provide connection pooling by <code>c3p0</code> library</p><h3>Leiningen/Boot</h3><p><a href='https://clojars.org/laniu'><img src="https://clojars.org/laniu/latest-version.svg" alt="Clojars Project" /></a></p><h3>Dependency Information</h3><p>Requires Clojure 1.9 or later!</p><p>And I Just test mysql 5.7.20 now, It will support more database later.</p><h2>Usage</h2><pre><code>clojure
+&#40;require '&#91;laniu.core :refer :all&#93;&#41;
+</code></pre><h3>config the database connection</h3><pre><code>clojure
+&#40;defdb
   {:default {
              :classname   &quot;com.mysql.jdbc.Driver&quot;
              :subprotocol &quot;mysql&quot;
              :subname     &quot;//127.0.0.1:3306/projectx2&quot;
              :user        &quot;root&quot;
              :password    &quot;123&quot;
-             :useSSL      false
-             }}&#41;
-</code></pre><h3>Multiple databases</h3><p>This setting maps database aliases, which are a way to refer to a specific database throughout query, to a dictionary of settings for that specific connection. </p><pre><code class="language-clojure">&#40;defdb
+             :useSSL      false}}&#41;
+</code></pre><h3>Multiple databases</h3><p>This setting maps database aliases, which are a way to refer to a specific database throughout query, to a dictionary of settings for that specific connection. <pre><code>clojure
+&#40;defdb
   {:default {
              :classname   &quot;com.mysql.jdbc.Driver&quot;
              :subprotocol &quot;mysql&quot;
@@ -45,10 +47,10 @@
              :password    &quot;123&quot;
              :useSSL      false
              :operation   :read
-             }
-   }&#41;
-; the default :poeratin is :read&#95;and&#95;write
-</code></pre><h3>define a model</h3><pre><code class="language-clojure">
+             }}&#41;
+; the default :operation is :read&#95;and&#95;write
+</code></pre></p><h3>define a model</h3><pre><code>clojure
+
 &#40;defmodel reporter
           :fields {:full&#95;name {:type :char-field :max-length 70}}
           :meta {:db&#95;table &quot;ceshi&#95;reporter&quot;}&#41;
@@ -67,7 +69,8 @@
                    :created    {:type :int-field :default #&#40;quot &#40;System/currentTimeMillis&#41; 1000&#41;}}
           :meta {:db&#95;table &quot;ceshi&#95;article&quot;}&#41;
 
-</code></pre><p>when you define a model , It's automatic create the data spec.</p><h3>insert data</h3><p>If the field has :default config, It will auto fill the default value to the field.</p><pre><code class="language-clojure">&#40;insert! reporter :values {:full&#95;name &quot;edison&quot;}&#41;
+</code></pre><p>when you define a model , It's automatic create the data spec.</p><h3>insert data</h3><p>If the field has :default config, It will auto fill the default value to the field.</p><pre><code>clojure
+&#40;insert! reporter :values {:full&#95;name &quot;edison&quot;}&#41;
 ;=&gt; &#40;{:generated&#95;key 45}&#41;
 
 &#40;insert! reporter :values {:full&#95;name &quot;chris&quot;}&#41;
@@ -79,15 +82,19 @@
 &#40;insert! category :values {:name &quot;Movie&quot; :sort&#95;order 2}&#41;
 ;=&gt; &#40;{:generated&#95;key 10}&#41;
 
-&#40;insert! category :values {:name &quot;Fun&quot; :sort&#95;order 3}&#41;
+; add :debug? true will print the sql info
+&#40;insert! category :values {:name &quot;Fun&quot; :sort&#95;order 3} :debug? true&#41;
+&quot;insert data to db &quot; :ceshi&#95;category &quot; : &quot; {&quot;ceshi&#95;category.name&quot; &quot;Fun&quot;, &quot;ceshi&#95;category.sort&#95;order&quot; 3}
 ;=&gt; &#40;{:generated&#95;key 11}&#41;
-</code></pre><h3>insert with default value</h3><p>:created field and :view_count field will auto fill the default value</p><pre><code class="language-clojure">&#40;insert! article
+</code></pre><h3>insert with default value</h3><p>:created field and :view_count field will auto fill the default value</p><pre><code>clojure
+&#40;insert! article
          :values {:headline &quot;just a test&quot;
                   :content  &quot;hello world&quot;
                   :reporter 45
                   :category 11}&#41;
 ; =&gt; &#40;{:generated&#95;key 6}&#41;
-</code></pre><h3>insert wrong data with spec error</h3><p>When you define a model, the defmodel will auto define a data spec, when you insert data or update data, the spec will valid the data.</p><pre><code class="language-clojure">&#40;insert! reporter :values {:full&#95;name2 &quot;chris&quot;}&#41;
+</code></pre><h3>insert wrong data with spec error</h3><p>When you define a model, the defmodel will auto define a data spec, when you insert data or update data, the spec will valid the data.</p><pre><code>clojure
+&#40;insert! reporter :values {:full&#95;name2 &quot;chris&quot;}&#41;
 ;=&gt;
 #:clojure.spec.alpha{:problems &#40;{:path &#91;&#93;,
                                  :pred &#40;clojure.core/fn &#91;%&#93; &#40;clojure.core/contains? % :full&#95;name&#41;&#41;,
@@ -107,7 +114,8 @@
                                  :in &#91;:sort&#95;order&#93;}&#41;,
                      :spec :laniu.core/category,
                      :value {:name &quot;Flower&quot;, :sort&#95;order &quot;a&quot;}}
-</code></pre><h3>field with choices valid</h3><pre><code class="language-clojure">&#40;defmodel user
+</code></pre><h3>field with choices valid</h3><pre><code>clojure
+&#40;defmodel user
           :fields {
                    :first-name {:type :char-field :verbose-name &quot;First name&quot; :max-length 30}
                    :last-name  {:type :char-field :verbose-name &quot;Last name&quot; :max-length 30}
@@ -130,7 +138,8 @@
                      :spec :laniu.core/user,
                      :value {:first-name &quot;Edison&quot;, :last-name &quot;Rao&quot;, :gender 4}}
 
-</code></pre><h3>insert multi rows</h3><pre><code class="language-clojure">&#40;insert-multi! article
+</code></pre><h3>insert multi rows</h3><pre><code>clojure
+&#40;insert-multi! article
                :values &#91;{:headline &quot;Apple make a phone&quot;
                          :content  &quot;bala babla ....&quot;
                          :reporter 46
@@ -146,7 +155,8 @@
                         &#93;&#41;
 ;=&gt; &#40;{:generated&#95;key 7} {:generated&#95;key 8} {:generated&#95;key 9}&#41;
 
-</code></pre><h3>update data</h3><pre><code class="language-clojure">; update
+</code></pre><h3>update data</h3><pre><code>clojure
+; update
 &#40;update! reporter
          :values {:full&#95;name &quot;Edison Rao&quot;}
          :where &#91;:id 45&#93;&#41;
@@ -155,7 +165,9 @@
 ; update with multi conditions
 &#40;update! reporter
          :values {:full&#95;name &quot;Chris Zheng&quot;}
-         :where &#91;:id 46 :full&#95;name &quot;chris&quot;&#93;&#41;
+         :where &#91;:id 46 :full&#95;name &quot;chris&quot;&#93;
+         :debug? true&#41;
+&#91;&quot;update ceshi&#95;reporter   set ceshi&#95;reporter.full&#95;name=? where ceshi&#95;reporter.id= ? and ceshi&#95;reporter.full&#95;name= ?&quot; &quot;Chris Zheng&quot; 46 &quot;chris&quot;&#93;
 ; =&gt; &#40;1&#41;
 
 ; update value , search with foreignkey model
@@ -168,7 +180,8 @@
          :values {:category 9 :reporter 45}
          :where &#91;:id 7&#93;&#41;
 ; =&gt; &#40;1&#41;
-</code></pre><h3>select data</h3><pre><code class="language-clojure">
+</code></pre><h3>select data</h3><pre><code>clojure
+
 ; select
 &#40;select category&#41;
 ; =&gt;
@@ -198,7 +211,9 @@
 &#40;select category
         :fields &#91;:id &#91;:name :category&#95;name&#93;&#93;
         :where &#91;:name &quot;IT&quot;&#93;
+        :debug? true
         &#41;
+&#91;&quot;select ceshi&#95;category.id, ceshi&#95;category.name as category&#95;name from ceshi&#95;category   where ceshi&#95;category.name= ?&quot; &quot;IT&quot;&#93;
 ;=&gt; 
 &#40;{:id 9, :category&#95;name &quot;IT&quot;} {:id 12, :category&#95;name &quot;IT&quot;}&#41;
 </code></pre><h3>select with or/and</h3><p>The default is and<pre><code>clojure
@@ -267,7 +282,8 @@ It's same to
         :where &#91;&#40;or :category.name &quot;IT&quot; :reporter.full&#95;name &quot;Edison Rao&quot;&#41; &#40;or :category.name &quot;Fun&quot; :reporter.full&#95;name &quot;Chris Zheng&quot;&#41;&#93;
         :debug? true
         &#41;
-</code></pre><h3>select foreignkey field</h3><pre><code class="language-clojure">&#40;select article
+</code></pre><h3>select foreignkey field</h3><pre><code>clojure
+&#40;select article
         :fields &#91;:id :headline :category.name&#93;
         :where &#91;:id 7&#93;&#41;
 ; =&gt; 
@@ -279,7 +295,8 @@ It's same to
         :where &#91;:id 7&#93;&#41;
 ;=&gt; 
 &#40;{:id 7, :headline &quot;Apple make a phone&quot;, :name &quot;IT&quot;, :reporter&#95;full&#95;name &quot;Edison Rao&quot;}&#41;
-</code></pre><h3>select foreignkey condition</h3><pre><code class="language-clojure">; select with foreignkey condition
+</code></pre><h3>select foreignkey condition</h3><pre><code>clojure
+; select with foreignkey condition
 &#40;select article
         :fields &#91;:id :headline :content :category.name &#91;:reporter.full&#95;name :reporter&#95;full&#95;name&#93;&#93;
         :where &#91;:category.name &quot;IT&quot;&#93;&#41;
@@ -294,33 +311,39 @@ It's same to
 ; =&gt; 
 &#40;{:id 7, :headline &quot;Apple make a phone&quot;, :content &quot;bala babla ....&quot;, :name &quot;IT&quot;, :full&#95;name &quot;Edison Rao&quot;}&#41;
 
-</code></pre><h3>select with function</h3><pre><code class="language-clojure">; select with function
+</code></pre><h3>select with function</h3><pre><code>clojure
+; select with function
 &#40;select article
         :where &#91;:id &#91;&gt; 7&#93;&#93;&#41;
 
 &#40;select article
         :where &#91;:headline &#91;startswith &quot;a&quot;&#93;&#93;&#41;
-</code></pre><h3>update with function</h3><pre><code class="language-clojure">&#40;update! article
+</code></pre><h3>update with function</h3><pre><code>clojure
+&#40;update! article
          :values {:view&#95;count &#40;+ :view&#95;count 10&#41;}&#41;
 
 &#40;def a 30&#41;
 &#40;update! article
          :values {:view&#95;count &#40;&#42; :view&#95;count a&#41;}
          :where &#91;:id 7&#93;&#41;
-</code></pre><h3>delete data</h3><pre><code class="language-clojure">&#40;delete! article :where &#91;:id 3&#93;&#41;
-</code></pre><h3>aggregate</h3><p>Returns the aggregate values (avg, sum, count, min, max), the aggregate field will return count<b>id, max</b>view_count.</p><pre><code class="language-clojure">&#40;aggregate article
-           :fields &#91;&#40;count :id&#41; &#40;max :view&#95;count&#41; &#40;min :view&#95;count&#41; &#40;avg :view&#95;count&#41; &#40;sum :view&#95;count&#41;&#93;&#41;
-=&gt; 
-&#40;{:count&#95;&#95;id 13, :max&#95;&#95;view&#95;count 600, :min&#95;&#95;view&#95;count 20, :avg&#95;&#95;view&#95;count 67.6923M, :sum&#95;&#95;view&#95;count 880M}&#41;
-
-</code></pre><h3>run raw sql</h3><p>If you need a more complex form of sql, you can use <code>raw-query</code> and <code>raw-execute!</code></p><p><code>raw-query</code> for select</p><pre><code class="language-sql">&#40;raw-query &#91;&quot;SELECT &#42; FROM ceshi&#95;article where id=?&quot; 15&#93;&#41;
+</code></pre><h3>delete data</h3><pre><code>clojure
+&#40;delete! article :where &#91;:id 3&#93;&#41;
+</code></pre><h3>aggregate</h3><p>Returns the aggregate values (avg, sum, count, min, max), the aggregate field will return count<b>id, max</b>view_count.</p><pre><code>clojure
+&#40;aggregate article
+           :fields &#91;&#40;count :id&#41; &#40;max :view&#95;count&#41; &#40;min :view&#95;count&#41; &#40;avg :view&#95;count&#41; &#40;sum :view&#95;count&#41;&#93;
+           :debug? true&#41;
+&#91;&quot;select count&#40;ceshi&#95;article.id&#41; as count&#95;&#95;id, max&#40;ceshi&#95;article.view&#95;count&#41; as max&#95;&#95;view&#95;count, min&#40;ceshi&#95;article.view&#95;count&#41; as min&#95;&#95;view&#95;count, avg&#40;ceshi&#95;article.view&#95;count&#41; as avg&#95;&#95;view&#95;count, sum&#40;ceshi&#95;article.view&#95;count&#41; as sum&#95;&#95;view&#95;count from ceshi&#95;article  &quot;&#93;
+=&gt; &#40;{:count&#95;&#95;id 13, :max&#95;&#95;view&#95;count 600, :min&#95;&#95;view&#95;count 20, :avg&#95;&#95;view&#95;count 67.6923M, :sum&#95;&#95;view&#95;count 880M}&#41;
+</code></pre><h3>run raw sql</h3><p>If you need a more complex form of sql, you can use <code>raw-query</code> and <code>raw-execute!</code></p><p><code>raw-query</code> for select</p><pre><code>sql
+&#40;raw-query &#91;&quot;SELECT &#42; FROM ceshi&#95;article where id=?&quot; 15&#93;&#41;
 
 &#40;raw-query &#91;&quot;SELECT &#42; FROM ceshi&#95;reporter where id=?&quot; 15&#93; {:as-arrays? true}&#41;
-</code></pre><p><code>raw-execute!</code> for insert, update, delete ...<pre><code class="language-sql">&#40;raw-execute! &#91;&quot;update ceshi&#95;article set content='jjjjj' where id=?&quot; 15&#93;&#41;
+</code></pre><p><code>raw-execute!</code> for insert, update, delete ...<pre><code>sql
+&#40;raw-execute! &#91;&quot;update ceshi&#95;article set content='jjjjj' where id=?&quot; 15&#93;&#41;
 
 &#40;raw-execute! &#91;&quot;update ceshi&#95;article set view&#95;count = &#40; 2 &#42; view&#95;count &#41; where view&#95;count &lt; ?&quot; 50&#93;&#41;
-</code></pre></p><h2>To do list</h2><h4>Document</h4><h4>Create table</h4><h4>Migration</h4><h4>Insert or update</h4><h4>Interacting with multiple databases</h4>
-            <p class="text-left text-muted">2019-01-07 17:01</p>
+</code></pre></p><h2>To do list</h2><h4>Document</h4><h4>Create table</h4><h4>Migration</h4><h4>Insert or update</h4><h4>Interacting with multiple databases</h4><h2>License</h2><p>Copyright © 2018</p><p>Distributed under the Eclipse Public License, the same as Clojure.</p>
+            <p class="text-left text-muted">2019-01-07 17:17</p>
         </div>
         <div class="container">
             <div class="row mt-4">
