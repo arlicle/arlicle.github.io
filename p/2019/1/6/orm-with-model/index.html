@@ -259,6 +259,14 @@
         &#41;
 &#91;&quot;select ceshi&#95;article.id, ceshi&#95;article.headline, ceshi&#95;category.name, ceshi&#95;reporter.full&#95;name from ceshi&#95;article  INNER JOIN ceshi&#95;reporter ON &#40;ceshi&#95;article.reporter&#95;id = ceshi&#95;reporter.id&#41; INNER JOIN ceshi&#95;category ON &#40;ceshi&#95;article.category&#95;id = ceshi&#95;category.id&#41; where &#40;ceshi&#95;category.name= ? or ceshi&#95;reporter.full&#95;name= ?&#41; and &#40;ceshi&#95;category.name= ? or ceshi&#95;reporter.full&#95;name= ?&#41;&quot; &quot;IT&quot; &quot;Edison Rao&quot; &quot;Fun&quot; &quot;Chris Zheng&quot;&#93;
 =&gt; &#40;{:id 13, :headline &quot;just a test&quot;, :name &quot;Fun&quot;, :full&#95;name &quot;Edison Rao&quot;}&#41;
+
+It's same to 
+
+&#40;select article
+        :fields &#91;:id :headline :category.name :reporter.full&#95;name&#93;
+        :where &#91;&#40;or :category.name &quot;IT&quot; :reporter.full&#95;name &quot;Edison Rao&quot;&#41; &#40;or :category.name &quot;Fun&quot; :reporter.full&#95;name &quot;Chris Zheng&quot;&#41;&#93;
+        :debug? true
+        &#41;
 </code></pre><h3>select foreignkey field</h3><pre><code class="language-clojure">&#40;select article
         :fields &#91;:id :headline :category.name&#93;
         :where &#91;:id 7&#93;&#41;
@@ -312,7 +320,7 @@
 
 &#40;raw-execute! &#91;&quot;update ceshi&#95;article set view&#95;count = &#40; 2 &#42; view&#95;count &#41; where view&#95;count &lt; ?&quot; 50&#93;&#41;
 </code></pre></p><h2>To do list</h2><h4>Document</h4><h4>Create table</h4><h4>Migration</h4><h4>Insert or update</h4><h4>Interacting with multiple databases</h4>
-            <p class="text-left text-muted">2019-01-07 16:59</p>
+            <p class="text-left text-muted">2019-01-07 17:01</p>
         </div>
         <div class="container">
             <div class="row mt-4">
