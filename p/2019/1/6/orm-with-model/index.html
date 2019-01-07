@@ -35,7 +35,7 @@
              :user        &quot;root&quot;
              :password    &quot;123&quot;
              :useSSL      false
-             :permission  :write
+             :operation   :read&#95;and&#95;write ; :operation types: :read :write :read&#95;and&#95;write
              }
    :read-db {:classname   &quot;com.mysql.jdbc.Driver&quot;
              :subprotocol &quot;mysql&quot;
@@ -43,8 +43,10 @@
              :user        &quot;root&quot;
              :password    &quot;123&quot;
              :useSSL      false
-             :permission  :read
-             }}&#41;
+             :operation   :read
+             }
+   }&#41;
+; the default :poeratin is :read&#95;and&#95;write
 </code></pre><h3>define a model</h3><pre><code class="language-clojure">
 &#40;defmodel reporter
           :fields {:full&#95;name {:type :char-field :max-length 70}}
@@ -245,7 +247,7 @@
 ; count
 
 </code></pre><h2>To do list</h2><h4>Document</h4><h4>Create table</h4><h4>Migration</h4><h4>Insert or update</h4><h4>Interacting with multiple databases</h4>
-            <p class="text-left text-muted">2019-01-07 08:46</p>
+            <p class="text-left text-muted">2019-01-07 08:58</p>
         </div>
         <div class="container">
             <div class="row mt-4">
