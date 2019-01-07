@@ -243,9 +243,11 @@
 </code></pre><h3>delete data</h3><pre><code class="language-clojure">&#40;delete! article :where &#91;:id 3&#93;&#41;
 
 
-; aggregates
-
-; count
+</code></pre><h3>aggregate</h3><p>Returns the aggregate values (avg, sum, count, min, max), the aggregate field will return count<b>id, max</b>view_count.</p><pre><code>clojure
+&#40;aggregate article
+           :fields &#91;&#40;count :id&#41; &#40;max :view&#95;count&#41; &#40;min :view&#95;count&#41; &#40;avg :view&#95;count&#41; &#40;sum :view&#95;count&#41;&#93;&#41;
+=&gt; 
+&#40;{:count&#95;&#95;id 13, :max&#95;&#95;view&#95;count 600, :min&#95;&#95;view&#95;count 20, :avg&#95;&#95;view&#95;count 67.6923M, :sum&#95;&#95;view&#95;count 880M}&#41;
 
 </code></pre><h3>run raw sql</h3><p>If you need a more complex form of sql, you can use <code>raw-query</code> and <code>raw-execute!</code></p><p><code>raw-query</code> for select</p><pre><code class="language-sql">&#40;raw-query &#91;&quot;SELECT &#42; FROM ceshi&#95;article where id=?&quot; 15&#93;&#41;
 
@@ -254,7 +256,7 @@
 
 &#40;raw-execute! &#91;&quot;update ceshi&#95;article set view&#95;count = &#40; 2 &#42; view&#95;count &#41; where view&#95;count &lt; ?&quot; 50&#93;&#41;
 </code></pre></p><h2>To do list</h2><h4>Document</h4><h4>Create table</h4><h4>Migration</h4><h4>Insert or update</h4><h4>Interacting with multiple databases</h4>
-            <p class="text-left text-muted">2019-01-07 15:25</p>
+            <p class="text-left text-muted">2019-01-07 16:14</p>
         </div>
         <div class="container">
             <div class="row mt-4">
