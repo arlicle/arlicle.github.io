@@ -12,11 +12,13 @@
 
 1. **数据库创建** 使用代码来定义数据库，更容易阅读和维护，用过代码自动来进行数据的创建。
 2. **Migration** 数据库变动的时候，通过代码自动的进行Migration，无需关心实现细节。 
-3. **多数据库支持** 可以灵活切换各种数据库
-4. **操作更容易** 非常简单的进行数据的操作：插入，更新，查找，删除
-5. **自动数据验证** 在进行数据插入和更新到时候，可以自动对数据进行验证
-6. **关联字段查询** 对数据查询可以自动进行 ORM， 自动关联Foreignkey相关字段的表进行查询，非常方便，
-7. **默认值字段** 可以对定义字段的默认值，这样像创建时间，等的字段就可以自动默认有值，无需在插入数据时手动维护
+3. **多种数据库支持** 可以灵活切换各种数据库，无需再去修改程序
+4. **多个数据库支持** 可以很方便的支持读写分离，同时增加多个读库与多个写库
+5. **操作更容易** 非常简单的进行数据的操作：插入，更新，查找，删除
+6. **自动数据验证** 在进行数据插入和更新到时候，可以自动对数据进行验证
+7. **关联字段查询** 对数据查询可以自动进行 ORM， 自动关联Foreignkey相关字段的表进行查询，非常方便，
+8. **默认值字段** 可以对定义字段的默认值，这样像创建时间，等的字段就可以自动默认有值，无需在插入数据时手动维护
+9. **支持连接池**
 
 互联网项目，开发速度非常关键，需要快速的出最低可用版本，无需性能，只需要专注于业务。这时候 model 就能大显身手了。
 
@@ -40,13 +42,39 @@ A Clojure library designed to normal human that don't like SQL, well, if you don
 ### config the database connection
 
 ```language-clojure
-(def db-spec {
-              :classname   "com.mysql.jdbc.Driver"
-              :subprotocol "mysql"
-              :subname     "//127.0.0.1:3306/projectx2"
-              :user        "root"
-              :password    "123"
-              :useSSL      false})
+(defdb
+  {:default {
+             :classname   "com.mysql.jdbc.Driver"
+             :subprotocol "mysql"
+             :subname     "//127.0.0.1:3306/projectx2"
+             :user        "root"
+             :password    "123"
+             :useSSL      false
+             }})
+```
+
+### Multiple databases
+This setting maps database aliases, which are a way to refer to a specific database throughout query, to a dictionary of settings for that specific connection. 
+
+```language-clojure
+(defdb
+  {:default {
+             :classname   "com.mysql.jdbc.Driver"
+             :subprotocol "mysql"
+             :subname     "//127.0.0.1:3306/projectx2"
+             :user        "root"
+             :password    "123"
+             :useSSL      false
+             :permission  :write
+             }
+   :read-db {:classname   "com.mysql.jdbc.Driver"
+             :subprotocol "mysql"
+             :subname     "//127.0.0.1:3306/projectx3"
+             :user        "root"
+             :password    "123"
+             :useSSL      false
+             :permission  :read
+             }})
 ```
 
 ### define a model
@@ -330,4 +358,4 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 #### Create table
 #### Migration
 #### Insert or update
-#### Connection Pooling
+#### Interacting with multiple databases
