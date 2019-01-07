@@ -307,7 +307,7 @@ When you define a model, the defmodel will auto define a data spec, when you ins
 ```
 
 
-### select with or/and 
+### select with or, and, not
 
 The default is and
 ```language-clojure
@@ -377,7 +377,7 @@ with and & or
 ["select ceshi_article.id, ceshi_article.headline, ceshi_category.name, ceshi_reporter.full_name from ceshi_article  INNER JOIN ceshi_reporter ON (ceshi_article.reporter_id = ceshi_reporter.id) INNER JOIN ceshi_category ON (ceshi_article.category_id = ceshi_category.id) where (ceshi_category.name= ? or ceshi_reporter.full_name= ?) and (ceshi_category.name= ? or ceshi_reporter.full_name= ?)" "IT" "Edison Rao" "Fun" "Chris Zheng"]
 => ({:id 13, :headline "just a test", :name "Fun", :full_name "Edison Rao"})
 
-It's same to 
+;It's same to 
 
 (select article
         :fields [:id :headline :category.name :reporter.full_name]
@@ -386,6 +386,19 @@ It's same to
         )
 ```
 
+with `not`, `not` only can contains one collection. (not [:id 1 :headline "xxx"])
+
+```language-clojure
+(select article :where (not [:id 1]) :debug? true)
+["select * from ceshi_article where not (ceshi_article.id= ?)" 1]
+
+(select article
+        :fields [:id :headline :category.name :reporter.full_name]
+        :where (not [(or :category.name "IT" :reporter.full_name "Edison Rao") (or :category.name "Fun" :reporter.full_name "Chris Zheng")])
+        :debug? true
+        )
+["select ceshi_article.id, ceshi_article.headline, ceshi_category.name, ceshi_reporter.full_name from ceshi_article  INNER JOIN ceshi_reporter ON (ceshi_article.reporter_id = ceshi_reporter.id) INNER JOIN ceshi_category ON (ceshi_article.category_id = ceshi_category.id) where not ((ceshi_category.name= ? or ceshi_reporter.full_name= ?) and (ceshi_category.name= ? or ceshi_reporter.full_name= ?))" "IT" "Edison Rao" "Fun" "Chris Zheng"]
+```
 
 
 ### select foreignkey field
@@ -497,7 +510,7 @@ If you need a more complex form of sql, you can use `raw-query` and `raw-execute
 
 ## License
 
-Copyright © 2018
+Copyright © 2019
 
 Distributed under the Eclipse Public License, the same as Clojure.
 
