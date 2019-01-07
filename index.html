@@ -18,7 +18,7 @@
 
 
 
-            <p>如果你使用过 Django，你会享受在Django model ORM中。</p><p>通过model 层分离了数据库，可以让我们把时间花在更高层次的抽象上，更多的时间用来思考如何解决复杂业务场景，几乎不用花费时间和心力去关注底层运作。</p><p>随着时间的推移，我们能够专注于更重要的问题，使得开发变得更为高效和容易维护。</p><p>简单列举几点使用 Model的优点：</p><ol><li><strong>数据库创建</strong> 使用代码来定义数据库，更容易阅读和维护，用过代码自动来进行数据的创建。</li><li><strong>Migration</strong> 数据库变动的时候，通过代码自动的进行Migration，无需关心实现细节。</li><li><strong>多种数据库支持</strong> 可以灵活切换各种数据库，无需再去修改程序</li><li><strong>多个数据库支持</strong> 可以很方便的支持读写分离，同时增加多个读库与多个写库</li><li><strong>操作更容易</strong> 非常简单的进行数据的操作：插入，更新，查找，删除</li><li><strong>自动数据验证</strong> 在进行数据插入和更新到时候，可以自动对数据进行验证</li><li><strong>关联字段查询</strong> 对数据查询可以自动进行 ORM， 自动关联Foreignkey相关字段的表进行查询，非常方便，</li><li><strong>默认值字段</strong> 可以对定义字段的默认值，这样像创建时间，等的字段就可以自动默认有值，无需在插入数据时手动维护</li><li><strong>支持连接池</strong></li></ol><p>互联网项目，开发速度非常关键，需要快速的出最低可用版本，无需性能，只需要专注于业务。这时候 model 就能大显身手了。</p><p>但是我们可爱的Clojure居然没有ORM的库，最像orm的一个库是Korma，我在两个项目中使用了Korma, 说实话，使用起来很不方便。 好多地方不够人性化。</p><p>没办法了，自己造轮子吧。</p><h2>Laniu</h2><p>我为他设计了非常漂亮的操作语法，很多地方反复的打磨。</p><p><a href='https://github.com/arlicle/laniu'>https://github.com/arlicle/laniu</a></p><p>It’s django model for clojure</p><p>A Clojure library designed to normal human that don't like SQL, well, if you don't like SQL , that part is up to you.</p><h2>Usage</h2><h3>config the database connection</h3><pre><code class="language-clojure">&#40;defdb
+            <p>如果你使用过 Django，你会享受在Django model ORM中。</p><p>通过model 层分离了数据库，可以让我们把时间花在更高层次的抽象上，更多的时间用来思考如何解决复杂业务场景，几乎不用花费时间和心力去关注底层运作。</p><p>随着时间的推移，我们能够专注于更重要的问题，使得开发变得更为高效和容易维护。</p><p>简单列举几点使用 Model的优点：</p><ol><li><strong>数据库创建</strong> 使用代码来定义数据库，更容易阅读和维护，用过代码自动来进行数据的创建。</li><li><strong>Migration</strong> 数据库变动的时候，通过代码自动的进行Migration，无需关心实现细节。</li><li><strong>多种数据库支持</strong> 可以灵活切换各种数据库，无需再去修改程序</li><li><strong>多个数据库支持</strong> 可以很方便的支持读写分离，同时增加多个读库与多个写库</li><li><strong>操作更容易</strong> 非常简单的进行数据的操作：插入，更新，查找，删除</li><li><strong>自动数据验证</strong> 在进行数据插入和更新到时候，可以自动对数据进行验证</li><li><strong>关联字段查询</strong> 对数据查询可以自动进行 ORM， 自动关联Foreignkey相关字段的表进行查询，非常方便，</li><li><strong>默认值字段</strong> 可以对定义字段的默认值，这样像创建时间，等的字段就可以自动默认有值，无需在插入数据时手动维护</li><li><strong>支持连接池</strong></li></ol><p>互联网项目，开发速度非常关键，需要快速的出最低可用版本，无需性能，只需要专注于业务。这时候 model 就能大显身手了。</p><p>但是我们可爱的Clojure居然没有ORM的库，最像orm的一个库是Korma，我在两个项目中使用了Korma, 说实话，使用起来很不方便。 好多地方不够人性化。</p><p>没办法了，自己造轮子吧。</p><h2>Laniu</h2><p>我为他设计了非常漂亮的操作语法，很多地方反复的打磨。</p><p><a href='https://github.com/arlicle/laniu'>https://github.com/arlicle/laniu</a></p><p>It’s django model for clojure</p><p>A Clojure library designed to normal human that don't like SQL, well, if you don't like SQL , that part is up to you.</p><p>PS. It's provide connection pooling by <code>c3p0</code> library</p><h2>Dependency Information</h2><p>Requires Clojure 1.9 or later!</p><h2>Usage</h2><h3>config the database connection</h3><pre><code class="language-clojure">&#40;defdb
   {:default {
              :classname   &quot;com.mysql.jdbc.Driver&quot;
              :subprotocol &quot;mysql&quot;
@@ -247,7 +247,7 @@
 ; count
 
 </code></pre><h2>To do list</h2><h4>Document</h4><h4>Create table</h4><h4>Migration</h4><h4>Insert or update</h4><h4>Interacting with multiple databases</h4>
-            <p class="text-left text-muted">2019-01-07 08:58</p>
+            <p class="text-left text-muted">2019-01-07 09:41</p>
         </div>
         <div class="container">
             <div class="row mt-4">

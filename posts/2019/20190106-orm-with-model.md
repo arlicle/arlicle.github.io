@@ -37,6 +37,11 @@ It’s django model for clojure
 
 A Clojure library designed to normal human that don't like SQL, well, if you don't like SQL , that part is up to you.
 
+PS. It's provide connection pooling by `c3p0` library
+
+## Dependency Information
+Requires Clojure 1.9 or later!
+
 ## Usage
 
 ### config the database connection
