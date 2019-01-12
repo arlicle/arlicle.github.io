@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[Transducers](https://www.debugmyself.com/p/2019/1/12/Transducers/)  
+
 [坏结果](https://www.debugmyself.com/p/2019/1/10/bad-result/)  
 
 [一个更好用的Clojure ORM库](https://www.debugmyself.com/p/2019/1/6/orm-with-model/)  
