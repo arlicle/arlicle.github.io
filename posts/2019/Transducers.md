@@ -280,8 +280,7 @@ transducers使用起来非常简单
 (reduce ((map-func inc) ((filter-func even?) +)) 0 (range 10))
 => 30
 ```
-函数从左到右的执行了，先进行了`map-func`的`inc`，然后进行了`filter-func`的`even?`，如果每一步都执行，那么就返回结果collection，如果`even?`这里判断不通过，就返回原collection。这个执行过程没有中间变量产生，并且没有循环。这么看着有点复杂，我们来改写一下写法。 
-
+这么看着有点复杂，我们来改写一下写法。让它看起来更清晰和简单
 ```.language-clojure
 (defn xform
   (comp
@@ -304,8 +303,7 @@ transducers使用起来非常简单
 (reduce (xform +) 0 (range 10))
 => 30
 ```
-
-
+函数从左到右的执行了，先进行了`map-func`的`inc`，然后进行了`filter-func`的`even?`，如果每一步都执行，那么就返回结果collection，如果`even?`这里判断不通过，就返回原collection。这个执行过程没有中间变量产生，并且只有`reduce`一次循环。
 
 
 

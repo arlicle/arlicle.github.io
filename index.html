@@ -181,7 +181,7 @@ whatever, input -&gt; whatever
 =&gt; &quot;246810&quot;
 &#40;reduce &#40;&#40;map-func inc&#41; &#40;&#40;filter-func even?&#41; +&#41;&#41; 0 &#40;range 10&#41;&#41;
 =&gt; 30
-</code></pre></p><p>函数从左到右的执行了，先进行了<code>map-func</code>的<code>inc</code>，然后进行了<code>filter-func</code>的<code>even?</code>，如果每一步都执行，那么就返回结果collection，如果<code>even?</code>这里判断不通过，就返回原collection。这个执行过程没有中间变量产生，并且没有循环。这么看着有点复杂，我们来改写一下写法。 </p><pre><code class=".language-clojure">&#40;defn xform
+</code></pre></p><p>这么看着有点复杂，我们来改写一下写法。让它看起来更清晰和简单<pre><code class=".language-clojure">&#40;defn xform
   &#40;comp
     &#40;map-func inc&#41;
     &#40;filter-func even?&#41;&#41;&#41;
@@ -201,8 +201,8 @@ whatever, input -&gt; whatever
 
 &#40;reduce &#40;xform +&#41; 0 &#40;range 10&#41;&#41;
 =&gt; 30
-</code></pre>
-            <p class="text-left text-muted">2019-01-14 13:41</p>
+</code></pre></p><p>函数从左到右的执行了，先进行了<code>map-func</code>的<code>inc</code>，然后进行了<code>filter-func</code>的<code>even?</code>，如果每一步都执行，那么就返回结果collection，如果<code>even?</code>这里判断不通过，就返回原collection。这个执行过程没有中间变量产生，并且只有<code>reduce</code>一次循环。</p>
+            <p class="text-left text-muted">2019-01-14 13:42</p>
         </div>
         <div class="container">
             <div class="row mt-4">
