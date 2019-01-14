@@ -50,22 +50,25 @@ whatever, input -&gt; whatever
 &#40;transduce xf str &quot;...&quot; &#40;range&#41;&#41;
 =&gt; &quot;...135791113151719&quot;
 
-</code></pre><p>可以看到transducers的使用非常的简单，但是transducers的原理是什么呢？</p><pre><code>&#40;def xf
+</code></pre><p>可以看到transducers的使用非常的简单，但是transducers的原理是什么呢？</p><pre><code class=".language-clojure">&#40;def xf
   &#40;comp
     &#40;map inc&#41;
     &#40;filter even?&#41;&#41;&#41;
 
 &#40;transduce xf conj &#91;&#93; &#40;range 10&#41;&#41;
 =&gt; &#91;2 4 6 8 10&#93;
-</code></pre><p>如果传统方式实现这个功能，有三种方式： 1 函数嵌套<pre><code class=".language-clojure">&#40;filter even? &#40;map inc &#40;range 10&#41;&#41;&#41;
+</code></pre><p>如果传统方式实现这个功能，有三种方式：</p><p>1 函数嵌套<pre><code class=".language-clojure">&#40;filter even? &#40;map inc &#40;range 10&#41;&#41;&#41;
 =&gt; &#40;2 4 6 8 10&#41;
-</code></pre></p><p>2 使用<code>-&gt;&gt;</code> ``.language-clojure (->> (range 10)<pre><code> &#40;map inc&#41;
- &#40;filter even?&#41;&#41; </code></pre>=> (2 4 6 8 10)</p><pre><code>3 使用`comp`
-<pre><code class=".language-clojure">&#40;&#40;comp
+</code></pre></p><p>2 使用<code>-&gt;&gt;</code><pre><code class=".language-clojure">&#40;-&gt;&gt; &#40;range 10&#41;
+     &#40;map inc&#41;
+     &#40;filter even?&#41;&#41;
+=&gt; &#40;2 4 6 8 10&#41;
+</code></pre></p><p>3 使用<code>comp</code><pre><code class=".language-clojure">&#40;&#40;comp
     &#40;partial filter even?&#41;
     &#40;partial map inc&#41;&#41; 
   &#40;range 10&#41;&#41;
-</code></pre><p>看上面<code>transduce</code>执行的例子，可以看到<code>transducers</code>很像<code>reduce</code>函数，我们试着来自己实现一个。</p><p>1 使用<code>reduce</code>实现一个<code>&#40;map inc&#41;</code></p><pre><code class=".language-clojure">&#40;map inc &#40;range 10&#41;&#41;
+=&gt; &#40;2 4 6 8 10&#41;
+</code></pre></p><p>看上面<code>transduce</code>执行的例子，可以看到<code>transducers</code>很像<code>reduce</code>函数，我们试着来自己实现一个。</p><p>1 使用<code>reduce</code>实现一个<code>&#40;map inc&#41;</code></p><pre><code class=".language-clojure">&#40;map inc &#40;range 10&#41;&#41;
 =&gt; &#40;1 2 3 4 5 6 7 8 9 10&#41;
 
 &#40;defn map-inc
@@ -86,7 +89,7 @@ whatever, input -&gt; whatever
 &#40;reduce filter-even? &#91;&#93; &#40;range 10&#41;&#41;
 =&gt; &#91;0 2 4 6 8&#93;
 </code></pre></p>
-            <p class="text-left text-muted">2019-01-14 10:13</p>
+            <p class="text-left text-muted">2019-01-14 10:14</p>
         </div>
         <div class="container">
             <div class="row mt-4">

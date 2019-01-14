@@ -87,7 +87,7 @@ transducers使用起来非常简单
 
 可以看到transducers的使用非常的简单，但是transducers的原理是什么呢？
 
-```
+```.language-clojure
 (def xf
   (comp
     (map inc)
@@ -98,24 +98,28 @@ transducers使用起来非常简单
 ```
 
 如果传统方式实现这个功能，有三种方式：
+
 1 函数嵌套
 ```.language-clojure
 (filter even? (map inc (range 10)))
 => (2 4 6 8 10)
 ```
+
 2 使用`->>`
-``.language-clojure
+```.language-clojure
 (->> (range 10)
      (map inc)
      (filter even?))
 => (2 4 6 8 10)
 ```
+
 3 使用`comp`
 ```.language-clojure
 ((comp
     (partial filter even?)
     (partial map inc)) 
   (range 10))
+=> (2 4 6 8 10)
 ```
 
 
