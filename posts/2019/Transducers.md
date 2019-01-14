@@ -15,10 +15,10 @@ Transducers就像一个筛子，输入一份数据，经过筛子组合，然后
 Here’s a visualisation to show the difference between array built-ins and transducers.
 
 1 chained built-in transformations create intermediate arrays
-![](/static/2019/1/transducers.gif {:style "max-width:800px"})
+![](/static/2019/1/transducers.gif)
 
 2 transduced transformations process items one by one into output array
-![](/static/2019/1/transducers2.gif {:style "max-width:800px"})
+![](/static/2019/1/transducers2.gif)
 
 在代码层面：
 
