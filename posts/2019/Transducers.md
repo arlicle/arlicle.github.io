@@ -244,7 +244,19 @@ transducers使用起来非常简单
 ```
 
 现在我们可以使用`map-func`和`filter-func`，同时随心所欲指定自己想要的数据处理函数和自己的`reducing function`，而且通过上面对`((map-func inc) conj)`函数和`((filter-func even?) conj)`函数顶使用可以发现，他们两个也是`reducing function`，接收两个参数，然后返回一个结果。所以我们可以把它们都当做`reducing function`来使用。
+```.language-clojure
+(reduce ((map-func inc) conj) [] (range 10))
+=> [1 2 3 4 5 6 7 8 9 10]
 
+(reduce ((map-func inc) str) "" (range 10))
+=> "12345678910"
+
+(reduce ((filter-func even?) conj) [] (range 10))
+=> [0 2 4 6 8]
+
+(reduce ((filter-func even?) str) "" (range 10))
+=> "02468"
+```
 而`(map-func inc)`和`(filter-func even?)` 就是 transducer 函数，它们接收一个`reducing`函数，然后返回一个`reducing`函数。
 
 如果我们这么用会发生什么事情呢？`((map-func inc) ((filter-func even?) conj))`， 把`((filter-func even?) conj)`当做`reducing function`来使用，并且用在`((map-func inc) conj)`函数中，替换`conj`函数。
@@ -259,10 +271,38 @@ transducers使用起来非常简单
 (((map-func inc) ((filter-func even?) conj)) [2] 3)
 => [2 4]
 ```
+`((map-func inc) ((filter-func even?) conj))`同样还是一个`reducing function`，所以我们可以这么用
+```.language-clojure
+(reduce ((map-func inc) ((filter-func even?) conj)) [] (range 10))
+=> [2 4 6 8 10]
+(reduce ((map-func inc) ((filter-func even?) str)) "" (range 10))
+=> "246810"
+(reduce ((map-func inc) ((filter-func even?) +)) 0 (range 10))
+=> 30
+```
 函数从左到右的执行了，先进行了`map-func`的`inc`，然后进行了`filter-func`的`even?`，如果每一步都执行，那么就返回结果collection，如果`even?`这里判断不通过，就返回原collection。这个执行过程没有中间变量产生，并且没有循环。这么看着有点复杂，我们来改写一下写法。 
 
 ```.language-clojure
+(defn xform
+  (comp
+    (map-func inc)
+    (filter-func even?)))
 
+((xform conj) [] 1)
+=> [2]
+((xform conj) [2] 2)
+=> [2]
+((xform conj) [2] 3)
+=> [2 4]
+
+(reduce (xform conj) [] (range 10))
+=> [2 4 6 8 10]
+
+(reduce (xform str) "" (range 10))
+=> "246810"
+
+(reduce (xform +) 0 (range 10))
+=> 30
 ```
 
 
