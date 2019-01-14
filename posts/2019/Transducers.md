@@ -20,6 +20,27 @@ Here’s a visualisation to show the difference between array built-ins and tran
 2 transduced transformations process items one by one into output array
 ![](/static/2019/1/transducers2.gif)
 
+在代码层面：
+
+## What's a Transducer?
+
+Transducers are functions that accept a reducing function and return a reducing function.
+
+A reducing function is just the kind of function you'd pass to reduce - it takes a result so far and a new input and returns the next result-so-far. In the context of transducers it's best to think about this most generally:
+
+```.language-clojure
+;;reducing function signature
+whatever, input -> whatever
+```
+
+and a transducer is a function that takes one reducing function and returns another:
+
+```.language-clojure
+;;transducer signature
+(whatever, input -> whatever) -> (whatever, input -> whatever)
+```
+
+我们常见的reducing function有：`conj`, `+` reducing function就是可以用在reduce上的函数 (reduce conj )
 
 传统，我们有三种方法来实现数据流的处理：
 
