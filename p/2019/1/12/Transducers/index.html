@@ -156,8 +156,16 @@ whatever, input -&gt; whatever
 =&gt; 12
 &#40;&#40;&#40;filter-func even?&#41; str&#41; &quot;0&quot; 2&#41;
 =&gt; &quot;02&quot;
-</code></pre><p>现在我们可以使用<code>map-func</code>和<code>filter-func</code>，同时随心所欲指定自己想要的数据处理函数和自己的<code>reducing function</code></p>
-            <p class="text-left text-muted">2019-01-14 13:17</p>
+</code></pre><p>现在我们可以使用<code>map-func</code>和<code>filter-func</code>，同时随心所欲指定自己想要的数据处理函数和自己的<code>reducing function</code>，而且通过上面对<code>&#40;&#40;map-func inc&#41; conj&#41;</code>函数和<code>&#40;&#40;filter-func even?&#41; conj&#41;</code>函数顶使用可以发现，他们两个也是<code>reducing function</code>，接收两个参数，然后返回一个结果。所以我们可以把它们都当做<code>reducing function</code>来使用。</p><p>而<code>&#40;map-func inc&#41;</code>和<code>&#40;filter-func even?&#41;</code> 就是 transducer 函数，它们接收一个<code>reducing</code>函数，然后返回一个<code>reducing</code>函数。</p><p>如果我们这么用会发生什么事情呢？<code>&#40;&#40;map inc&#41; &#40;&#40;filter even?&#41; conj&#41;&#41;</code>， 把<code>&#40;&#40;filter even?&#41; conj&#41;</code>当做<code>reducing function</code>来使用，并且用在<code>&#40;&#40;map-func inc&#41; conj&#41;</code>函数中，替换<code>conj</code>函数。</p><pre><code class=".language-clojure">&#40;&#40;&#40;map inc&#41; &#40;&#40;filter even?&#41; conj&#41;&#41; &#91;&#93; 0&#41;
+=&gt; &#91;&#93;
+&#40;&#40;&#40;map inc&#41; &#40;&#40;filter even?&#41; conj&#41;&#41; &#91;&#93; 1&#41;
+=&gt; &#91;2&#93;
+&#40;&#40;&#40;map inc&#41; &#40;&#40;filter even?&#41; conj&#41;&#41; &#91;2&#93; 2&#41;
+=&gt; &#91;2&#93;
+&#40;&#40;&#40;map inc&#41; &#40;&#40;filter even?&#41; conj&#41;&#41; &#91;2&#93; 3&#41;
+=&gt; &#91;2 4&#93;
+</code></pre>
+            <p class="text-left text-muted">2019-01-14 13:27</p>
         </div>
         <div class="container">
             <div class="row mt-4">

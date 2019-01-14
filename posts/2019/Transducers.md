@@ -243,9 +243,22 @@ transducers使用起来非常简单
 => "02"
 ```
 
-现在我们可以使用`map-func`和`filter-func`，同时随心所欲指定自己想要的数据处理函数和自己的`reducing function`
+现在我们可以使用`map-func`和`filter-func`，同时随心所欲指定自己想要的数据处理函数和自己的`reducing function`，而且通过上面对`((map-func inc) conj)`函数和`((filter-func even?) conj)`函数顶使用可以发现，他们两个也是`reducing function`，接收两个参数，然后返回一个结果。所以我们可以把它们都当做`reducing function`来使用。
 
+而`(map-func inc)`和`(filter-func even?)` 就是 transducer 函数，它们接收一个`reducing`函数，然后返回一个`reducing`函数。
 
+如果我们这么用会发生什么事情呢？`((map inc) ((filter even?) conj))`， 把`((filter even?) conj)`当做`reducing function`来使用，并且用在`((map-func inc) conj)`函数中，替换`conj`函数。
+
+```.language-clojure
+(((map inc) ((filter even?) conj)) [] 0)
+=> []
+(((map inc) ((filter even?) conj)) [] 1)
+=> [2]
+(((map inc) ((filter even?) conj)) [2] 2)
+=> [2]
+(((map inc) ((filter even?) conj)) [2] 3)
+=> [2 4]
+```
 
 
 
