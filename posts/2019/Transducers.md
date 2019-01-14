@@ -303,7 +303,11 @@ transducers使用起来非常简单
 (reduce (xform +) 0 (range 10))
 => 30
 ```
-函数从左到右的执行了，先进行了`map-func`的`inc`，然后进行了`filter-func`的`even?`，如果每一步都执行，那么就返回结果collection，如果`even?`这里判断不通过，就返回原collection。这个执行过程没有中间变量产生，并且只有`reduce`一次循环。
+当`conj`传入`xform`中时，是从右向左执行的，`conj`先作为函数`(filter-func even?)`和参数执行，执行结果为`((filter-func even?) conj)`，然后这个执行结果传入`(map-func inc)`函数作为参数，执行结果为`((map-func inc) ((filter-func even?) conj))`，因为`((filter-func even?) conj)`是作为`reducing function`作为函数`(map-func inc)`的参数，内部为`(conj result (inc i))`所以会先执行`(inc i)`，然后才执行`(filter-func even?)`，最后才执行最初指定的`reducing function`函数`conj`。所以最终数据处理的顺序变为从左到右的执行了，先进行了`map-func`的`inc`，然后进行了`filter-func`的`even?`，如果每一步都执行，那么就返回结果collection，如果`even?`这里判断不通过，就返回原collection。这个执行过程没有中间变量产生，并且只有`reduce`一次循环。
+
+这就是`transducers`的整个过程。
+
+
 
 
 
