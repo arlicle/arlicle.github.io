@@ -59,15 +59,18 @@ whatever, input -&gt; whatever
 =&gt; &#91;2 4 6 8 10&#93;
 </code></pre><p>如果传统方式实现这个功能，有三种方式：</p><p>1 函数嵌套<pre><code class=".language-clojure">&#40;filter even? &#40;map inc &#40;range 10&#41;&#41;&#41;
 =&gt; &#40;2 4 6 8 10&#41;
+; 会创建中间的collection, 并且有两次循环
 </code></pre></p><p>2 使用<code>-&gt;&gt;</code><pre><code class=".language-clojure">&#40;-&gt;&gt; &#40;range 10&#41;
      &#40;map inc&#41;
      &#40;filter even?&#41;&#41;
 =&gt; &#40;2 4 6 8 10&#41;
+; 会创建中间的collection, 并且有两次循环
 </code></pre></p><p>3 使用<code>comp</code> (comp执行的顺序是从右向左)<pre><code class=".language-clojure">&#40;&#40;comp
     &#40;partial filter even?&#41;
     &#40;partial map inc&#41;&#41; 
   &#40;range 10&#41;&#41;
 =&gt; &#40;2 4 6 8 10&#41;
+; 会创建中间的collection，并且有两次循环
 </code></pre></p><p>看上面<code>transduce</code>执行的例子，可以看到<code>transducers</code>很像<code>reduce</code>函数，我们试着来自己实现一个。</p><p>1 使用<code>reduce</code>实现一个<code>&#40;map inc&#41;</code></p><pre><code class=".language-clojure">&#40;map inc &#40;range 10&#41;&#41;
 =&gt; &#40;1 2 3 4 5 6 7 8 9 10&#41;
 
@@ -88,8 +91,29 @@ whatever, input -&gt; whatever
 
 &#40;reduce filter-even? &#91;&#93; &#40;range 10&#41;&#41;
 =&gt; &#91;0 2 4 6 8&#93;
+</code></pre></p><p>我们像<code>&#40;map inc&#41;</code> <code>&#40;filter even?&#41;</code> 一样，单独实现<code>map</code>和<code>filter</code>，然后把<code>inc</code>和<code>even?</code>按需要传入进去。 我们可以这么写<pre><code class=".language-clojure">&#40;defn map-func
+  &#91;f result i&#93;
+  &#40;conj result &#40;f i&#41;&#41;&#41;
+</code></pre></p><p>但是这么写有个问题，就是不符合<code>reducing function</code>,无法配合<code>reduce</code>进行使用<code>reducing function</code>智能接收一个或者两个参数。 所以只能这么写<pre><code class=".language-clojure">&#40;defn map-func
+  &#91;f&#93;
+  &#40;fn &#91;result i&#93;
+    &#40;conj result &#40;f i&#41;&#41;&#41;&#41;
+
+&#40;&#40;map-func inc&#41; &#91;&#93; 2&#41;
+=&gt; &#91;3&#93;
+
+&#40;reduce map-func &#91;&#93; &#40;range 10&#41;&#41;
+=&gt; &#91;1 2 3 4 5 6 7 8 9 10&#93;
+</code></pre></p><p>同样的来实现<code>&#40;filter even?&#41;</code><pre><code class=".language-clojure">&#40;defn filter-func
+  &#91;pred&#93;
+  &#40;fn &#91;result i&#93;
+    &#40;if &#40;pred i&#41;
+      &#40;conj result i&#41;
+      result&#41;&#41;&#41;
+
+&#40;&#40;filter-func even?&#41; &#91;&#93; 2&#41;
 </code></pre></p>
-            <p class="text-left text-muted">2019-01-14 10:20</p>
+            <p class="text-left text-muted">2019-01-14 11:13</p>
         </div>
         <div class="container">
             <div class="row mt-4">

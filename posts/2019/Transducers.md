@@ -103,6 +103,7 @@ transducers使用起来非常简单
 ```.language-clojure
 (filter even? (map inc (range 10)))
 => (2 4 6 8 10)
+; 会创建中间的collection, 并且有两次循环
 ```
 
 2 使用`->>`
@@ -111,6 +112,7 @@ transducers使用起来非常简单
      (map inc)
      (filter even?))
 => (2 4 6 8 10)
+; 会创建中间的collection, 并且有两次循环
 ```
 
 3 使用`comp` (comp执行的顺序是从右向左)
@@ -120,12 +122,8 @@ transducers使用起来非常简单
     (partial map inc)) 
   (range 10))
 => (2 4 6 8 10)
+; 会创建中间的collection，并且有两次循环
 ```
-
-
-
-
-
 
 看上面`transduce`执行的例子，可以看到`transducers`很像`reduce`函数，我们试着来自己实现一个。
 
@@ -156,6 +154,40 @@ transducers使用起来非常简单
 
 (reduce filter-even? [] (range 10))
 => [0 2 4 6 8]
+```
+
+我们像`(map inc)` `(filter even?)` 一样，单独实现`map`和`filter`，然后把`inc`和`even?`按需要传入进去。
+我们可以这么写
+```.language-clojure
+(defn map-func
+  [f result i]
+  (conj result (f i)))
+```
+但是这么写有个问题，就是不符合`reducing function`,无法配合`reduce`进行使用`reducing function`智能接收一个或者两个参数。
+所以只能这么写
+```.language-clojure
+(defn map-func
+  [f]
+  (fn [result i]
+    (conj result (f i))))
+
+((map-func inc) [] 2)
+=> [3]
+
+(reduce map-func [] (range 10))
+=> [1 2 3 4 5 6 7 8 9 10]
+```
+
+同样的来实现`(filter even?)`
+```.language-clojure
+(defn filter-func
+  [pred]
+  (fn [result i]
+    (if (pred i)
+      (conj result i)
+      result)))
+
+((filter-func even?) [] 2)
 ```
 
 
