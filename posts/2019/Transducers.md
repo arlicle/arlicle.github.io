@@ -10,7 +10,7 @@ Transducers就像一个筛子，输入一份数据，经过筛子组合，然后
 
 或者也可以把他比喻做食谱，食物只要经过这个食谱的烹饪，就可以变成一道菜。Transducers是如何处理数据序列的配方，而不知道数据是什么。
 
-而且最重要的是，Transducers性能非常好，他在数据处理过程中，并不会创建中间集合。
+而且最重要的是，Transducers性能非常好，他在数据处理过程中，并不会创建中间变量。
 
 Here’s a visualisation to show the difference between array built-ins and transducers.
 
@@ -40,96 +40,52 @@ and a transducer is a function that takes one reducing function and returns anot
 (whatever, input -> whatever) -> (whatever, input -> whatever)
 ```
 
-我们常见的reducing function有：`conj`, `+` reducing function就是可以用在reduce上的函数 (reduce conj )
+## 使用transducers
+transducers使用起来非常简单
 
-传统，我们有三种方法来实现数据流的处理：
+`(transduce xform f coll)`   `(transduce xform f init coll)`
+> 如果没有init, 会直接调用(f) 来创建init.
+> f 必须是一个reducing函数，可以接收一个或者两个参数。如果f仅仅支持两个参数，那我们可以使用completing函数为f添加一个`arity-1`参数函数, completing默认添加的是([x] (identity x))的`arity-1`函数，
+> 像 `reduce` 一样依次将`init`和coll里面的第一个元素，传入`xform`中进行处理，
+> 处理结果会经过 f reducing函数进行连接。
+> 如果coll是空的，就直接返回init值，(f函数不会被调用), 
 
-1 nested calls
-```.language-clojure
-(reduce + (filter odd? (map #(+ 2 %) (range 0 10))))
-```
-
-2 functional composition
-```.language-clojure
-(def xform
-    (comp
-    (partial filter odd?)
-    (partial map #(+ 2 %))))
-(reduce + (xform (range 0 10)))
-```
-3 threading macro
-```.language-clojure
-(defn xform [xs]
-    (->> xs
-        (map #(+ 2 %))
-        (filter odd?)))
-(reduce + (xform (range 0 10)))
-```
-
-With transducers you will write it like:
 ```.language-clojure
 (def xform
   (comp
-    (map #(+ 2 %))
-    (filter odd?)))
-(transduce xform + (range 0 10))
-```
-They all do the same. The difference is that you never call Transducers directly, you pass them to another function. Transducers know what to do, the function that gets transducer knows how. The order of combinators is like you write it with threading macro (natural order). Now you can reuse xform with channel:
-```.language-clojure
-(chan 1 xform)
-```
+    (map inc)
+    (filter even?)
+    ))
 
-## Terminology
-
-A reducing function is the kind of function you’d pass to reduce - it is a function that takes an accumulated result and a new input and returns a new accumulated result:
+(transduce xform conj [] (range 10))
+```
+在transduce中, xform的执行顺序是从左到右,(原生comp是从右到左)。
 
 ```.language-clojure
-;; reducing function signature  
-whatever, input -> whatever
-```
-
-A transducer (sometimes referred to as xform or xf) is a transformation from one reducing function to another:
-
-```.language-clojure
-;; transducer signature
-(whatever, input -> whatever) -> (whatever, input -> whatever)
-```
-
-## Defining Transformations With Transducers
-```.language-clojure
-(filter odd?) ;; returns a transducer that filters odd
-(map inc)     ;; returns a mapping transducer for incrementing
-(take 5)      ;; returns a transducer that will take the first 5 values
-```
-
- The recommended way to compose transducers is with the existing comp function:
-
- ```.language-clojure
- (def xf
+(def xf
   (comp
     (filter odd?)
-    (map inc)
-    (take 5)))
- ```
+    (take 10)))
 
- The transducer xf is a transformation stack that will be applied by a process to a series of input elements. Each function in the stack is performed before the operation it wraps. Composition of the transformer runs right-to-left but builds a transformation stack that runs left-to-right (filtering happens before mapping in this example).
+(transduce xf conj (range))
+=> [1 3 5 7 9 11 13 15 17 19]
 
- ## transduce
-One of the most common ways to apply transducers is with the transduce function, which is analogous to the standard reduce function:
+(transduce xf + (range))
+=> 100
 
-```.language-clojure
-(transduce xform f coll)
-(transduce xform f init coll)
+; ... with an ini
+(transduce xf + 17 (range))
+=> 117
+
+(transduce xf str (range))
+=> "135791113151719"
+
+(transduce xf str "..." (range))
+=> "...135791113151719"
+
 ```
 
-transduce will immediately (not lazily) reduce over coll with the transducer xform applied to the reducing function f, using init as the initial value if supplied or (f) otherwise. f supplies the knowledge of how to accumulate the result, which occurs in the (potentially stateful) context of the reduce.
-```.language-clojure
-(def xf (comp (filter odd?) (map inc)))
-(transduce xf + (range 5))
-;; => 6
-(transduce xf + 100 (range 5))
-;; => 106
-```
+可以看到transducers的使用非常的简单，但是transducers的原理是什么呢？
 
-The composed xf transducer will be invoked left-to-right with a final call to the reducing function f. In the last example, input values will be filtered, then incremented, and finally summed.
+
 
