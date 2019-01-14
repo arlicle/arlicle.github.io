@@ -87,5 +87,75 @@ transducers使用起来非常简单
 
 可以看到transducers的使用非常的简单，但是transducers的原理是什么呢？
 
+```
+(def xf
+  (comp
+    (map inc)
+    (filter even?)))
+
+(transduce xf conj [] (range 10))
+=> [2 4 6 8 10]
+```
+
+如果传统方式实现这个功能，有三种方式：
+1 函数嵌套
+```.language-clojure
+(filter even? (map inc (range 10)))
+=> (2 4 6 8 10)
+```
+2 使用`->>`
+``.language-clojure
+(->> (range 10)
+     (map inc)
+     (filter even?))
+=> (2 4 6 8 10)
+```
+3 使用`comp`
+```.language-clojure
+((comp
+    (partial filter even?)
+    (partial map inc)) 
+  (range 10))
+```
+
+
+
+
+看上面`transduce`执行的例子，可以看到`transducers`很像`reduce`函数，我们试着来自己实现一个。
+
+1 使用`reduce`实现一个`(map inc)`
+
+```.language-clojure
+(map inc (range 10))
+=> (1 2 3 4 5 6 7 8 9 10)
+
+(defn map-inc
+  [result i]
+  (conj result (inc i)))
+
+(reduce map-inc [] (range 10))
+=> [1 2 3 4 5 6 7 8 9 10]
+```
+
+2 使用`reduce`实现一个`(filter even?)`
+```.language-clojure
+(filter even? (range 10))
+=> (0 2 4 6 8)
+
+(defn filter-even?
+  [result i]
+  (if (even? i)
+    (conj result i)
+    result))
+
+(reduce filter-even? [] (range 10))
+=> [0 2 4 6 8]
+```
+
+
+
+
+
+
 
 
