@@ -174,8 +174,12 @@ transducers使用起来非常简单
 ((map-func inc) [] 2)
 => [3]
 
-(reduce map-func [] (range 10))
+(reduce (map-func inc) [] (range 10))
 => [1 2 3 4 5 6 7 8 9 10]
+
+; 切换自己想要的函数
+(reduce (map-func -) [] (range 10))
+=> [0 -1 -2 -3 -4 -5 -6 -7 -8 -9]
 ```
 
 同样的来实现`(filter even?)`
@@ -188,7 +192,63 @@ transducers使用起来非常简单
       result)))
 
 ((filter-func even?) [] 2)
+=> 2
+
+(reduce (filter-func even?) [] (range 10))
+=> [0 2 4 6 8]
+
+; 切换自己想要的pred函数
+(reduce (filter-func odd?) [] (range 10))
+=> [1 3 5 7 9]
 ```
+
+现在我们的`map-func`和`filter-func`都是用`conj`来做`reducing function`, 那么如果我们想变为可切换`reducing function`，可以把`conj`切换`+`或者别的`reducing function`，这样我们就需要把`conj`作为一个参数传入进去，变成：`((map-func inc) conj)`
+```.language-clojure
+(defn map-func
+  [f]
+  (fn [reducing]
+    (fn [result i]
+      (reducing result (f i))
+      )))
+
+(((map-func inc) conj) [] 1)
+=> [2]
+; 换为不同的reducing function
+(((map-func inc) +) 0 1)
+=> 2
+(((map-func inc) +) 1 1)
+=> 3
+(((map-func inc) str) "0" 1)
+=> "02"
+```
+
+把`filter-func`也改为`((filter-func even?) conj)`
+
+```.language-clojure
+(defn filter-func
+  [pred]
+  (fn [reducing]
+    (fn [result i]
+      (if (pred i)
+        (reducing result i)
+        result))))
+
+(((filter-func even?) conj) [] 1)
+=> []
+(((filter-func even?) conj) [] 2)
+=> [2]
+(((filter-func even?) +) 10 2)
+=> 12
+(((filter-func even?) str) "0" 2)
+=> "02"
+```
+
+现在我们可以使用`map-func`和`filter-func`，同时随心所欲指定自己想要的数据处理函数和自己的`reducing function`
+
+
+
+
+
 
 
 

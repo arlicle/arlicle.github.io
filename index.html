@@ -102,8 +102,12 @@ whatever, input -&gt; whatever
 &#40;&#40;map-func inc&#41; &#91;&#93; 2&#41;
 =&gt; &#91;3&#93;
 
-&#40;reduce map-func &#91;&#93; &#40;range 10&#41;&#41;
+&#40;reduce &#40;map-func inc&#41; &#91;&#93; &#40;range 10&#41;&#41;
 =&gt; &#91;1 2 3 4 5 6 7 8 9 10&#93;
+
+; 切换自己想要的函数
+&#40;reduce &#40;map-func -&#41; &#91;&#93; &#40;range 10&#41;&#41;
+=&gt; &#91;0 -1 -2 -3 -4 -5 -6 -7 -8 -9&#93;
 </code></pre></p><p>同样的来实现<code>&#40;filter even?&#41;</code><pre><code class=".language-clojure">&#40;defn filter-func
   &#91;pred&#93;
   &#40;fn &#91;result i&#93;
@@ -112,8 +116,48 @@ whatever, input -&gt; whatever
       result&#41;&#41;&#41;
 
 &#40;&#40;filter-func even?&#41; &#91;&#93; 2&#41;
-</code></pre></p>
-            <p class="text-left text-muted">2019-01-14 11:13</p>
+=&gt; 2
+
+&#40;reduce &#40;filter-func even?&#41; &#91;&#93; &#40;range 10&#41;&#41;
+=&gt; &#91;0 2 4 6 8&#93;
+
+; 切换自己想要的pred函数
+&#40;reduce &#40;filter-func odd?&#41; &#91;&#93; &#40;range 10&#41;&#41;
+=&gt; &#91;1 3 5 7 9&#93;
+</code></pre></p><p>现在我们的<code>map-func</code>和<code>filter-func</code>都是用<code>conj</code>来做<code>reducing function</code>, 那么如果我们想变为可切换<code>reducing function</code>，可以把<code>conj</code>切换<code>+</code>或者别的<code>reducing function</code>，这样我们就需要把<code>conj</code>作为一个参数传入进去，变成：<code>&#40;&#40;map-func inc&#41; conj&#41;</code><pre><code class=".language-clojure">&#40;defn map-func
+  &#91;f&#93;
+  &#40;fn &#91;reducing&#93;
+    &#40;fn &#91;result i&#93;
+      &#40;reducing result &#40;f i&#41;&#41;
+      &#41;&#41;&#41;
+
+&#40;&#40;&#40;map-func inc&#41; conj&#41; &#91;&#93; 1&#41;
+=&gt; &#91;2&#93;
+; 换为不同的reducing function
+&#40;&#40;&#40;map-func inc&#41; +&#41; 0 1&#41;
+=&gt; 2
+&#40;&#40;&#40;map-func inc&#41; +&#41; 1 1&#41;
+=&gt; 3
+&#40;&#40;&#40;map-func inc&#41; str&#41; &quot;0&quot; 1&#41;
+=&gt; &quot;02&quot;
+</code></pre></p><p>把<code>filter-func</code>也改为<code>&#40;&#40;filter-func even?&#41; conj&#41;</code></p><pre><code class=".language-clojure">&#40;defn filter-func
+  &#91;pred&#93;
+  &#40;fn &#91;reducing&#93;
+    &#40;fn &#91;result i&#93;
+      &#40;if &#40;pred i&#41;
+        &#40;reducing result i&#41;
+        result&#41;&#41;&#41;&#41;
+
+&#40;&#40;&#40;filter-func even?&#41; conj&#41; &#91;&#93; 1&#41;
+=&gt; &#91;&#93;
+&#40;&#40;&#40;filter-func even?&#41; conj&#41; &#91;&#93; 2&#41;
+=&gt; &#91;2&#93;
+&#40;&#40;&#40;filter-func even?&#41; +&#41; 10 2&#41;
+=&gt; 12
+&#40;&#40;&#40;filter-func even?&#41; str&#41; &quot;0&quot; 2&#41;
+=&gt; &quot;02&quot;
+</code></pre><p>现在我们可以使用<code>map-func</code>和<code>filter-func</code>，同时随心所欲指定自己想要的数据处理函数和自己的<code>reducing function</code></p>
+            <p class="text-left text-muted">2019-01-14 13:17</p>
         </div>
         <div class="container">
             <div class="row mt-4">
