@@ -15,10 +15,10 @@ Transducers就像一个筛子，输入一份数据，经过筛子组合，然后
 Here’s a visualisation to show the difference between array built-ins and transducers.
 
 1 chained built-in transformations create intermediate arrays
-![](/static/2019/1/transducers.gif)
+![](/static/2019/1/transducers.gif {:style "max-width:800px"})
 
 2 transduced transformations process items one by one into output array
-![](/static/2019/1/transducers2.gif)
+![](/static/2019/1/transducers2.gif {:style "max-width:800px"})
 
 在代码层面：
 
@@ -113,7 +113,7 @@ transducers使用起来非常简单
 => (2 4 6 8 10)
 ```
 
-3 使用`comp`
+3 使用`comp` (comp执行的顺序是从右向左)
 ```.language-clojure
 ((comp
     (partial filter even?)
@@ -121,6 +121,8 @@ transducers使用起来非常简单
   (range 10))
 => (2 4 6 8 10)
 ```
+
+
 
 
 
