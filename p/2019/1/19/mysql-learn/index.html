@@ -22,8 +22,8 @@
 alter table t add index&#40;k&#41;;
 </code></pre></p><p>如果重建主键索引：<pre><code class=".language-sql">alter table t drop primary key;
 alter table t add primary key&#40;id&#41;;
-</code></pre></p>
-            <p class="text-left text-muted">2019-01-19 09:24</p>
+</code></pre></p><p><code>select &#42; from t where k between 3 and 5</code>需要执行几次树的搜索操作，会扫描多少行？</p><ol><li>在k索引树上找到k=3的记录，取得id=300;</li><li>再到id索引树查到id=300对应的R3;</li><li>在 k 索引树上取下一个值k=5,取得id=500;</li><li>再回到id索引树查到id=500对应的R4;</li><li>在k索引树上取下一个值k=6，不满足条件，循环结束</li></ol><p>回到主键索引树搜索到过程称为回表，这个查询过程读了 k 索引树3条记录，回表了两次。</p><p>由于查询所需结果的数据只在主键索引上有，所以不得不回表。</p>
+            <p class="text-left text-muted">2019-01-19 10:04</p>
         </div>
         <div class="container">
             <div class="row mt-4">
