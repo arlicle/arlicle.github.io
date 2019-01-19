@@ -202,11 +202,11 @@ whatever, input -&gt; whatever
 &#40;reduce &#40;xform +&#41; 0 &#40;range 10&#41;&#41;
 =&gt; 30
 </code></pre></p><p>当<code>conj</code>传入<code>xform</code>中时，是从右向左执行的，<code>conj</code>先作为函数<code>&#40;filter-func even?&#41;</code>和参数执行，执行结果为<code>&#40;&#40;filter-func even?&#41; conj&#41;</code>，然后这个执行结果传入<code>&#40;map-func inc&#41;</code>函数作为参数，执行结果为<code>&#40;&#40;map-func inc&#41; &#40;&#40;filter-func even?&#41; conj&#41;&#41;</code>，因为<code>&#40;&#40;filter-func even?&#41; conj&#41;</code>是作为<code>reducing function</code>作为函数<code>&#40;map-func inc&#41;</code>的参数，内部为<code>&#40;conj result &#40;inc i&#41;&#41;</code>所以会先执行<code>&#40;inc i&#41;</code>，然后才执行<code>&#40;filter-func even?&#41;</code>，最后才执行最初指定的<code>reducing function</code>函数<code>conj</code>。所以最终数据处理的顺序变为从左到右的执行了，先进行了<code>map-func</code>的<code>inc</code>，然后进行了<code>filter-func</code>的<code>even?</code>，如果每一步都执行，那么就返回结果collection，如果<code>even?</code>这里判断不通过，就返回原collection。这个执行过程没有中间变量产生，并且只有<code>reduce</code>一次循环。</p><p>这就是<code>transducers</code>的整个过程。</p>
-            <p class="text-left text-muted">2019-01-14 13:52</p>
+            <p class="text-left text-muted">2019-01-14 06:35</p>
         </div>
         <div class="container">
             <div class="row mt-4">
-                <div class="col-6 text-left"></div>
+                <div class="col-6 text-left"><a href="/p/2019/1/19/mysql-learn/">上一篇: Mysql学习一</a></div>
                 <div class="col-6 text-right"><a href="/p/2019/1/10/bad-result/">下一篇:坏结果</a></div>
             </div>
         </div>

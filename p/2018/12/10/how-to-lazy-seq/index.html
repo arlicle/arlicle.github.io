@@ -82,7 +82,7 @@ clojure.core/take
 </code></pre><p>但是如果取比较大的值就会报错</p><pre><code class=".language-clojure">&#40;nth head-fibo 1000000&#41;
 java.lang.OutOfMemoryError:GC overhead limit excceded
 </code></pre><p>这里的问题是，顶级变量head-fibo持有着容器的头元素。这样就阻止了垃圾收集器取回收序列中的元素，即便你其实早就已经越过了那些元素。因此，你曾经用到的那部分斐波那契数序列都会被缓存起来，这些被head-fibo饮用者的值得存活事件，很可能就和整个程序的生命一样长。</p><p>除非是自己就是希望遍历序列时对它进行缓存，否则，一定要格外小心，千万不要持有序列头元素的引用。</p><p>通常情况下，应该把惰性序列暴露为返回该序列的一个函数，而不是直接用变量来容纳这个序列。倘若这个函数的某个调用者想要显式的进行缓存，那么这个调用可以随时创建它自己的变量。在使用惰性序列时，丢弃头元素往往是一个好主意。</p><h2>lazy more lazy 懒上加懒</h2><p>根据第五条规则，直接使用先用序列函数或者 API 来解决问题。</p>
-            <p class="text-left text-muted">2018-12-11 10:16</p>
+            <p class="text-left text-muted">2018-12-11 02:16</p>
         </div>
         <div class="container">
             <div class="row mt-4">

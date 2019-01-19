@@ -55,7 +55,7 @@ created: /Users/edison/Downloads/ubuntu.dmg
 848+0 records out
 889192448 bytes transferred in 203.405350 secs &#40;4371529 bytes/sec&#41;
 </code></pre><p>同时系统会弹出eject U 盘的对话框，点击eject，然后就可以安全拔出 U 盘。</p><p>如果没有弹出，就在终端执行eject命令</p><p><code>sudo eject /dev/rdisk2</code></p><h2>把安装 U盘，恢复为普通U 盘</h2><p>插入系统安装 U 盘的时候，可能系统里面会弹出一个对话框</p><p><img src="/static/2018/4/img/eject.png" alt="" /></p><p>不用管它，直接在终端执行：</p><p><code>sudo dd if=/dev/urandom of=/dev/rdisk2</code></p><p>使用随机数据来填充 U 盘，然后就可以随意在苹果磁盘工具里面格式化为自己想要的任何格式了。</p>
-            <p class="text-left text-muted">2018-12-03 00:53</p>
+            <p class="text-left text-muted">2018-12-02 16:53</p>
         </div>
         <div class="container">
             <div class="row mt-4">
