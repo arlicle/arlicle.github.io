@@ -1,5 +1,5 @@
 {
-    :title "写一个Lein的command/plugin"
+    :title "写一个Lein的command/plugin/task"
     :post-date "2019-2-10 17:49"
 }
 

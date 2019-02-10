@@ -8,7 +8,7 @@
 ### 最新     
 
 
-[写一个Lein的command/plugin](https://www.debugmyself.com/p/2019/2/10/write-a-lein-command-or-plugin/)  
+[写一个Lein的command/plugin/task](https://www.debugmyself.com/p/2019/2/10/write-a-lein-command-or-plugin/)  
 
 [Mysql学习一](https://www.debugmyself.com/p/2019/1/19/mysql-learn/)  
 
