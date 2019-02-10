@@ -18,8 +18,63 @@
 
 
 
-            <p><a href='https://github.com/arlicle/laniu'>Laniu</a>需要用到一个lein下的命令，用来执行<code>makemigrations</code>和<code>migrate</code>命令，没有找到相关的中文教程，那么就自己学会了写一个，可以帮助到更多人。</p>
-            <p class="text-left text-muted">2019-02-10 09:53</p>
+            <p><a href='https://github.com/arlicle/laniu'>Laniu</a>需要用到一个lein下的命令，用来执行<code>makemigrations</code>和<code>migrate</code>命令，没有找到相关的中文教程，那么就自己学会了写一个，可以帮助到更多人。</p><p>我希望执行的命令是：<pre><code class=".language-bash">➜ lein makemigrations
+Hello makemigrations!
+➜ lein migrate
+Hello migrate
+</code></pre></p><p>新建一个project命名为lein-laniu-task</p><pre><code class=".language-bash">lein new plugin lein-laniu-task
+</code></pre><p>项目结构为：<pre><code class=".language-bash">lein-laniu-task
+├── CHANGELOG.md
+├── LICENSE
+├── README.md
+├── lein-laniu-task.iml
+├── project.clj
+├── src
+│   └── leiningen
+│       └── laniu&#95;task.clj
+└── target
+    └── classes
+</code></pre></p><p>改写src/leiningen/laniu_task.clj的代码为<pre><code class=".language-clojure">&#40;ns leiningen.laniu-task&#41;
+
+&#40;defn laniu-task
+  &quot;I don't do a lot.&quot;
+  &#91;project &amp; args&#93;
+  &#40;println &quot;Hi! laniu-task&quot;&#41;&#41;
+</code></pre></p><p>创建文件 src/leiningen/makemigrations.clj，代码为：<pre><code class=".language-clojure">&#40;ns leiningen.laniu-task&#41;
+
+&#40;defn laniu-task
+  &quot;I don't do a lot.&quot;
+  &#91;project &amp; args&#93;
+  &#40;println &quot;Hi! laniu-task&quot;&#41;&#41;
+</code></pre></p><p>创建文件 src/leiningen/migrate.clj，代码为：<pre><code class=".language-clojure">&#40;ns leiningen.migrate&#41;
+
+&#40;defn migrate
+  &quot;I don't do a lot.&quot;
+  &#91;project &amp; args&#93;
+  &#40;println &quot;Hello migrate!&quot;&#41;&#41;
+</code></pre></p><p>把项目版本从<code>0.1.0-SNAPSHOT</code> 改为 <code>0.1.0</code>, project.clj代码为:<pre><code class=".language-clojure">&#40;defproject lein-laniu-task &quot;0.1.0&quot;
+  :description &quot;FIXME: write description&quot;
+  :url &quot;http://example.com/FIXME&quot;
+  :license {:name &quot;Eclipse Public License&quot;
+            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
+  :eval-in-leiningen true&#41;
+</code></pre></p><p>把项目打包并部署到本地库</p><pre><code class=".language-bash">➜ lein install
+Created /&lt;path-to-dir&gt;/lein-laniu-task/target/lein-laniu-task-0.1.0.jar
+Wrote /&lt;path-to-dir&gt;/lein-laniu-task/pom.xml
+Installed jar and pom into local repo.
+</code></pre><p>把[lein-laniu-task "0.1.0"]加入plugins配置<pre><code class=".language-clojure">&#40;defproject lein-laniu-task &quot;0.1.0&quot;
+  :description &quot;FIXME: write description&quot;
+  :url &quot;http://example.com/FIXME&quot;
+  :license {:name &quot;Eclipse Public License&quot;
+            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
+  :eval-in-leiningen true
+  :plugins &#91;&#91;lein-laniu-task &quot;0.1.0&quot;&#93;&#93;&#41;
+</code></pre></p><p>好了，现在可以试一试相关命令了。</p><pre><code class=".language-bash">➜ lein makemigrations
+Hello makemigrations!
+➜ lein migrate
+Hello migrate!
+</code></pre><p>完美！接下来继续完成命令的细节任务就好啦。</p><p>如果插件要发布给所有人用的话，就和常规clojure项目一样，发布到clojars就可以了。</p>
+            <p class="text-left text-muted">2019-02-10 10:29</p>
         </div>
         <div class="container">
             <div class="row mt-4">
