@@ -8,7 +8,7 @@
 ### 最新     
 
 
-[成长](https://www.debugmyself.com/p/2019/2/16/Grow-up/)  
+[成长和晋升](https://www.debugmyself.com/p/2019/2/16/Grow-up/)  
 
 [The Clojure Style Guide](https://www.debugmyself.com/p/2019/2/13/The-Clojure-Style-Guide/)  
 
