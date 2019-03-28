@@ -25,31 +25,23 @@
             1 1
             &#40;+
               &#40;fibo &#40;- n 1&#41;&#41;
-              &#40;fibo &#40;- n 2&#41;&#41;
-              &#41;&#41;&#41;
+              &#40;fibo &#40;- n 2&#41;&#41;&#41;&#41;&#41;
 </code></pre><p>因为是递归，对于n>1的情况，每次调用fibo都会招致对其自身的两次调用(fibo (- n 1))和(fibo (- n 2))，在Java虚拟机层面，这些调用会被翻译为方法调用。而每次方法调用都会分配一个被称为栈帧(stack frame)的数据结构。</p><p>fibo会创建深度与n成正比的栈帧，这样就迅速的耗尽了Java虚拟机的空间，并引发了StackOverflowError的异常。而且它创建的栈帧总数是n的指数，因此即使栈没有溢出，其性能也极为糟糕。</p><p>Clojure函数调用被标明是消耗栈空间的，因为他们使用了栈空间来分配栈帧。在Clojure中，应该尽量避免采用fibo这样消耗栈空间型的递归。</p><h2>尾递归</h2><p>函数式程序可以借助尾递归技术解决栈空间的使用问题，尾递归函数依然被定义为是递归的，但递归点必须位于尾部，即函数中返回某个值的那个表达式。语言随后即可进行尾部调用优化(tail-call optimization, TCO), 把尾递归转换为迭代，于是不再消耗栈空间。</p><pre><code class=".language-clojure">  &#40;defn tail-fibo
         &#91;n&#93;
         &#40;letfn &#91;&#40;fibo
                   &#91;current next-num n&#93;
                   &#40;if &#40;zero? n&#41;
                     current
-                    &#40;fibo next-num &#40;+ current next-num&#41; &#40;dec n&#41;&#41;
-                    &#41;
-                  &#41;
-                &#93;
-               &#40;fibo 0 1 n&#41;
-               &#41;&#41;
+                    &#40;fibo next-num &#40;+ current next-num&#41; &#40;dec n&#41;&#41;&#41;&#41;&#93;
+               &#40;fibo 0 1 n&#41;&#41;&#41;
 </code></pre><h2>自递归与recur</h2><p>递归在Java虚拟机上有一种可以被优化的特殊情况，就是自递归。 在Clojure中，可以借助<code>recur</code>把那种在尾部调用其自身的函数，转换为显式自递归。</p><pre><code class=".language-clojure">  &#40;defn recur-fibo
         &#91;n&#93;
         &#40;letfn &#91;&#40;fibo
                   &#91;current next-num n&#93;
                   &#40;if &#40;zero? n&#41;
                     current
-                    &#40;recur next-num &#40;+ current next-num&#41; &#40;dec n&#41;&#41;
-                    &#41;
-                  &#41;&#93;
-               &#40;fibo 0 1 n&#41;
-               &#41;&#41;
+                    &#40;recur next-num &#40;+ current next-num&#41; &#40;dec n&#41;&#41;&#41;&#41;&#93;
+               &#40;fibo 0 1 n&#41;&#41;&#41;
 </code></pre><p>现在运行recur-fibo计算斐波那契数时，不再消耗栈空间，运行速度有非常大的提升，同时，可以计算很大的数值。</p><h2>惰性序列</h2><p>惰性序列是由<code>lazy-seq</code>宏创建出来的</p><p>(lazy-seq & body)</p><p>仅当需要时，lazy才会去调用它的 body，也就是说，当seq被直接或间接的调用时，lazy-seq会为后续的调用缓存结果。</p><pre><code class=".language-clojure">  &#40;defn lazy-fibo
         &#40;&#91;&#93;
           &#40;concat &#91;0 1&#93; &#40;lazy-fibo 0 1&#41;&#41;&#41;
@@ -82,7 +74,7 @@ clojure.core/take
 </code></pre><p>但是如果取比较大的值就会报错</p><pre><code class=".language-clojure">&#40;nth head-fibo 1000000&#41;
 java.lang.OutOfMemoryError:GC overhead limit excceded
 </code></pre><p>这里的问题是，顶级变量head-fibo持有着容器的头元素。这样就阻止了垃圾收集器取回收序列中的元素，即便你其实早就已经越过了那些元素。因此，你曾经用到的那部分斐波那契数序列都会被缓存起来，这些被head-fibo饮用者的值得存活事件，很可能就和整个程序的生命一样长。</p><p>除非是自己就是希望遍历序列时对它进行缓存，否则，一定要格外小心，千万不要持有序列头元素的引用。</p><p>通常情况下，应该把惰性序列暴露为返回该序列的一个函数，而不是直接用变量来容纳这个序列。倘若这个函数的某个调用者想要显式的进行缓存，那么这个调用可以随时创建它自己的变量。在使用惰性序列时，丢弃头元素往往是一个好主意。</p><h2>lazy more lazy 懒上加懒</h2><p>根据第五条规则，直接使用先用序列函数或者 API 来解决问题。</p>
-            <p class="text-left text-muted">2018-12-11 02:16</p>
+            <p class="text-left text-muted">2019-03-28 14:07</p>
         </div>
         <div class="container">
             <div class="row mt-4">
