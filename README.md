@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[Jupyter 资源占用过多然后挂掉的问题](https://www.debugmyself.com/p/2019/5/2/jupyter-IOPub-data-rate-exceeded/)  
+
 [成长和晋升](https://www.debugmyself.com/p/2019/2/16/Grow-up/)  
 
 [The Clojure Style Guide](https://www.debugmyself.com/p/2019/2/13/The-Clojure-Style-Guide/)  
