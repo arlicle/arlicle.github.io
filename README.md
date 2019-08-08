@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[国内Rustcc 源 专属crates.io镜像](https://www.debugmyself.com/p/2019/8/8/rust/)  
+
 [Jupyter 资源占用过多然后挂掉的问题](https://www.debugmyself.com/p/2019/5/2/jupyter-IOPub-data-rate-exceeded/)  
 
 [成长和晋升](https://www.debugmyself.com/p/2019/2/16/Grow-up/)  
