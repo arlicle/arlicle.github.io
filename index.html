@@ -35,7 +35,7 @@ impl Solution {
         vec!&#91;0&#93;
     }
 }
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 28 ms , 在所有 Rust 提交中击败了 44.75% 的用户 <br /> 内存消耗 : 2 MB , 在所有 Rust 提交中击败了 100.00% 的用户 </p></blockquote><p>这么做思路简单清晰，内存消耗低，但是不好就是会进行很多次循环，效率不是那么高。</p><h3>思路二</h3><p>只用一次循环，用target与每次的数字相减得到结果A，然后查找剩余数字里面有没有A这个数字, 引入HashMap来查找有没有相减结果A，没有找到的时候，就把数字放入HashMap然后继续找，如果找到了就返回结果。</p><pre><code class=".lang-rust">// 代码实现
+</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 28 ms , 在所有 Rust 提交中击败了 44.75% 的用户 <br /> 内存消耗 : 2 MB , 在所有 Rust 提交中击败了 100.00% 的用户 </p></blockquote><p>这么做思路简单清晰，内存消耗低，但是不好就是会进行很多次循环，效率不是那么高。需要像一个优化思路，只用一次循环。</p><h3>优化后的思路二</h3><p>只用一次循环，用target与每次的数字相减得到结果A，然后查找剩余数字里面有没有A这个数字, 引入HashMap来查找有没有相减结果A，没有找到的时候，就把数字放入HashMap然后继续找，如果找到了就返回结果。</p><pre><code class=".lang-rust">// 代码实现
 use std::collections::HashMap;
 impl Solution {
     pub fn two&#95;sum&#40;nums: Vec&lt;i32&gt;, target: i32&#41; -&gt; Vec&lt;i32&gt; {
@@ -51,8 +51,8 @@ impl Solution {
         vec!&#91;&#93;
     }
 }
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户 <br /> 内存消耗 : 2.7 MB , 在所有 Rust 提交中击败了 61.14% 的用户 <br /></p></blockquote><p>这个思路，只使用一次循环，执行用时缩短为约等于0ms，由于引入了HashMap，内存稍微增加了一点。这是划算的，越短的执行时间，就可以支撑越多的用户并发。</p>
-            <p class="text-left text-muted">2019-09-01 12:28</p>
+</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户 <br /> 内存消耗 : 2.7 MB , 在所有 Rust 提交中击败了 61.14% 的用户 <br /></p></blockquote><p>这个思路，只使用一次循环，执行用时缩短为约等于0ms，由于引入了HashMap，内存稍微增加了一点。这是划算的，越短的执行时间，就可以支撑越多的用户并发。</p><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/'>两数之和 II - 输入有序数组</a></p><p><a href='https://leetcode-cn.com/problems/two-sum-iii-data-structure-design/'>两数之和 III - 数据结构设计</a></p><p><a href='https://leetcode-cn.com/problems/two-sum-iv-input-is-a-bst/'>两数之和 IV - 输入 BST</a></p>
+            <p class="text-left text-muted">2019-09-01 12:47</p>
         </div>
         <div class="container">
             <div class="row mt-4">
