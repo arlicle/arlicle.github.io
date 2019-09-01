@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[2. 两数相加](https://www.debugmyself.com/p/2019/9/1/add-two-numbers/)  
+
 [1. 两数之和 - leetcode刷题](https://www.debugmyself.com/p/2019/9/1/two-sum/)  
 
 [国内Rustcc 源 专属crates.io镜像](https://www.debugmyself.com/p/2019/8/8/rust/)  
