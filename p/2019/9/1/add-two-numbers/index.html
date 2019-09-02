@@ -86,7 +86,7 @@ mod test {
             vec2linked&#95;list&#40;vec!&#91;1, 2, 3&#93;&#41;&#41;;
     }
 }
-</code></pre> <h3>思路一</h3><p>使用循环，分别从第一位开始相加，会遇到3情况：1、相加之和大于10，那么就要记录进位；2、只有其中其中一个链表有值，另一个链表结束，那么相当于+0；3 两个链表都结束，如果有之前的进位，那么就为进位创建1位数字1，如果没有进位，返回结果。</p><pre><code class=".lang-rust">// 代码实现
+</code></pre> <h3>思路一</h3><p>使用循环，分别从第一位开始相加，会遇到3种情况：</p><p>1、相加之和大于10，那么就要记录进位；<br /> 2、只有其中其中一个链表有值，另一个链表结束，那么相当于+0；<br /> 3 两个链表都结束，如果有之前的进位，那么就为进位创建1位数字1，如果没有进位，返回结果。</p><pre><code class=".lang-rust">// 代码实现
 impl Solution {
     pub fn add&#95;two&#95;numbers&#40;l1: Option&lt;Box&lt;ListNode&gt;&gt;, l2: Option&lt;Box&lt;ListNode&gt;&gt;&#41; -&gt; Option&lt;Box&lt;ListNode&gt;&gt; {
         let mut l1 = l1;
@@ -192,7 +192,7 @@ mod test {
     }
 }
 </code></pre><h3>leetcode执行结果</h3><blockquote><p> 执行用时 : 4 ms , 在所有 Rust 提交中击败了 93.52% 的用户 <br /> 内存消耗 : 2 MB , 在所有 Rust 提交中击败了 100.00% 的用户 </p></blockquote><p>使用递归，执行效率和思路一是一样的，执行了n次(比思路少了1次)，算法复杂度同样为$O(n)$，递归过程可能有额外的一点点消耗，时间上和内存上稍微多了一点点。</p><h3>做题中的困惑</h3><ol><li>在Clojure中，除非使用尾递归调用或者惰性序列，才会使用递归，否则一般是不使用递归的，因为递归有额外的性能损耗，不知道Rust有没有对尾递归进行优化，或者Rust的惰性序列构造的方式。</li><li>在构造vec的时候，我使用range 来构造vec, 比如  1..10, 但是输入 'let a:Vec<i32> = (1..10).'的时候，不会提示出collect方法，但实际是有这个方法的，因为<code>let a:Vec&lt;i32&gt; = &#40;1..10&#41;.collect&#40;&#41;;</code>是可以执行的，这应该怎么解决呢？</li></ol><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/multiply-strings/'>字符串相乘</a></p><p><a href='https://leetcode-cn.com/problems/add-binary/'>二进制求和</a></p><p><a href='https://leetcode-cn.com/problems/sum-of-two-integers/'>两整数之和</a></p>
-            <p class="text-left text-muted">2019-09-02 06:59</p>
+            <p class="text-left text-muted">2019-09-02 11:51</p>
         </div>
         <div class="container">
             <div class="row mt-4">
