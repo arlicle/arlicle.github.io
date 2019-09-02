@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[738. 单调递增的数字](https://www.debugmyself.com/p/2019/9/2/monotone-increasing-digits/)  
+
 [2. 两数相加](https://www.debugmyself.com/p/2019/9/1/add-two-numbers/)  
 
 [1. 两数之和 - leetcode刷题](https://www.debugmyself.com/p/2019/9/1/two-sum/)  
