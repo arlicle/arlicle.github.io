@@ -72,6 +72,28 @@ impl ListNode {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use crate::{vec2linked_list, ListNode};
+
+    pub fn vec2linked_list_test() {
+        assert_eq!(
+            Some(Box::new(ListNode {
+                val: 1,
+                next: Some(
+                    Box::new(
+                        ListNode {
+                            val: 2,
+                            next: Some(Box::new(ListNode {
+                                val: 3,
+                                next: None,
+                            })),
+                        })),
+            })),
+            vec2linked_list(vec![1, 2, 3]));
+    }
+}
 ```
  
 ### 思路一
@@ -114,6 +136,17 @@ impl Solution {
             tail.as_mut().unwrap().next = Some(Box::new(ListNode::new(r % 10)));
             tail = &mut tail.as_mut().unwrap().next;
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::{vec2linked_list, Solution};
+
+    pub fn add_two_numbers_test(){
+        let l1 = vec2linked_list(vec![1,2,3]);
+        let l2 = vec2linked_list(vec![2,3,4]);
+        assert_eq!(vec2linked_list(vec![3,5,7]), Solution::add_two_numbers(l1,l2));
     }
 }
 ```
@@ -172,6 +205,17 @@ pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>, ext
         val: r % 10,
         next: add_two_numbers(n1, n2, r / 10),
     }))
+}
+
+#[cfg(test)]
+mod test {
+    use crate::{vec2linked_list, Solution};
+
+    pub fn add_two_numbers_test(){
+        let l1 = vec2linked_list(vec![1,2,3]);
+        let l2 = vec2linked_list(vec![2,3,4]);
+        assert_eq!(vec2linked_list(vec![3,5,7]), Solution::add_two_numbers(l1,l2));
+    }
 }
 ```
 
