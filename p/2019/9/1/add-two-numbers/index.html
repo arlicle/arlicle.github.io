@@ -18,8 +18,137 @@
 
 
 
-            <h3>题目</h3><p>给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。</p><p>如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。</p><p>您可以假设除了数字 0 之外，这两个数都不会以 0 开头。</p><h3>示例</h3><p>输入：(2 -> 4 -> 3) + (5 -> 6 -> 4)</p><p>输出：7 -> 0 -> 8</p><p>原因：342 + 465 = 807</p> <h3>思路一</h3><h4>leetcode执行结果</h4>
-            <p class="text-left text-muted">2019-09-01 13:36</p>
+            <h3>题目</h3><p>给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。</p><p>如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。</p><p>您可以假设除了数字 0 之外，这两个数都不会以 0 开头。</p><h3>示例</h3><p>输入：(2 -> 4 -> 3) + (5 -> 6 -> 4)</p><p>输出：7 -> 0 -> 8</p><p>原因：342 + 465 = 807</p><p><code>题型归类: Linked-list, Recursive, HashMap</code></p><h3>首先构造做题环境</h3><p>因为传入参数是链表，开发和测试都要反复用到，如果在开发或者测试直接徒手撸链表，代码量大又不容易维护，所以需要一个东西来方便的吧vec转换为链表。</p><pre><code class=".lang-rust">fn vec2linked&#95;list&#40;mut arr: Vec&lt;i32&gt;&#41; -&gt; Option&lt;Box&lt;ListNode&gt;&gt; {
+    arr.reverse&#40;&#41;;
+    let mut node = ListNode {
+        val: 0,
+        next: None,
+    };
+
+    let mut index = 0;
+    for i in arr {
+        if index == 0 {
+            node = ListNode::new&#40;i&#41;;
+        } else {
+            node = node.prepend&#40;i&#41;;
+        }
+        index += 1;
+    }
+
+    Some&#40;Box::new&#40;node&#41;&#41;
+}
+
+// Definition for singly-linked list.
+#&#91;derive&#40;PartialEq, Eq, Clone, Debug&#41;&#93;
+pub struct ListNode {
+    pub val: i32,
+    pub next: Option&lt;Box&lt;ListNode&gt;&gt;,
+}
+
+impl ListNode {
+    #&#91;inline&#93;
+    fn new&#40;val: i32&#41; -&gt; Self {
+        ListNode {
+            next: None,
+            val,
+        }
+    }
+}
+
+impl ListNode {
+    fn prepend&#40;self, val: i32&#41; -&gt; Self {
+        /// 从最末端开始，一个接一个的创建一个链表
+        ListNode {
+            val,
+            next: Some&#40;Box::new&#40;self&#41;&#41;,
+        }
+    }
+}
+</code></pre> <h3>思路一</h3><p>使用循环，分别从第一位开始相加，会遇到3情况：1、相加之和大于10，那么就要记录进位；2、只有其中其中一个链表有值，另一个链表结束，那么相当于+0；3 两个链表都结束，如果有之前的进位，那么就为进位创建1位数字1，如果没有进位，返回结果。</p><pre><code class=".lang-rust">// 代码实现
+impl Solution {
+    pub fn add&#95;two&#95;numbers&#40;l1: Option&lt;Box&lt;ListNode&gt;&gt;, l2: Option&lt;Box&lt;ListNode&gt;&gt;&#41; -&gt; Option&lt;Box&lt;ListNode&gt;&gt; {
+        let mut l1 = l1;
+        let mut l2 = l2;
+
+        let mut head = Some&#40;Box::new&#40;ListNode::new&#40;0&#41;&#41;&#41;; // 记录链表头
+        let mut tail = &amp;mut head; // 记录链表末端节点，好继续往末端追加节点
+
+        let mut extra&#95;add = 0; // 记录是否有进位
+        loop {
+            let mut r = extra&#95;add; // 两个节点的求和，再加上进位
+
+            let mut l1&#95;none = true; // 记录链表1是否结束了
+            let mut l2&#95;none = true; // 记录链表2是否结束了
+            if let Some&#40;l1&#95;node&#41; = l1 {
+                r += l1&#95;node.val;
+                l1 = l1&#95;node.next;
+                l1&#95;none = false;
+            }
+
+            if let Some&#40;l2&#95;node&#41; = l2 {
+                r += l2&#95;node.val;
+                l2 = l2&#95;node.next;
+                l2&#95;none = false;
+            }
+
+            if l1&#95;none &amp;&amp; l2&#95;none &amp;&amp; r == 0 {
+                // 当两个链表都结束，并且没有进位，那么就返回结果链表
+                break head.unwrap&#40;&#41;.next;
+            }
+
+            extra&#95;add = r / 10;
+            tail.as&#95;mut&#40;&#41;.unwrap&#40;&#41;.next = Some&#40;Box::new&#40;ListNode::new&#40;r % 10&#41;&#41;&#41;;
+            tail = &amp;mut tail.as&#95;mut&#40;&#41;.unwrap&#40;&#41;.next;
+        }
+    }
+}
+</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户 <br /> 内存消耗 : 2.1 MB , 在所有 Rust 提交中击败了 100.00% 的用户 </p></blockquote><p>这个思路，循环是最长链表的长度n+1?(加1或不加1)，因此算法复杂度是$O(n)$，这个算法的特殊处理在于，我们记录了链表的尾节点的指针，然后把它变为mut，往next里面继续增加节点，然后再把新增加的节点地址更新尾指针，在改变尾指针的时候，需要as_mut来转换Option类型为可变，否则编译器会报错。</p><h3>思路二</h3><p>使用递归， 因为链表是从最里面开始，逐步向外一层一层的包上去的，那么我们就可以用递归的特点，计算最外层时，一层一层的往里面去取最里层。</p><pre><code class=".lang-rust">// 代码实现
+impl Solution {
+    pub fn add&#95;two&#95;numbers&#40;l1: Option&lt;Box&lt;ListNode&gt;&gt;, l2: Option&lt;Box&lt;ListNode&gt;&gt;&#41; -&gt; Option&lt;Box&lt;ListNode&gt;&gt; {
+        add&#95;two&#95;numbers&#40;l1, l2, 0&#41;
+    }
+}
+
+
+pub fn add&#95;two&#95;numbers&#40;l1: Option&lt;Box&lt;ListNode&gt;&gt;, l2: Option&lt;Box&lt;ListNode&gt;&gt;, extra&#95;add: i32&#41; -&gt; Option&lt;Box&lt;ListNode&gt;&gt; {
+    // extra&#95;add 表示节点相加的进位
+    let mut r = extra&#95;add;
+
+    let mut n1 = None;
+    let mut n2 = None;
+
+    let mut is&#95;l1&#95;none = true;
+    let mut is&#95;l2&#95;none = true;
+
+    if let Some&#40;l1&#95;node&#41; = l1 {
+        r += l1&#95;node.val;
+        n1 = l1&#95;node.next;
+        is&#95;l1&#95;none = false;
+    }
+
+    if let Some&#40;l2&#95;node&#41; = l2 {
+        r += l2&#95;node.val;
+        n2 = l2&#95;node.next;
+        is&#95;l2&#95;none = false;
+    }
+
+    if is&#95;l1&#95;none &amp;&amp; is&#95;l2&#95;none {
+        if extra&#95;add &gt; 0 {
+            // 如果两个链表都结束了，但是有进位，需要为进位增加一个节点
+            return Some&#40;Box::new&#40;ListNode::new&#40;extra&#95;add&#41;&#41;&#41;;
+        } else {
+            // 如果没有进位，直接返回None即可
+            return None;
+        }
+    }
+
+    Some&#40;Box::new&#40;ListNode {
+        val: r % 10,
+        next: add&#95;two&#95;numbers&#40;n1, n2, r / 10&#41;,
+    }&#41;&#41;
+}
+</code></pre><h3>leetcode执行结果</h3><blockquote><p> 执行用时 : 4 ms , 在所有 Rust 提交中击败了 93.52% 的用户 <br /> 内存消耗 : 2 MB , 在所有 Rust 提交中击败了 100.00% 的用户 </p></blockquote><p>使用递归，执行效率和思路一是一样的，执行了n次(比思路少了1次)，算法复杂度同样为$O(n)$，递归过程可能有额外的一点点消耗，时间上和内存上稍微多了一点点。</p><h3>做题中的困惑</h3><p>在Clojure中，除非使用尾递归调用或者惰性序列，才会使用递归，否则一般是不使用递归的，因为递归有额外的性能损耗，不知道Rust有没有对尾递归进行优化，或者Rust的惰性序列构造的方式。</p><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/multiply-strings/'>字符串相乘</a></p><p><a href='https://leetcode-cn.com/problems/add-binary/'>二进制求和</a></p><p><a href='https://leetcode-cn.com/problems/sum-of-two-integers/'>两整数之和</a></p>
+            <p class="text-left text-muted">2019-09-02 06:41</p>
         </div>
         <div class="container">
             <div class="row mt-4">
