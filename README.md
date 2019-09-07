@@ -8,7 +8,7 @@
 ### 最新     
 
 
-[232. 用栈实现队列](https://www.debugmyself.com/p/2019/9/3/用栈实现队列/)  
+[232. 用栈实现队列](https://www.debugmyself.com/p/2019/9/3/implement-queue-using-stacks/)  
 
 [738. 单调递增的数字](https://www.debugmyself.com/p/2019/9/2/monotone-increasing-digits/)  
 

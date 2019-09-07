@@ -74,6 +74,11 @@ mod test {
     }
 }
 </code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户  <br /> 内存消耗 : 2.1 MB , 在所有 Rust 提交中击败了 100.00% 的用户 <br /></p></blockquote><p>这个题就是一个简单的队列实现，没有涉及什么算法，就是需要对vec熟悉。我们可以试一试自己用一个struct来实现一个队列，并实现这些方法。</p><h3>思路二</h3><p>使用struct 和Linked-list链表来实现。每次push相当于往末端节点增加，pop就弹出头部节点，更新链表为去掉头部的链表。为了性能，不使用循环去查找节点，我们需要记录链表的尾节点，有length属性，记录链表的长度。因为在链表中，我们每个节点会同时被next和tail持有，所有需要用Rc智能指针，然后用RefCell来修改。</p><pre><code class=".lang-rust">// 代码实现
+
+use std::rc::Rc;
+use std::cell::RefCell;
+
+
 #&#91;derive&#40;Debug&#41;&#93;
 struct Node {
     val: i32,
@@ -81,17 +86,17 @@ struct Node {
 }
 
 #&#91;derive&#40;Debug&#41;&#93;
-pub struct LinkedList {
+pub struct MyQueue {
     length: i32,
     list: Rc&lt;RefCell&lt;Option&lt;Node&gt;&gt;&gt;,
     tail: Rc&lt;RefCell&lt;Option&lt;Node&gt;&gt;&gt;,
 }
 
-impl LinkedList {
+impl MyQueue {
     pub fn new&#40;&#41; -&gt; Self {
         // 新建一个空列表
         let node = Rc::new&#40;RefCell::new&#40;None&#41;&#41;;
-        LinkedList {
+        MyQueue {
             length: 0,
             list: node.clone&#40;&#41;,
             tail: node.clone&#40;&#41;,
@@ -150,11 +155,11 @@ impl LinkedList {
 
 #&#91;cfg&#40;test&#41;&#93;
 mod test {
-    use crate::LinkedList;
+    use crate::MyQueue;
 
     #&#91;test&#93;
     pub fn queue&#95;test&#40;&#41; {
-        let mut queue = LinkedList::new&#40;&#41;;
+        let mut queue = MyQueue::new&#40;&#41;;
         queue.push&#40;1&#41;;
         queue.push&#40;2&#41;;
         assert&#95;eq!&#40;1, queue.peek&#40;&#41;&#41;;
@@ -164,8 +169,8 @@ mod test {
         assert&#95;eq!&#40;true, queue.empty&#40;&#41;&#41;;
     }
 }
-</code></pre><p>思路二的一开始的困惑点是，没有重新更新tail指针，所以tail指针一直指向原来的位置，所有每次borrow_mut更新值后，一直值原地更新，绕了好久才绕明白了，原来是我需要用新的tail值来更新原来的tail值，虽然两个都是<code>Rc::New&#40;RefCell::new&#40;None&#41;&#41;</code>, 但是内存地址，是不一样的。</p><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/implement-stack-using-queues/'>用队列实现栈</a></p>
-            <p class="text-left text-muted">2019-09-07 05:51</p>
+</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户 <br /> 内存消耗 : 2.1 MB , 在所有 Rust 提交中击败了 100.00% 的用户 </p></blockquote><p>思路二的一开始的困惑点是，没有重新更新tail指针，所以tail指针一直指向原来的位置，所有每次borrow_mut更新值后，一直值原地更新，绕了好久才绕明白了，原来是我需要用新的tail值来更新原来的tail值，虽然两个都是<code>Rc::New&#40;RefCell::new&#40;None&#41;&#41;</code>, 但是内存地址，是不一样的。</p><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/implement-stack-using-queues/'>用队列实现栈</a></p>
+            <p class="text-left text-muted">2019-09-07 05:59</p>
         </div>
         <div class="container">
             <div class="row mt-4">
@@ -198,7 +203,7 @@ mod test {
     </div>
     <script>
         var AL_configs = {
-            "post_id":"/p/2019/9/3/用栈实现队列/",
+            "post_id":"/p/2019/9/3/implement-queue-using-stacks/",
             "appid":"847e226e8a46f64045d45312245a68ba1368a564"
         };
         (function() {
