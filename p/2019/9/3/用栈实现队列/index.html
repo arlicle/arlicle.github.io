@@ -27,7 +27,7 @@ queue.pop&#40;&#41;;   // 返回 1
 queue.empty&#40;&#41;; // 返回 false
 
 
-</code></pre><p><code>题型归类: Vec, Linked-list</code></p> <h3>思路一</h3><p>使用MyQueue这个struct, 构造一个序列的操作，可以直接使用vec来实现，push可以直接使用，pop有不一样，区别就是vec的pop是弹出末尾的元素，这里要求弹出头元素, 我们可以使用vec的remove方法来替代； peek方法没有，需要自己实现；empty方法直接有is_empty方法了。</p><p>1、相加之和大于10，那么就要记录进位；<br /> 2、只有其中其中一个链表有值，另一个链表结束，那么相当于+0；<br /> 3 两个链表都结束，如果有之前的进位，那么就为进位创建1位数字1，如果没有进位，返回结果。</p><pre><code class=".lang-rust">// 代码实现
+</code></pre><p><code>题型归类: Vec, Linked-list</code></p> <h3>思路一</h3><p>使用MyQueue这个struct, 构造一个序列的操作，可以直接使用vec来实现，push可以直接使用，pop有不一样，区别就是vec的pop是弹出末尾的元素，这里要求弹出头元素, 我们可以使用vec的remove方法来替代； peek方法没有，需要自己实现；empty方法直接有is_empty方法了。</p><pre><code class=".lang-rust">// 代码实现
 struct MyQueue {
     stack:Vec&lt;i32&gt;
 }
@@ -73,8 +73,99 @@ mod test {
 
     }
 }
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户  <br /> 内存消耗 : 2.1 MB , 在所有 Rust 提交中击败了 100.00% 的用户 <br /></p></blockquote><p>这个题就是一个简单的队列实现，没有涉及什么算法，就是需要对vec熟悉。我们可以试一试自己用一个struct来实现一个队列，并实现这些方法。</p><h3>思路二</h3><p>使用struct 和Linked-list链表来实现。每次push相当于往末端节点增加，pop就弹出头部节点，更新链表为去掉头部的链表</p><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/implement-stack-using-queues/'>用队列实现栈</a></p>
-            <p class="text-left text-muted">2019-09-03 01:05</p>
+</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户  <br /> 内存消耗 : 2.1 MB , 在所有 Rust 提交中击败了 100.00% 的用户 <br /></p></blockquote><p>这个题就是一个简单的队列实现，没有涉及什么算法，就是需要对vec熟悉。我们可以试一试自己用一个struct来实现一个队列，并实现这些方法。</p><h3>思路二</h3><p>使用struct 和Linked-list链表来实现。每次push相当于往末端节点增加，pop就弹出头部节点，更新链表为去掉头部的链表。为了性能，不使用循环去查找节点，我们需要记录链表的尾节点，有length属性，记录链表的长度。因为在链表中，我们每个节点会同时被next和tail持有，所有需要用Rc智能指针，然后用RefCell来修改。</p><pre><code class=".lang-rust">// 代码实现
+#&#91;derive&#40;Debug&#41;&#93;
+struct Node {
+    val: i32,
+    next: Rc&lt;RefCell&lt;Option&lt;Node&gt;&gt;&gt;,
+}
+
+#&#91;derive&#40;Debug&#41;&#93;
+pub struct LinkedList {
+    length: i32,
+    list: Rc&lt;RefCell&lt;Option&lt;Node&gt;&gt;&gt;,
+    tail: Rc&lt;RefCell&lt;Option&lt;Node&gt;&gt;&gt;,
+}
+
+impl LinkedList {
+    pub fn new&#40;&#41; -&gt; Self {
+        // 新建一个空列表
+        let node = Rc::new&#40;RefCell::new&#40;None&#41;&#41;;
+        LinkedList {
+            length: 0,
+            list: node.clone&#40;&#41;,
+            tail: node.clone&#40;&#41;,
+        }
+    }
+
+    pub fn push&#40;&amp;mut self, v: i32&#41; {
+        // 将一个元素放入队列的尾部
+        let tail = Rc::new&#40;RefCell::new&#40;None&#41;&#41;;
+        let node = Node {
+            val: v,
+            next: tail.clone&#40;&#41;,
+        };
+
+        // 更新最后一个节点的值
+        &#42;self.tail.borrow&#95;mut&#40;&#41; = Some&#40;node&#41;;
+        // 更新tail指针，指向新的尾节点
+        self.tail = tail;
+        self.length += 1;
+    }
+
+    pub fn peek&#40;&amp;self&#41; -&gt; i32 {
+        // 返回队列首部的元素
+        match &amp;&#42;self.list.borrow&#40;&#41; {
+            Some&#40;node&#41; =&gt; node.val,
+            None =&gt; panic!&#40;&quot;empty list&quot;&#41;
+        }
+    }
+
+    pub fn pop&#40;&amp;mut self&#41; -&gt; i32 {
+        // 从队列首部移除元素
+        let mut next;
+        let v = match &amp;&#42;self.list.borrow&#40;&#41; {
+            Some&#40;node&#41; =&gt; {
+                let v = node.val;
+                next = node.next.clone&#40;&#41;;
+                v
+            }
+            None =&gt; panic!&#40;&quot;empty list&quot;&#41;
+        };
+
+        self.list = next;
+        self.length -= 1;
+        v
+    }
+
+    pub fn empty&#40;&amp;self&#41; -&gt; bool {
+        // 返回队列是否为空
+        if self.length == 0 {
+            true
+        } else {
+            false
+        }
+    }
+}
+
+#&#91;cfg&#40;test&#41;&#93;
+mod test {
+    use crate::LinkedList;
+
+    #&#91;test&#93;
+    pub fn queue&#95;test&#40;&#41; {
+        let mut queue = LinkedList::new&#40;&#41;;
+        queue.push&#40;1&#41;;
+        queue.push&#40;2&#41;;
+        assert&#95;eq!&#40;1, queue.peek&#40;&#41;&#41;;
+        assert&#95;eq!&#40;1, queue.pop&#40;&#41;&#41;;
+        assert&#95;eq!&#40;false, queue.empty&#40;&#41;&#41;;
+        assert&#95;eq!&#40;2, queue.pop&#40;&#41;&#41;;
+        assert&#95;eq!&#40;true, queue.empty&#40;&#41;&#41;;
+    }
+}
+</code></pre><p>思路二的一开始的困惑点是，没有重新更新tail指针，所以tail指针一直指向原来的位置，所有每次borrow_mut更新值后，一直值原地更新，绕了好久才绕明白了，原来是我需要用新的tail值来更新原来的tail值，虽然两个都是<code>Rc::New&#40;RefCell::new&#40;None&#41;&#41;</code>, 但是内存地址，是不一样的。</p><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/implement-stack-using-queues/'>用队列实现栈</a></p>
+            <p class="text-left text-muted">2019-09-07 05:51</p>
         </div>
         <div class="container">
             <div class="row mt-4">
