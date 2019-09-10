@@ -169,8 +169,74 @@ mod test {
         assert&#95;eq!&#40;true, queue.empty&#40;&#41;&#41;;
     }
 }
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户 <br /> 内存消耗 : 2.1 MB , 在所有 Rust 提交中击败了 100.00% 的用户 </p></blockquote><p>思路二的一开始的困惑点是，没有重新更新tail指针，所以tail指针一直指向原来的位置，所有每次borrow_mut更新值后，一直值原地更新，绕了好久才绕明白了，原来是我需要用新的tail值来更新原来的tail值，虽然两个都是<code>Rc::New&#40;RefCell::new&#40;None&#41;&#41;</code>, 但是内存地址，是不一样的。</p><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/implement-stack-using-queues/'>用队列实现栈</a></p>
-            <p class="text-left text-muted">2019-09-07 05:59</p>
+</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户 <br /> 内存消耗 : 2.1 MB , 在所有 Rust 提交中击败了 100.00% 的用户 </p></blockquote><p>思路二的一开始的困惑点是，没有重新更新tail指针，所以tail指针一直指向原来的位置，所有每次borrow_mut更新值后，一直值原地更新，绕了好久才绕明白了，原来是我需要用新的tail值来更新原来的tail值，虽然两个都是<code>Rc::New&#40;RefCell::new&#40;None&#41;&#41;</code>, 但是内存地址，是不一样的。</p><h3>思路三</h3><p>思路一和思路二都对题目的意思理解错误了，用栈实现队列操作，栈操作就只有push和pop两个操作，我们要仅用栈的push和pop两个操作，实现题目要求的 push, pop, peek, empty 方法。</p><pre><code class=".lang-rust">// 代码实现
+
+#&#91;derive&#40;Debug&#41;&#93;
+struct MyQueue {
+    stack: Vec&lt;i32&gt;
+}
+
+impl MyQueue {
+    fn new&#40;&#41; -&gt; Self {
+        MyQueue {
+            stack: Vec::new&#40;&#41;
+        }
+    }
+
+    fn trans&#40;vec1: &amp;mut Vec&lt;i32&gt;, vec2: &amp;mut Vec&lt;i32&gt;&#41; {
+        // 把vec1中的数据 reverse 后， 放入vec2中
+        while let Some&#40;i&#41; = vec1.pop&#40;&#41; {
+            vec2.push&#40;i&#41;;
+        }
+    }
+
+    fn push&#40;&amp;mut self, v: i32&#41; {
+        let mut x = vec!&#91;&#93;;
+        MyQueue::trans&#40;&amp;mut self.stack, &amp;mut x&#41;;
+        // 恢复为正常排序后，在末尾push入元素
+        x.push&#40;v&#41;;
+        // 把x 的数据倒序装入stack中
+        MyQueue::trans&#40;&amp;mut x, &amp;mut self.stack&#41;;
+    }
+
+    fn pop&#40;&amp;mut self&#41; -&gt; i32 {
+        self.stack.pop&#40;&#41;.expect&#40;&quot;empty stack now&quot;&#41;
+    }
+
+    fn peek&#40;&amp;mut self&#41; -&gt; i32 {
+        let i = self.stack.pop&#40;&#41;.expect&#40;&quot;empty stack now&quot;&#41;;
+        self.stack.push&#40;i&#41;;
+        i
+    }
+
+    fn empty&#40;&amp;mut self&#41; -&gt; bool {
+        match self.stack.pop&#40;&#41; {
+            Some&#40;v&#41; =&gt; {
+                self.stack.push&#40;v&#41;;
+                false
+            }
+            None =&gt; true
+        }
+    }
+}
+
+#&#91;cfg&#40;test&#41;&#93;
+mod test {
+    use crate::MyQueue;
+
+    #&#91;test&#93;
+    fn myqueue&#95;test&#40;&#41; {
+        let mut v = MyQueue::new&#40;&#41;;
+        v.push&#40;1&#41;;
+        v.push&#40;2&#41;;
+        assert&#95;eq!&#40;1, v.peek&#40;&#41;&#41;;
+        assert&#95;eq!&#40;1, v.pop&#40;&#41;&#41;;
+        assert&#95;eq!&#40;false, v.empty&#40;&#41;&#41;;
+        assert&#95;eq!&#40;vec!&#91;2&#93;, v.stack&#41;;
+    }
+}
+</code></pre><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/implement-stack-using-queues/'>用队列实现栈</a></p>
+            <p class="text-left text-muted">2019-09-10 14:01</p>
         </div>
         <div class="container">
             <div class="row mt-4">
