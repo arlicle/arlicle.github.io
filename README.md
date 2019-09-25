@@ -8,6 +8,10 @@
 ### 最新     
 
 
+[344. 反转字符串](https://www.debugmyself.com/p/2019/9/25/design-hashmap/)  
+
+[344. 反转字符串](https://www.debugmyself.com/p/2019/9/25/reverse-string/)  
+
 [797. 所有可能的路径](https://www.debugmyself.com/p/2019/9/10/all-paths-from-source-to-target/)  
 
 [226. 翻转二叉树](https://www.debugmyself.com/p/2019/9/7/invert-binary-tree/)  
