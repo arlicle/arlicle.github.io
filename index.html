@@ -107,7 +107,7 @@ mod test {
         assert&#95;eq!&#40;-1, hashMap.get&#40;2&#41;&#41;;
     }
 }
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 60 ms , 在所有 Rust 提交中击败了 100.00% 的用户  <br /> 内存消耗 : 4.4 MB , 在所有 Rust 提交中击败了 100.00% 的用户<br /></p></blockquote><h4>存疑</h4><p>要怎么做才可以更快呢？</p><h3>思路二</h3><p>思路一中，因为为了做数据更新，所以每次插入数据都去循环检查了有没有这个key，有就更新，没有就插入，实际上，如果大小有确定的一个范围，我们可以只管插入，不管更新，要remove我们只remove最近一个单元，这样可以减少很多循环。</p><pre><code class=".lang-rust">#&#91;derive&#40;Debug&#41;&#93;
+</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 60 ms , 在所有 Rust 提交中击败了 100.00% 的用户  <br /> 内存消耗 : 4.4 MB , 在所有 Rust 提交中击败了 100.00% 的用户<br /></p></blockquote><h4>存疑</h4><p>要怎么做才可以更快呢？</p><h3>思路二</h3><p>思路一中，因为为了做数据更新，所以每次插入数据都去循环检查了有没有这个key，有就更新，没有就插入。为了提升速度，我们可以只管插入，每次都是从0插入，不管更新。获取的时候都从开始往后找。要remove我们就标记最近一个单元的状态为delete，这样可以减少很多循环。</p><pre><code class=".lang-rust">#&#91;derive&#40;Debug&#41;&#93;
 struct KeyVal {
     key:i32,
     value:i32,
@@ -183,7 +183,7 @@ mod test {
     }
 }
 </code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 44 ms , 在所有 Rust 提交中击败了 100.00% 的用户  <br /> 内存消耗 : 4.4 MB , 在所有 Rust 提交中击败了 100.00% </p></blockquote><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/design-hashset/'>705. 设计哈希集合</a><br /></p>
-            <p class="text-left text-muted">2019-09-25 13:29</p>
+            <p class="text-left text-muted">2019-09-25 13:31</p>
         </div>
         <div class="container">
             <div class="row mt-4">
