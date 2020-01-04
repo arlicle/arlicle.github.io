@@ -8,6 +8,10 @@
 ### 最新     
 
 
+[设计一个方便前后端分离项目开发的接口管理工具](https://www.debugmyself.com/p/2020/1/4/设计一个接口管理工具/)  
+
+[无畏并发](https://www.debugmyself.com/p/2019/12/15/fearless-concurrency/)  
+
 [344. 反转字符串](https://www.debugmyself.com/p/2019/9/25/design-hashmap/)  
 
 [344. 反转字符串](https://www.debugmyself.com/p/2019/9/25/reverse-string/)  
