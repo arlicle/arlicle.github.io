@@ -18,7 +18,7 @@
 
 
 
-            <p>Panda api的接口文档工具是一个简单、易用、又强大的接口文档管理工具。我们直接从一个例子开始了解他吧。</p><h3>定义一个用户操作的接口文档</h3><p>我们创建一个目录，起名为api-docs，然后再这个目录中创建<code>auth.json</code>文件，然后敲上下面的代码</p><pre><code class=".language-json">{
+            <p>Panda api的接口文档工具是一个简单、易用、又强大的接口文档管理工具。这里我不想讲为什么自己重复造轮子，也不想去讲他有多强大，<code>Talk is cheap.Show you my code</code>。我们直接从一个例子开始了解他吧。</p><h2>简易快速入门</h2><h3>定义一个用户操作的接口文档</h3><p>我们创建一个目录，起名为api-docs，然后再这个目录中创建<code>auth.json</code>文件，然后敲上下面的代码</p><pre><code class=".language-json">{
     &quot;name&quot;:&quot;用户操作&quot;,
     &quot;desc&quot;:&quot;用户登录系统、退出登录系统&quot;,
     &quot;order&quot;:1,
@@ -75,7 +75,15 @@
         },
         &quot;test&#95;data&quot;:&#91;
             {
+                &quot;query&quot;:{&quot;id&quot;:1, &quot;username&quot;:&quot;root&quot;}
                 &quot;response&quot;:{&quot;code&quot;:1, &quot;msg&quot;:&quot;退出成功&quot;}
+            },
+            {
+                &quot;response&quot;:{&quot;code&quot;:-1, &quot;msg&quot;:&quot;非法操作&quot;}
+            },
+            {
+                &quot;query&quot;:{&quot;id&quot;:3, &quot;username&quot;:&quot;lily&quot;}
+                &quot;response&quot;:{&quot;code&quot;:-1, &quot;msg&quot;:&quot;用户名和id不匹配&quot;}
             }
         &#93;
     }
@@ -89,16 +97,18 @@
 &quot;desc&quot;:&quot;用户登录系统、退出登录系统&quot;, // 当前接口文档描述说明
 &quot;order&quot;:1, // 表示有多个文档时，当前文档在列表中的排序
 &quot;api&quot;:&#91;...&#93; // 当前接口文档的接口列表
-</code></pre></p><p>在这个用户操作的接口文档中，我们再api这个列表里面定义了两个接口，用户登录接口和用户退出登录接口，我们先来看用户登录接口</p><h3>用户登录接口</h3><pre><code class=".language-json">{
+</code></pre></p><p>在这个用户操作的接口文档中，我们再api这个列表里面定义了两个接口，用户登录接口和用户退出登录接口，我们先来看用户登录接口</p><h3>接口的完整字段</h3><pre><code class=".language-json">{
 &quot;name&quot;:&quot;用户登录&quot;, // 接口的名称
 &quot;desc&quot;:&quot;用户登录成功，接口会返回一个token&quot;, // 接口的描述说明 &#40;可选&#41;，不写时默认为空
 &quot;method&quot;: &quot;POST&quot;, // 接口的请求方法 &#40;可选&#41; 不写时默认是GET
 &quot;url&quot;:&quot;/login/&quot;, // 接口请求的url地址
+&quot;auth&quot;:false,    // 是否需要登录， 默认为false
 &quot;body&#95;mode&quot;:&quot;json&quot;, // 请求的数据格式
 &quot;body&quot;:{           // post 请求的 body 字段说明,
     &quot;username&quot;:{&quot;name&quot;:&quot;用户名&quot;},
     &quot;password&quot;:{&quot;name&quot;:&quot;用户登录密码&quot;}
 },
+&quot;query&quot;:{} // url上的query参数（可选） 比如aaa=3&amp;bbb=4 不填写时默认为空
 &quot;response&quot;:{
     &quot;code&quot;:{&quot;name&quot;:&quot;返回结果的代码&quot;, &quot;type&quot;:&quot;int&quot;, &quot;desc&quot;:&quot;登录成功只返回1&quot;},
     &quot;msg&quot;:{&quot;name&quot;:&quot;登录成功返回消息&quot;, &quot;type&quot;:&quot;string&quot;, &quot;desc&quot;:&quot;通常返回都是空&quot;},
@@ -106,7 +116,7 @@
 },
 &quot;test&#95;data&quot;:&#91;...&#93;
 }
-</code></pre><p>其中当请求method是POST的时候，body_mode和body字段设置了才会有效，当请求method是GET的时候，对应的字段是query。</p><p>body中的第一个字段username的属性是{"name":"用户名"}, 这个属性的完整写法是<pre><code class=".language-json">&quot;username&quot;:{
+</code></pre><p>其中当请求method是POST的时候，body_mode和body字段设置了才会有效，当请求method是GET的时候，对应的字段是query。</p><h3>body 字段</h3><p>body表示post的请求body，因为我们定义body_mode是json，因此他必须提交json格式的数据。 body中的第一个字段username的属性是{"name":"用户名"}, 这个属性的完整写法是<pre><code class=".language-json">&quot;username&quot;:{
     &quot;name&quot;:&quot;用户名&quot;, // 字段的名称
     &quot;desc&quot;:&quot;用户名的描述&quot;, // 字段的描述说明
     &quot;type&quot;:&quot;string&quot; // 字段的类型， &#40;可选&#41; 不填写时默认是string
@@ -115,12 +125,54 @@
     &quot;enum&quot;:&#91;&#93; // 字段的枚举值，&#40;可选&#41; 表示字段职能从这几个字段中有值，比如&#91;&quot;edison&quot;,&quot;lemon&quot;,&quot;jay&quot;&#93;, 
     // 那么username只能是这3个值中的一个
 }
-</code></pre></p><p>当我们不写<code>desc</code>属性时，默认为空，不写<code>required</code>属性时，默认为true, 也就是这个字段是必填的。</p><h3>字段的类型</h3><p>字段的类型一共有这几种</p><ol><li>string 字符串 "aaa"</li><li>number 数字 1、2</li><li>bool 布尔值 true、false</li><li>object 对象 {}</li><li>array 数组 []</li></ol>
-            <p class="text-left text-muted">2020-01-15 11:41</p>
+</code></pre></p><p>当我们不写<code>desc</code>属性时，默认为空，不写<code>required</code>属性时，默认为true, 也就是这个字段是必填的。</p><h3>type 字段的类型</h3><p>type 字段的类型一共有这几种</p><ol><li>string 字符串 "aaa"</li><li>number 数字 1、2</li><li>bool 布尔值 true、false</li><li>object 对象 {}</li><li>array 数组 []</li></ol><h3>response</h3><p>response表示请求后返回的结果字段说明，里面的字段由自己根据前后端约定去定义</p><h3>test_data</h3><p>test_data是非常强大和方便的一个功能，表示前端请求的数据和对应返回的数据集，我们定义好了这个数据集，系统才会接收对应的数据请求，然后返回对应的数据。里面的字段就可以根据真实情况，自己按要求去定义和模拟就好了。</p><p>test_data里面完整的有三个字段<pre><code class=".language-json">{
+    &quot;body&quot;: {...} // request body 请求值， 只在POST请求是才有 &#40;可选&#41;
+    &quot;query&quot;:{...} // url query 请求值 在POST和GET中都可以有 &#40;可选&#41;
+    &quot;response&quot;:{...} // 返回结果
+}
+</code></pre></p><h3>用户退出登录接口</h3><p>这里因为是为了模拟GET请求中的query参数，所以可以加了username和id字段。我们可以看到,当请求method是GET的时候，我们的query参数就要放到query字段中，当然query这个字段的参数在POST请求时也是有效的，你可以同时还有body参数和query参数</p><p>在退出登录接口中，因为请求方法是GET, 所以请求参数放到了query中<pre><code class=".language-json">&quot;query&quot;:{
+    &quot;id&quot;:{&quot;name&quot;:&quot;用户id&quot;},
+    &quot;username&quot;:{&quot;name&quot;:&quot;用户名&quot;}
+},
+</code></pre></p><p>对应的test_data里面，请求的参数也是query和response对应。</p><h3>设置项目的概要</h3><p>创建文件<code>&#95;settings.json</code>，敲上下面的内容。(注意，文件名开头有一个下划线，主要是为了把他和正常的接口文档区分开)<pre><code class=".language-json">{
+  &quot;project&#95;name&quot;: &quot;Panda Api&quot;, // 项目名称
+  &quot;project&#95;desc&quot;: &quot;Panda Api is a simple api manage tool&quot; // 项目简述
+}
+</code></pre></p><h3>设置项目首页说明</h3><p>创建文件 <code>README.md</code>，<pre><code class=".language-json">大家好，我是一个项目说明文档
+</code></pre></p><p>整个项目的全部desc字段和 README.md文件里面的内容都是支持markdown语法的。</p><h3>列表和对象</h3><p>获取文章列表接口</p><pre><code class=".language-json">{
+    &quot;name&quot;:&quot;文章列表&quot;,
+    &quot;method&quot;:&quot;POST&quot;,
+    &quot;url&quot;:&quot;/post/star/list/&quot;,
+    &quot;body&quot;:{
+        &quot;page&quot;:{&quot;name&quot;:&quot;分页&quot;, &quot;type&quot;:&quot;number&quot;}
+    },
+    &quot;response&quot;:{
+        &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
+        &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
+        &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
+        &quot;result&quot;: 
+            &#91;{
+                &quot;-name&quot;:&quot;文章列表&quot;,
+                &quot;-desc&quot;:&quot;只包含用户点赞过的文章列表&quot;,
+                &quot;id&quot;: {&quot;name&quot;:&quot;用户id&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;title&quot;: {&quot;name&quot;:&quot;文章标题&quot;},
+                &quot;category&quot;: {
+                    &quot;-name&quot;:&quot;文章所属分类&quot;,
+                    &quot;-desc&quot;:&quot;这里为了体现对象，所以就特意把文章分类用一个对象来表示&quot;,
+                    &quot;id&quot;:{&quot;name&quot;:&quot;分类id&quot;, &quot;type&quot;:&quot;number&quot;},
+                    &quot;name&quot;:{&quot;name&quot;:&quot;分类名称&quot;, &quot;type&quot;:&quot;string&quot;}
+                },
+                &quot;content&quot;: {&quot;name&quot;:&quot;文章内容&quot;},
+                &quot;created&quot;: {&quot;name&quot;:&quot;文章创建时间&quot;, &quot;type&quot;:&quot;number&quot;}
+            }&#93;
+    }
+}
+</code></pre><p>这个例子中，<code>response</code>返回的结果中，<code>result</code>字段，还有一点特殊，他是一个列表，然后列表里面有一个对象，他表示<code>result</code>的类型是<code>array</code>,然后里面的那个对象描述的是<code>array</code>中的数据的展现类型，字段有哪些。</p><p><code>resuolt</code>中的最开头 <code>-name</code> 字段和<code>-desc</code>字段是用来描述<code>result</code>字段的名称和描述。因为为了防止和常规字段冲突，所以在前面加了<code>-</code>减号, </p><p><code>category</code>字段的类型是一个对象<code>object</code>， 里面有两个属性<code>id</code>和<code>name</code>，分别表示分类的id和分类的名称。同样的<code>-name</code>, <code>-desc</code>是用来描述<code>category</code>这个字段的。</p><h3>结尾</h3><p>至此，我们的建议教学就结束了，可以试着找一个以前的项目或者新项目，开始写自己的接口文档，遇到有任何的问题或者意见建议，欢迎和我讨论。</p><p>下一篇，开启高级教学，一些复杂的用法，以及代码和数据的重用，让我们更简单快速的维护接口文档。</p>
+            <p class="text-left text-muted">2020-01-15 13:54</p>
         </div>
         <div class="container">
             <div class="row mt-4">
-                <div class="col-6 text-left"></div>
+                <div class="col-6 text-left"><a href="/p/2020/1/15/Panda-api高级使用说明/">上一篇: Panda api 高级使用说明</a></div>
                 <div class="col-6 text-right"><a href="/p/2020/1/4/设计一个接口管理工具/">下一篇:设计一个方便前后端分离项目开发的接口管理工具</a></div>
             </div>
         </div>
