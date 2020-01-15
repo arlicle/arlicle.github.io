@@ -81,11 +81,11 @@
     }
 &#93;}
 
-</code></pre><p>当我们保存好这个文档后，就可以运行命令 <code>panda-api</code>，就会运行起接口文档服务，</p><p>我们就可以在浏览器中输入网址 <code>http://localhost:9000</code>来访问这个文档了。</p><p>同时，我们的前端，或者我们用postman就可以测试请求用户登录接口，也就是 <code>http://localhost:9000/login/</code> 这个地址。提交的参数就是username和password。</p><p>当我们提交的参数是<pre><code class=".language-json">{&quot;username&quot;:&quot;edison&quot;, &quot;password&quot;:&quot;123&quot;}
+</code></pre><p>当我们保存好这个文档后，就可以运行命令 <code>panda-api</code>，就会运行起接口文档服务，</p><p>我们就可以在浏览器中输入网址 <code>http://localhost:9000</code>来访问这个文档了。</p><p>✌️耶~！我们有接口文档啦！O(∩_∩)O哈哈~！</p><p>继续还有更强大的。</p><p>同时，我们的panda-api或已经开始为我们的前端提供了接口服务，我们的前端开发人员，或者我们用postman就可以测试请求用户登录接口，也就是请求 <code>http://localhost:9000/login/</code> 这个地址。提交的参数就是username和password。</p><p>当我们提交的参数是<pre><code class=".language-json">{&quot;username&quot;:&quot;edison&quot;, &quot;password&quot;:&quot;123&quot;}
 </code></pre></p><p>我们会得到返回结果<pre><code class=".language-json">{&quot;code&quot;:-1, &quot;msg&quot;:&quot;密码输入不正确&quot;}
 </code></pre></p><p>当我们提交的参数是<pre><code class=".language-json">{&quot;username&quot;:&quot;root&quot;, &quot;password&quot;:&quot;123&quot;}
 </code></pre></p><p>我们会得到返回结果<pre><code class=".language-json">{&quot;code&quot;:1, &quot;msg&quot;:&quot;登录成功&quot;, &quot;token&quot;:&quot;fjdlkfjlafjdlaj3jk2l4j&quot;}
-</code></pre></p><p>注意到没，我们请求的参数和返回结果，就是我们再test_data里面设置的数据集，这个数据集中body和response是一一对应的，</p><p>我们前端就可以使用这个数据集进行开发了，测试各种各样我们想要的特殊情况，我们还可以继续往里面增加各种测试数据。</p><h3>接口文档的根字段</h3><p>我们定义了一个用户的接口文档，在接口文档的最根节点有三个字段：<pre><code class=".language-json">&quot;name&quot;:&quot;用户操作&quot;,  // 当前接口文档名称
+</code></pre></p><p>注意到没，我们请求的参数和返回结果，就是我们再test_data里面设置的数据集，这个数据集中body和response是一一对应的，</p><p>我们前端就可以使用这个数据集进行开发了，测试各种各样我们想要的特殊情况，我们还可以继续往里面增加各种测试数据。</p><p>下面我们把这个接口文档的每一个部分都详细说明一下</p><h3>接口文档的根字段</h3><p>我们定义了一个用户的接口文档，在接口文档的最根节点有三个字段：<pre><code class=".language-json">&quot;name&quot;:&quot;用户操作&quot;,  // 当前接口文档名称
 &quot;desc&quot;:&quot;用户登录系统、退出登录系统&quot;, // 当前接口文档描述说明
 &quot;order&quot;:1, // 表示有多个文档时，当前文档在列表中的排序
 &quot;api&quot;:&#91;...&#93; // 当前接口文档的接口列表
@@ -116,7 +116,7 @@
     // 那么username只能是这3个值中的一个
 }
 </code></pre></p><p>当我们不写<code>desc</code>属性时，默认为空，不写<code>required</code>属性时，默认为true, 也就是这个字段是必填的。</p><h3>字段的类型</h3><p>字段的类型一共有这几种</p><ol><li>string 字符串 "aaa"</li><li>number 数字 1、2</li><li>bool 布尔值 true、false</li><li>object 对象 {}</li><li>array 数组 []</li></ol>
-            <p class="text-left text-muted">2020-01-15 11:37</p>
+            <p class="text-left text-muted">2020-01-15 11:41</p>
         </div>
         <div class="container">
             <div class="row mt-4">
