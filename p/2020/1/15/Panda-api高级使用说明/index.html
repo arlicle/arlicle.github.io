@@ -306,7 +306,7 @@
         &quot;desc&quot;:&quot;这个接口既可以上传处方单扫描件、本地处方单照片，还可以上传身份证扫描件和本地身份证照片&quot;,
         &quot;url&quot;:&quot;/common/photo/upload/&quot;,
         &quot;method&quot;:&quot;POST&quot;,
-        &quot;body&#95;mode&quot;:&quot;formdata&quot;,
+        &quot;body&#95;mode&quot;:&quot;form-data&quot;,
         &quot;body&quot;: {
             &quot;file&quot;: {&quot;name&quot;:&quot;要上传的文件&quot;, &quot;desc&quot;:&quot;如果是扫描件要转变为扫描好的本地文件&quot;},
             &quot;file&#95;type&quot;:{&quot;name&quot;:&quot;文件类型&quot;, &quot;desc&quot;:&quot;分为处方单，身份证&quot;, &quot;enum&quot;:&#91;&#91;&quot;id&#95;no&quot;:&quot;身份证&quot;&#93;, &#91;&quot;chufangdan&quot;, &quot;处方单&quot;&#93;, &#91;&quot;other&quot;, &quot;其它普通照片&quot;&#93;&#93;}
@@ -315,16 +315,18 @@
             &quot;$ref&quot;:&quot;./&#95;data/models.json:Response&quot;,
             &quot;result&quot;:{
                 &quot;upload&#95;id&quot;:{&quot;name&quot;:&quot;上传文件id&quot;, &quot;desc&quot;:&quot;上传文件保存后的返回id&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;upload&#95;url&quot;:{&quot;name&quot;:&quot;上传文件后访问的url地址&quot;},
                 &quot;ocr&quot;:{&quot;name&quot;:&quot;OCR识别数据&quot;, &quot;desc&quot;:&quot;上传文件系统自动识别OCR返回的结果,目前只有部分处方单和身份证有这个数据&quot;, &quot;required&quot;:false}
             }
         },
         &quot;test&#95;data&quot;:&#91;                {
-            &quot;request&quot;:{&quot;file&quot;:&quot;aaa.jpg&quot;, &quot;file&#95;type&quot;:&quot;id&#95;no&quot;},
+            &quot;body&quot;:{&quot;file&quot;:&quot;aaa.jpg&quot;, &quot;file&#95;type&quot;:&quot;id&#95;no&quot;},
             &quot;response&quot;:{
                 &quot;code&quot;: 1,
                 &quot;msg&quot;: &quot;&quot;,
                 &quot;result&quot;: {
                     &quot;upload&#95;id&quot;: 1,
+                    &quot;upload&#95;url&quot;: &quot;/&#95;upload/aaa.jpg&quot;,
                     &quot;ocr&quot;:{&quot;id&#95;no&quot;:&quot;533025199002160013&quot;, &quot;name&quot;:&quot;张三&quot;, &quot;gender&quot;:&quot;男&quot;, &quot;age&quot;:&quot;29&quot;}
                 }
             }
@@ -360,8 +362,8 @@
     &#93;
 }
 
-</code></pre><p>同样的，继承过来以后还是可以自定义里面的字段属性，比如这里<code>name</code>字段就进行了自定义，这里主要还有就是写上<code>name</code>方便维护的时候看</p><h3>引入cvs外部数据</h3><p>正在搞...</p>
-            <p class="text-left text-muted">2020-01-16 06:32</p>
+</code></pre><p>同样的，继承过来以后还是可以自定义里面的字段属性，比如这里<code>name</code>字段就进行了自定义，这里主要还有就是写上<code>name</code>方便维护的时候看</p><h3>文件上传接口</h3><p>在照片上传的接口中，有两个特殊的地方，首先：我们的<code>body&#95;mode</code>是<code>form-data</code>，也必须是<code>form-data</code>才会进行文件的接收。</p><p>在<code>test&#95;data</code>中，<code>body</code>中的上传文件的匹配用的是文件名进行匹配，</p><p><code>test&#95;data</code>的返回值<code>response</code>中，我们还可以获取文件的访问<code>url</code>地址，<code>url</code>访问地址为：<code>&#95;upload/</code> + 文件名。即如果我们的文件名是：<code>aaa.jpg</code>, 那么我们访问的文件url地址是：<code>/&#95;upload/aaa.jpg</code>。当你访问这个地址: <code>http://localhost:9000/&#95;upload/aaa.jpg</code>时，就可以访问到文件。</p><h3>引入cvs外部数据</h3><p>正在搞...</p>
+            <p class="text-left text-muted">2020-01-16 15:57</p>
         </div>
         <div class="container">
             <div class="row mt-4">
