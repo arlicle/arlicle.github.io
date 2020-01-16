@@ -299,8 +299,69 @@
     &quot;name&quot;:&quot;查看文章&quot;,
     &quot;method&quot;:&quot;POST&quot;,
     &quot;url&quot;:&quot;/post/{id:\\d+}/&quot;,
-</code></pre></p><p>这么写的意思是：我们匹配的url是<code>/post/id/</code>，然后我们对<code>id</code>进行了约束，只要<code>id</code>是数字就会匹配，我也可以写单词匹配，<code>/post/{id:\\w+}/</code>，然后也可以写更复杂的正则匹配。</p>
-            <p class="text-left text-muted">2020-01-16 02:03</p>
+</code></pre></p><p>这么写的意思是：我们匹配的url是<code>/post/id/</code>，然后我们对<code>id</code>进行了约束，只要<code>id</code>是数字就会匹配，我也可以写单词匹配，<code>/post/{id:\\w+}/</code>，然后也可以写更复杂的正则匹配。</p><h3>整个接口的复用</h3><p>有的接口，会在多个地方去体现和是用，比如，用户操作有图片上传，文章上传有图片，后台管理员操作也有上传图片，或者多个角色都有上传图片，但是我们开发的时候，需要把文档放到一起。</p><p>所有复用的东西需要创建在<code>&#95;data</code>目录，我们在<code>&#95;data</code>里面，创建文件<code>common&#95;api.json</code>(文件名可以根据我们的实际需求修改)，里面的代码是：</p><pre><code class=".language-json">
+{
+    &quot;photo&#95;upload&quot;:{
+        &quot;name&quot;:&quot;上传照片&quot;,
+        &quot;desc&quot;:&quot;这个接口既可以上传处方单扫描件、本地处方单照片，还可以上传身份证扫描件和本地身份证照片&quot;,
+        &quot;url&quot;:&quot;/common/photo/upload/&quot;,
+        &quot;method&quot;:&quot;POST&quot;,
+        &quot;body&#95;mode&quot;:&quot;formdata&quot;,
+        &quot;body&quot;: {
+            &quot;file&quot;: {&quot;name&quot;:&quot;要上传的文件&quot;, &quot;desc&quot;:&quot;如果是扫描件要转变为扫描好的本地文件&quot;},
+            &quot;file&#95;type&quot;:{&quot;name&quot;:&quot;文件类型&quot;, &quot;desc&quot;:&quot;分为处方单，身份证&quot;, &quot;enum&quot;:&#91;&#91;&quot;id&#95;no&quot;:&quot;身份证&quot;&#93;, &#91;&quot;chufangdan&quot;, &quot;处方单&quot;&#93;, &#91;&quot;other&quot;, &quot;其它普通照片&quot;&#93;&#93;}
+        },
+        &quot;response&quot;:{
+            &quot;$ref&quot;:&quot;./&#95;data/models.json:Response&quot;,
+            &quot;result&quot;:{
+                &quot;upload&#95;id&quot;:{&quot;name&quot;:&quot;上传文件id&quot;, &quot;desc&quot;:&quot;上传文件保存后的返回id&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;ocr&quot;:{&quot;name&quot;:&quot;OCR识别数据&quot;, &quot;desc&quot;:&quot;上传文件系统自动识别OCR返回的结果,目前只有部分处方单和身份证有这个数据&quot;, &quot;required&quot;:false}
+            }
+        },
+        &quot;test&#95;data&quot;:&#91;                {
+            &quot;request&quot;:{&quot;file&quot;:&quot;aaa.jpg&quot;, &quot;file&#95;type&quot;:&quot;id&#95;no&quot;},
+            &quot;response&quot;:{
+                &quot;code&quot;: 1,
+                &quot;msg&quot;: &quot;&quot;,
+                &quot;result&quot;: {
+                    &quot;upload&#95;id&quot;: 1,
+                    &quot;ocr&quot;:{&quot;id&#95;no&quot;:&quot;533025199002160013&quot;, &quot;name&quot;:&quot;张三&quot;, &quot;gender&quot;:&quot;男&quot;, &quot;age&quot;:&quot;29&quot;}
+                }
+            }
+        }&#93;
+    }
+}
+
+</code></pre><p>当我们定义好这个公共接口后，我们就可以在文章中直接引用这个接口</p><pre><code class=".language-json">{
+    &quot;name&quot;:&quot;文章接口&quot;,
+    &quot;define&quot;:{
+        &quot;model&quot;: &quot;./&#95;data/models.json&quot;,
+        &quot;article&quot;: &quot;./&#95;data/models.json:Article&quot;
+    },
+    &quot;api&quot;:&#91;
+        {
+            &quot;$ref&quot;:&quot;./&#95;data/common&#95;api.json:photo&#95;upload&quot;,
+            &quot;name&quot;:&quot;照片上传&quot;
+        },
+        {
+            &quot;name&quot;:&quot;文章添加/编辑&quot;,
+            &quot;url&quot;:&quot;/post/add/&quot;,
+            &quot;body&quot;:{
+                &quot;$ref&quot;: &quot;$model:Article&quot;,
+                &quot;$exclude&quot;:&#91;&quot;category&#95;name&quot;, &quot;read&#95;count&quot;, &quot;created&quot;, &quot;create&#95;username&quot;&#93;,
+                &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;, &quot;required&quot;:false},
+            },
+            &quot;response&quot;:{
+                // code 和 msg 字段来自全局了
+                &quot;id&quot;: {&quot;name&quot;:&quot;文章id&quot;}
+            }
+        },
+        ...
+    &#93;
+}
+
+</code></pre><p>同样的，继承过来以后还是可以自定义里面的字段属性，比如这里<code>name</code>字段就进行了自定义，这里主要还有就是写上<code>name</code>方便维护的时候看</p><h3>引入cvs外部数据</h3><p>正在搞...</p>
+            <p class="text-left text-muted">2020-01-16 02:57</p>
         </div>
         <div class="container">
             <div class="row mt-4">
