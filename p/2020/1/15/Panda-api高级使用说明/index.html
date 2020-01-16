@@ -23,8 +23,8 @@
     &quot;msg&quot;:{...}
 }
 </code></pre></p><p>实际上，很有可能，我们整个系统的接口，都遵循同样的标准，所有接口都有<code>code</code>字段和<code>msg</code>字段，那么，每个地方的body和response都去写岂不是很麻烦；另外，可能我们整个网站绝大部分的接口都是要登录的，只有很少的一小部分不需要登录，每个都去设置也很麻烦啊。我承认就是懒，所以Panda api提供了一个简单的全局设置方法。</p><p>打开<code>&#95;settings.json</code>文件<pre><code class=".language-json">{
-  &quot;project&#95;name&quot;: &quot;Panda Api&quot;, // 项目名称
-  &quot;project&#95;desc&quot;: &quot;Panda Api is a simple api manage tool&quot; // 项目简述
+  &quot;project&#95;name&quot;: &quot;Panda Api&quot;, /&#42; 项目名称 &#42;/
+  &quot;project&#95;desc&quot;: &quot;Panda Api is a simple api manage tool&quot; /&#42; 项目简述 &#42;/
 }
 </code></pre></p><p>我们增加<code>global</code>字段，内容变为：</p><pre><code class=".language-json">{
   &quot;project&#95;name&quot;: &quot;Panda Api&quot;,
@@ -44,12 +44,12 @@
     &quot;desc&quot;:&quot;用户登录成功，接口会返回一个token&quot;,
     &quot;method&quot;: &quot;POST&quot;,
     &quot;url&quot;:&quot;/login/&quot;,
-    &quot;auth&quot;:false, // 单独设置登录接口不需要验证和用户登录状态
+    &quot;auth&quot;:false, /&#42; 单独设置登录接口不需要验证和用户登录状态 &#42;/
     &quot;body&#95;mode&quot;:&quot;json&quot;,
     &quot;body&quot;:...
 </code></pre></p><p><code>code</code>字段和<code>msg</code>字段，如果有的地方不需要这两个字段，就不能简单的像auth字段一样修改一个值，你要做的是再不需要的地方设置删除。</p><pre><code class=".language-json">&quot;response&quot;:{
-    &quot;code&quot;:&quot;$del&quot;, // 删除继承得来的code字段
-    &quot;msg&quot;:&quot;$del&quot;, // 删除继承得来的msg字段
+    &quot;code&quot;:&quot;$del&quot;, /&#42; 删除继承得来的code字段 &#42;/
+    &quot;msg&quot;:&quot;$del&quot;, /&#42; 删除继承得来的msg字段 &#42;/
     ...
 }
 </code></pre><p>这个时候设置了值为<code>$del</code>的字段就没有了，我们可以刷新前端文档看一下。</p><h3>重用相同的数据模型</h3><p>有时候，几个接口的字段差不多，又只是几个接口会这样，是不能用全局设置来表示的，比如用户操作的文章列表的字段、文章添加的字段、文章查看的字段差不多，如果字段很多，每个都重复写就很累，虽然可以复制粘贴，但是维护的时候又要同时维护多个地方，带来了麻烦。</p><p>所以Panda api上我参考swagger设计了<code>$ref</code>语法，方便的引用数据模型，此外又增加了<code>$exclude</code>语法、<code>$include</code>语法和继承语法，让我们使用起来更方便，我们来看例子吧。</p><p>我们的文章的接口文档是这样的：</p><pre><code class=".language-json">{
@@ -68,7 +68,7 @@
                 &quot;tag&quot;:{&quot;name&quot;:&quot;文章标签&quot;}
             },
             &quot;response&quot;:{
-                // code 和 msg 字段来自全局了
+                /&#42; code 和 msg 字段来自全局了 &#42;/
                 &quot;id&quot;: {&quot;name&quot;:&quot;文章id&quot;}
             }
         },
@@ -80,13 +80,13 @@
                 &quot;page&quot;:{&quot;name&quot;:&quot;分页&quot;, &quot;type&quot;:&quot;number&quot;}
             },
             &quot;response&quot;:{
-                // code 和 msg 字段来自全局了
+                /&#42; code 和 msg 字段来自全局了 &#42;/
                 &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;result&quot;: 
                     &#91;{
-                        &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;}, // 这时id是必有的
+                        &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;}, /&#42; 这时id是必有的 &#42;/
                         &quot;title&quot;:{&quot;name&quot;:&quot;文章标题&quot;},
                         &quot;summary&quot;:{&quot;name&quot;:&quot;文章摘要&quot;},
                         &quot;category&#95;name&quot;:{&quot;name&quot;:&quot;文章分类名称&quot;},
@@ -113,7 +113,7 @@
                 &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;result&quot;: 
                     &#91;{
-                        &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;}, // 这时id是必有的
+                        &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;}, /&#42; 这时id是必有的 &#42;/
                         &quot;title&quot;:{&quot;name&quot;:&quot;文章标题&quot;},
                         &quot;category&#95;name&quot;:{&quot;name&quot;:&quot;文章分类名称&quot;},
                         &quot;author&#95;name&quot;:{&quot;name&quot;:&quot;文章作者姓名&quot;},
@@ -132,7 +132,7 @@
 &quot;tag&quot;:{&quot;name&quot;:&quot;文章标签&quot;}
 </code></pre><p>这个部分的字段是一模一样的，</p><p>再看文章列表，<code>id</code>，<code>title</code>，<code>author&#95;name</code>，<code>tag</code>，是一样的，<code>category&#95;name</code>、<code>author&#95;name</code>、<code>created</code>是增加字段。</p><p>实际上，这些新增的字段也都是文章模型的属性，相同的不同字段分开写就导致如果发生字段调整，属性调整，要维护的地方就会很多，容易出错。</p><p>所以Panda api设计的是，我们可以统一设计一个模型，然后每次调用的时候，只调用需要的部分。这样写和维护就统一只在一个地方。</p><h3>设计文章模型</h3><p>创建文件夹 <code>&#95;data</code>, 在<code>&#95;data</code>文件夹中创建文件<code>models.json</code>(文件名可以根据自己的需要设定)，在<code>models.json</code>中敲下面的代码：</p><pre><code class=".language-json">{
     &quot;Article&quot;:{
-        &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;}, // 这时id是必有的
+        &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;}, /&#42; 这时id是必有的 &#42;/
         &quot;title&quot;:{&quot;name&quot;:&quot;文章标题&quot;},
         &quot;summary&quot;:{&quot;name&quot;:&quot;文章摘要&quot;},
         &quot;category&#95;id&quot;:{&quot;name&quot;:&quot;文章分类id&quot;, &quot;type&quot;:&quot;number&quot;},
@@ -157,7 +157,7 @@
                 &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;, &quot;required&quot;:false}
             },
             &quot;response&quot;:{
-                // code 和 msg 字段来自全局了
+                /&#42; code 和 msg 字段来自全局了 &#42;/
                 &quot;id&quot;: {&quot;name&quot;:&quot;文章id&quot;}
             }
         },
@@ -169,7 +169,7 @@
                 &quot;page&quot;:{&quot;name&quot;:&quot;分页&quot;, &quot;type&quot;:&quot;number&quot;}
             },
             &quot;response&quot;:{
-                // code 和 msg 字段来自全局了
+                /&#42; code 和 msg 字段来自全局了 &#42;/
                 &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
@@ -234,7 +234,7 @@
                 &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;, &quot;required&quot;:false},
             },
             &quot;response&quot;:{
-                // code 和 msg 字段来自全局了
+                /&#42; code 和 msg 字段来自全局了 &#42;/
                 &quot;id&quot;: {&quot;name&quot;:&quot;文章id&quot;}
             }
         },
@@ -246,7 +246,7 @@
                 &quot;page&quot;:{&quot;name&quot;:&quot;分页&quot;, &quot;type&quot;:&quot;number&quot;}
             },
             &quot;response&quot;:{
-                // code 和 msg 字段来自全局了
+                /&#42; code 和 msg 字段来自全局了 &#42;/
                 &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
@@ -352,7 +352,7 @@
                 &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;, &quot;required&quot;:false},
             },
             &quot;response&quot;:{
-                // code 和 msg 字段来自全局了
+                /&#42; code 和 msg 字段来自全局了 &#42;/
                 &quot;id&quot;: {&quot;name&quot;:&quot;文章id&quot;}
             }
         },
@@ -361,7 +361,7 @@
 }
 
 </code></pre><p>同样的，继承过来以后还是可以自定义里面的字段属性，比如这里<code>name</code>字段就进行了自定义，这里主要还有就是写上<code>name</code>方便维护的时候看</p><h3>引入cvs外部数据</h3><p>正在搞...</p>
-            <p class="text-left text-muted">2020-01-16 03:34</p>
+            <p class="text-left text-muted">2020-01-16 06:32</p>
         </div>
         <div class="container">
             <div class="row mt-4">
