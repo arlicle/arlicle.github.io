@@ -52,8 +52,86 @@
     &quot;msg&quot;:&quot;$del&quot;, // 删除继承得来的msg字段
     ...
 }
-</code></pre><p>这个时候设置了值为<code>$del</code>的字段就没有了，我们可以刷新前端文档看一下。</p><h3>列表和对象</h3>
-            <p class="text-left text-muted">2020-01-15 13:27</p>
+</code></pre><p>这个时候设置了值为<code>$del</code>的字段就没有了，我们可以刷新前端文档看一下。</p><h3>重用相同的数据模型</h3><p>有时候，几个接口的字段差不多，又只是几个接口会这样，是不能用全局设置来表示的，比如用户操作的文章列表的字段、文章添加的字段、文章查看的字段差不多，如果字段很多，每个都重复写就很累，虽然可以复制粘贴，但是维护的时候又要同时维护多个地方，带来了麻烦。</p><p>所以Panda api上我参考swagger设计了<code>$ref</code>语法，方便的引用数据模型，此外又增加了<code>exclude</code>语法和继承语法，让我们使用起来更方便，我们来看例子吧。</p><p>我们的文章的接口文档是这样的：</p><pre><code class=".language-json">{
+    &quot;name&quot;:&quot;文章接口&quot;,
+    &quot;api&quot;:&#91;
+        {
+            &quot;name&quot;:&quot;文章添加/编辑&quot;,
+            &quot;url&quot;:&quot;/post/add/&quot;,
+            &quot;body&quot;:{
+                &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;, &quot;required&quot;:false},
+                &quot;title&quot;:{&quot;name&quot;:&quot;文章标题&quot;},
+                &quot;summary&quot;:{&quot;name&quot;:&quot;文章摘要&quot;},
+                &quot;category&#95;id&quot;:{&quot;name&quot;:&quot;文章分类id&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;author&#95;name&quot;:{&quot;name&quot;:&quot;文章作者姓名&quot;},
+                &quot;source&quot;:{&quot;name&quot;:&quot;文章来源&quot;},
+                &quot;tag&quot;:{&quot;name&quot;:&quot;文章标签&quot;}
+            },
+            &quot;response&quot;:{
+                // code 和 msg 字段来自全局了
+                &quot;id&quot;: {&quot;name&quot;:&quot;文章id&quot;}
+            }
+        },
+        {
+            &quot;name&quot;:&quot;查看文章&quot;,
+            &quot;method&quot;:&quot;POST&quot;,
+            &quot;url&quot;:&quot;/post/{id:\\d+}/&quot;,
+            &quot;body&quot;:{
+                &quot;page&quot;:{&quot;name&quot;:&quot;分页&quot;, &quot;type&quot;:&quot;number&quot;}
+            },
+            &quot;response&quot;:{
+                // code 和 msg 字段来自全局了
+                &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;result&quot;: 
+                    &#91;{
+                        &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;}, // 这时id是必有的
+                        &quot;title&quot;:{&quot;name&quot;:&quot;文章标题&quot;},
+                        &quot;summary&quot;:{&quot;name&quot;:&quot;文章摘要&quot;},
+                        &quot;category&#95;name&quot;:{&quot;name&quot;:&quot;文章分类名称&quot;},
+                        &quot;author&#95;name&quot;:{&quot;name&quot;:&quot;文章作者姓名&quot;},
+                        &quot;source&quot;:{&quot;name&quot;:&quot;文章来源&quot;},
+                        &quot;tag&quot;:{&quot;name&quot;:&quot;文章标签&quot;},
+                        &quot;read&#95;count&quot;:{&quot;name&quot;:&quot;阅读次数&quot;, &quot;type&quot;:&quot;number&quot;},
+                        &quot;created&quot;:{&quot;name&quot;:&quot;创建时间&quot;, &quot;type&quot;:&quot;number&quot;},
+                        &quot;create&#95;username&quot;:{&quot;name&quot;:&quot;文章创建人姓名&quot;}
+                    }&#93;
+                
+            }
+        },
+        {
+            &quot;name&quot;:&quot;文章列表&quot;,
+            &quot;method&quot;:&quot;POST&quot;,
+            &quot;url&quot;:&quot;/post/star/list/&quot;,
+            &quot;body&quot;:{
+                &quot;page&quot;:{&quot;name&quot;:&quot;分页&quot;, &quot;type&quot;:&quot;number&quot;}
+            },
+            &quot;response&quot;:{
+                &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;result&quot;: 
+                    &#91;{
+                        &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;}, // 这时id是必有的
+                        &quot;title&quot;:{&quot;name&quot;:&quot;文章标题&quot;},
+                        &quot;category&#95;name&quot;:{&quot;name&quot;:&quot;文章分类名称&quot;},
+                        &quot;author&#95;name&quot;:{&quot;name&quot;:&quot;文章作者姓名&quot;},
+                        &quot;tag&quot;:{&quot;name&quot;:&quot;文章标签&quot;},
+                        &quot;created&quot;:{&quot;name&quot;:&quot;创建时间&quot;},
+                    }&#93;
+            }
+        }
+    &#93;
+}
+</code></pre><p>我们的文章接口文档里面一共有三个接口：文章添加，文章查看，文章列表，</p><p>如果以文章添加为基础来看的话，文章查看与文章添加的区别是：id变为了必填，category_id变为了category_name，增加了3个字段<code>read&#95;count</code>阅读次数，<code>created</code>创建时间，<code>create&#95;username</code>文章创建人姓名，</p><pre><code class=".language-json">&quot;title&quot;:{&quot;name&quot;:&quot;文章标题&quot;},
+&quot;summary&quot;:{&quot;name&quot;:&quot;文章摘要&quot;},
+&quot;category&#95;id&quot;:{&quot;name&quot;:&quot;文章分类id&quot;, &quot;type&quot;:&quot;number&quot;},
+&quot;author&#95;name&quot;:{&quot;name&quot;:&quot;文章作者姓名&quot;},
+&quot;source&quot;:{&quot;name&quot;:&quot;文章来源&quot;},
+&quot;tag&quot;:{&quot;name&quot;:&quot;文章标签&quot;}
+</code></pre><p>这个部分的字段是一模一样的，</p><p>再看文章列表，<code>id</code>，<code>title</code>，<code>author&#95;name</code>，<code>tag</code>，是一样的，<code>category&#95;name</code>、<code>author&#95;name</code>、<code>created</code>是增加字段。</p><p>实际上，这些新增的字段也都是文章模型的属性，相同的不同字段分开写就导致如果发生字段调整，属性调整，要维护的地方就会很多，容易出错。</p><p>所以Panda api设计的是，我们可以统一设计一个模型，然后每次调用的时候，只调用需要的部分。这样写和维护就统一只在一个地方。</p><p>创建文件夹 <code>&#95;data</code>, 在<code>&#95;data</code>文件夹中创建文件<code>models.json</code>(文件名可以根据自己的需要设定)，</p>
+            <p class="text-left text-muted">2020-01-16 01:13</p>
         </div>
         <div class="container">
             <div class="row mt-4">
