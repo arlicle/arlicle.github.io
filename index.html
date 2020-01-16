@@ -52,7 +52,7 @@
     &quot;msg&quot;:&quot;$del&quot;, // 删除继承得来的msg字段
     ...
 }
-</code></pre><p>这个时候设置了值为<code>$del</code>的字段就没有了，我们可以刷新前端文档看一下。</p><h3>重用相同的数据模型</h3><p>有时候，几个接口的字段差不多，又只是几个接口会这样，是不能用全局设置来表示的，比如用户操作的文章列表的字段、文章添加的字段、文章查看的字段差不多，如果字段很多，每个都重复写就很累，虽然可以复制粘贴，但是维护的时候又要同时维护多个地方，带来了麻烦。</p><p>所以Panda api上我参考swagger设计了<code>$ref</code>语法，方便的引用数据模型，此外又增加了<code>exclude</code>语法和继承语法，让我们使用起来更方便，我们来看例子吧。</p><p>我们的文章的接口文档是这样的：</p><pre><code class=".language-json">{
+</code></pre><p>这个时候设置了值为<code>$del</code>的字段就没有了，我们可以刷新前端文档看一下。</p><h3>重用相同的数据模型</h3><p>有时候，几个接口的字段差不多，又只是几个接口会这样，是不能用全局设置来表示的，比如用户操作的文章列表的字段、文章添加的字段、文章查看的字段差不多，如果字段很多，每个都重复写就很累，虽然可以复制粘贴，但是维护的时候又要同时维护多个地方，带来了麻烦。</p><p>所以Panda api上我参考swagger设计了<code>$ref</code>语法，方便的引用数据模型，此外又增加了<code>$exclude</code>语法、<code>$include</code>语法和继承语法，让我们使用起来更方便，我们来看例子吧。</p><p>我们的文章的接口文档是这样的：</p><pre><code class=".language-json">{
     &quot;name&quot;:&quot;文章接口&quot;,
     &quot;api&quot;:&#91;
         {
@@ -154,7 +154,7 @@
             &quot;body&quot;:{
                 &quot;$ref&quot;: &quot;./&#95;data/models.json:Article&quot;,
                 &quot;$exclude&quot;:&#91;&quot;category&#95;name&quot;, &quot;read&#95;count&quot;, &quot;created&quot;, &quot;create&#95;username&quot;&#93;,
-                &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;, &quot;required&quot;:false},
+                &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;, &quot;required&quot;:false}
             },
             &quot;response&quot;:{
                 // code 和 msg 字段来自全局了
@@ -200,8 +200,107 @@
         }
     &#93;
 }
-</code></pre><p>在文件添加接口中，我们使用<code>$ref</code>引用了文章模型，语法是:<code>./&#95;data/models.json:Article</code> 就是文件路径，后面是冒号<code>:</code>，后是具体的模型引用路径，如果只引用一个title字段，也可以这么写:<code>&quot;$ref&quot;:&quot;./&#95;data/models.json:Article.title&quot;</code>，</p>
-            <p class="text-left text-muted">2020-01-16 01:30</p>
+</code></pre><h3><code>$include</code>和<code>$exclude</code>语法</h3><p>在文件添加接口中，我们使用<code>$ref</code>引用了文章模型，语法是:<code>./&#95;data/models.json:Article</code> 就是文件路径，后面是冒号<code>:</code>，后是具体的模型引用路径，如果只引用一个title字段，也可以这么写:<code>&quot;$ref&quot;:&quot;./&#95;data/models.json:Article.title&quot;</code>，</p><p>接着有的字段我们是不要的，我们就可以使用<code>$exclude</code>语法，排除一些字段，<code>&quot;$exclude&quot;:&#91;&quot;category&#95;name&quot;, &quot;read&#95;count&quot;, &quot;created&quot;, &quot;create&#95;username&quot;&#93;,</code>，放入<code>$exclude</code>中的字段就不会被加载进来。</p><p>最后，重写了<code>id</code>字段，<code>&quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;, &quot;required&quot;:false}</code>。当把字段在当前重写了，那么就会以当前字段为准。</p><p>文章列表中，我们一样的引入了<code>Article</code>模型，然后没用<code>$exclude</code>，而是用<code>$include</code>语法指定我们需要的字段，这么的好处是，当我们再Article模型中增加了字段，增加的字段不会在模型自动加载出来，因为系统只会加载<code>$include</code>里面的字段；但是<code>$exclude</code>语法因为一开始没有设置这个新增加的字段，所以在<code>$exclude</code>模型的情况，模型<code>Article</code>中增加的字段会自动加载出来。</p><p>所以一共是三部操作：</p><ol><li>写一个文章模型</li><li>引入模型, 当前就会继承引入模型的字段</li><li>排除不需要的字段</li><li>重写不一样的字段</li></ol><h3>指定按字段引用</h3><p>我们还可以只引入某一个字段，比如有一个简单的文章列表接口，只需要文章标题和文章id，<pre><code class=".language-json">{
+    &quot;name&quot;:&quot;简要文章列表&quot;,
+    &quot;method&quot;:&quot;POST&quot;,
+    &quot;url&quot;:&quot;/post/simple/list/&quot;,
+    &quot;body&quot;:{
+        &quot;page&quot;:{&quot;name&quot;:&quot;分页&quot;, &quot;type&quot;:&quot;number&quot;}
+    },
+    &quot;response&quot;:{
+        &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
+        &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
+        &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
+        &quot;result&quot;: 
+            &#91;{
+                &quot;id&quot;:{&quot;$ref&quot;: &quot;./&#95;data/models.json:Article.id&quot;},
+                &quot;title&quot;:{&quot;$ref&quot;: &quot;./&#95;data/models.json:Article.title&quot;}
+            }&#93;
+    }
+}
+</code></pre></p><h3>简化引用路径</h3><p>每个地方都要去写<code>./&#95;data/models.json</code>这么一长段路径，很麻烦，万一路径变了，那么每个地方都要改。因此我们可以使用define语法。来定义路径，所以，我们的文章接口改进未这样：</p><pre><code class=".language-json">{
+    &quot;name&quot;:&quot;文章接口&quot;,
+    &quot;define&quot;:{
+        &quot;model&quot;: &quot;./&#95;data/models.json&quot;,
+        &quot;article&quot;: &quot;./&#95;data/models.json:Article&quot;
+    },
+    &quot;api&quot;:&#91;
+        {
+            &quot;name&quot;:&quot;文章添加/编辑&quot;,
+            &quot;url&quot;:&quot;/post/add/&quot;,
+            &quot;body&quot;:{
+                &quot;$ref&quot;: &quot;$model:Article&quot;,
+                &quot;$exclude&quot;:&#91;&quot;category&#95;name&quot;, &quot;read&#95;count&quot;, &quot;created&quot;, &quot;create&#95;username&quot;&#93;,
+                &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;, &quot;required&quot;:false},
+            },
+            &quot;response&quot;:{
+                // code 和 msg 字段来自全局了
+                &quot;id&quot;: {&quot;name&quot;:&quot;文章id&quot;}
+            }
+        },
+        {
+            &quot;name&quot;:&quot;查看文章&quot;,
+            &quot;method&quot;:&quot;POST&quot;,
+            &quot;url&quot;:&quot;/post/{id:\\d+}/&quot;,
+            &quot;body&quot;:{
+                &quot;page&quot;:{&quot;name&quot;:&quot;分页&quot;, &quot;type&quot;:&quot;number&quot;}
+            },
+            &quot;response&quot;:{
+                // code 和 msg 字段来自全局了
+                &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;result&quot;: 
+                    &#91;{
+                        &quot;$ref&quot;: &quot;$article&quot;,
+                        &quot;$exclude&quot;:&#91;&quot;category&#95;id&quot;&#93;
+                    }&#93;
+            }
+        },
+        {
+            &quot;name&quot;:&quot;文章列表&quot;,
+            &quot;method&quot;:&quot;POST&quot;,
+            &quot;url&quot;:&quot;/post/star/list/&quot;,
+            &quot;body&quot;:{
+                &quot;page&quot;:{&quot;name&quot;:&quot;分页&quot;, &quot;type&quot;:&quot;number&quot;}
+            },
+            &quot;response&quot;:{
+                &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;result&quot;: 
+                    &#91;{
+                        &quot;$ref&quot;: &quot;$article&quot;,
+                        &quot;$include&quot;:&#91;&quot;id&quot;, &quot;title&quot;, &quot;category&#95;name&quot;, &quot;author&#95;name&quot;, &quot;tag&quot;, &quot;created&quot;&#93;
+                    }&#93;
+            }
+        },
+        {
+            &quot;name&quot;:&quot;简要文章列表&quot;,
+            &quot;method&quot;:&quot;POST&quot;,
+            &quot;url&quot;:&quot;/post/simple/list/&quot;,
+            &quot;body&quot;:{
+                &quot;page&quot;:{&quot;name&quot;:&quot;分页&quot;, &quot;type&quot;:&quot;number&quot;}
+            },
+            &quot;response&quot;:{
+                &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
+                &quot;result&quot;: 
+                    &#91;{
+                        &quot;id&quot;:{&quot;$ref&quot;: &quot;$article.id&quot;},
+                        &quot;title&quot;:{&quot;$ref&quot;: &quot;$article.title&quot;}
+                    }&#93;
+            }
+        }
+    &#93;
+}
+</code></pre><h3>文章地址支持正则匹配</h3><p>查看文章接口，接口地址是这么写的：<code>&quot;url&quot;:&quot;/post/{id:\\d+}/&quot;</code>，<pre><code class=".language-json">{
+    &quot;name&quot;:&quot;查看文章&quot;,
+    &quot;method&quot;:&quot;POST&quot;,
+    &quot;url&quot;:&quot;/post/{id:\\d+}/&quot;,
+</code></pre></p><p>这么写的意思是：我们匹配的url是<code>/post/id/</code>，然后我们对<code>id</code>进行了约束，只要<code>id</code>是数字就会匹配，我也可以写单词匹配，<code>/post/{id:\\w+}/</code>，然后也可以写更复杂的正则匹配。</p>
+            <p class="text-left text-muted">2020-01-16 02:03</p>
         </div>
         <div class="container">
             <div class="row mt-4">
