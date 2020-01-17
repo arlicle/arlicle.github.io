@@ -19,7 +19,7 @@
 
 
             <h3>全局字段属性，不需要重复写相同的字段</h3><p>我们在上一篇的简易教学文章中，用户登录接口和用户退出接口的response返回字段，都有一个<code>code</code>字段和<code>msg</code>字段，<pre><code class=".language-json">&quot;response&quot;:{
-    &quot;code&quot;:{...}
+    &quot;code&quot;:{...},
     &quot;msg&quot;:{...}
 }
 </code></pre></p><p>实际上，很有可能，我们整个系统的接口，都遵循同样的标准，所有接口都有<code>code</code>字段和<code>msg</code>字段，那么，每个地方的body和response都去写岂不是很麻烦；另外，可能我们整个网站绝大部分的接口都是要登录的，只有很少的一小部分不需要登录，每个都去设置也很麻烦啊。我承认就是懒，所以Panda api提供了一个简单的全局设置方法。</p><p>打开<code>&#95;settings.json</code>文件<pre><code class=".language-json">{
@@ -59,7 +59,7 @@
             &quot;name&quot;:&quot;文章添加/编辑&quot;,
             &quot;url&quot;:&quot;/post/add/&quot;,
             &quot;body&quot;:{
-                &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;, &quot;required&quot;:false},
+                &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;}, &quot;required&quot;:false},
                 &quot;title&quot;:{&quot;name&quot;:&quot;文章标题&quot;},
                 &quot;summary&quot;:{&quot;name&quot;:&quot;文章摘要&quot;},
                 &quot;category&#95;id&quot;:{&quot;name&quot;:&quot;文章分类id&quot;, &quot;type&quot;:&quot;number&quot;},
@@ -363,7 +363,7 @@
 }
 
 </code></pre><p>同样的，继承过来以后还是可以自定义里面的字段属性，比如这里<code>name</code>字段就进行了自定义，这里主要还有就是写上<code>name</code>方便维护的时候看</p><h3>文件上传接口</h3><p>在照片上传的接口中，有两个特殊的地方，首先：我们的<code>body&#95;mode</code>是<code>form-data</code>，也必须是<code>form-data</code>才会进行文件的接收。</p><p>在<code>test&#95;data</code>中，<code>body</code>中的上传文件的匹配用的是文件名进行匹配，</p><p><code>test&#95;data</code>的返回值<code>response</code>中，我们还可以获取文件的访问<code>url</code>地址，<code>url</code>访问地址为：<code>&#95;upload/</code> + 文件名。即如果我们的文件名是：<code>aaa.jpg</code>, 那么我们访问的文件url地址是：<code>/&#95;upload/aaa.jpg</code>。当你访问这个地址: <code>http://localhost:9000/&#95;upload/aaa.jpg</code>时，就可以访问到文件。</p><h3>引入cvs外部数据</h3><p>正在搞...</p>
-            <p class="text-left text-muted">2020-01-16 15:57</p>
+            <p class="text-left text-muted">2020-01-17 09:14</p>
         </div>
         <div class="container">
             <div class="row mt-4">
