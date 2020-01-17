@@ -89,7 +89,25 @@
     }
 &#93;}
 
-</code></pre><p>当我们保存好这个文档后，就可以运行命令 <code>panda-api</code>，就会运行起接口文档服务，</p><p>我们就可以在浏览器中输入网址 <code>http://localhost:9000</code>来访问这个文档了。</p><p>✌️耶~！我们有接口文档啦！O(∩_∩)O哈哈~！</p><p>继续还有更强大的。</p><p>同时，我们的panda-api或已经开始为我们的前端提供了接口服务，我们的前端开发人员，或者我们用postman就可以测试请求用户登录接口，也就是请求 <code>http://localhost:9000/login/</code> 这个地址。提交的参数就是username和password。</p><p>当我们提交的参数是<pre><code class=".language-json">{&quot;username&quot;:&quot;edison&quot;, &quot;password&quot;:&quot;123&quot;}
+</code></pre><p>当我们保存好这个文档后，就可以运行命令 <code>panda-api</code>，就会运行起接口文档服务，</p><p>我们就可以在浏览器中输入网址 <code>http://localhost:9000</code>来访问这个文档了。</p><p>当我们没有文档皮肤<code>theme</code>设定的时候，页面会自动跳转到 文档接口显示 <code>http://localhost:9000/&#95;&#95;api&#95;docs/</code></p><p>如果没有皮肤<code>theme</code>，我们又要访问具体的接口文档，那么就访问 <code>http://localhost:9000/&#95;&#95;api&#95;docs/api&#95;data/?filename=auth.json</code> 他会展示整个文档的内容。</p><p>这里我们创建目录<code>&#95;data</code>，然后把<code>theme</code>文件夹拷贝到 <code>&#95;data</code>目录中，就可以访问正常的文档了。</p><p>这时，我们的文件目录是这个样子的<pre><code class=".language-shell">├── &#95;data
+│   └── theme
+│       ├── css
+│       │   ├── app.2085e0b4.css
+│       │   └── chunk-vendors.f7054a7c.css
+│       ├── favicon.ico
+│       ├── fonts
+│       │   ├── element-icons.535877f5.woff
+│       │   └── element-icons.732389de.ttf
+│       ├── index.html
+│       └── js
+│           ├── app.1a30140c.js
+│           ├── app.1a30140c.js.map
+│           ├── chunk-2d21a3d2.d5d808b0.js
+│           ├── chunk-2d21a3d2.d5d808b0.js.map
+│           ├── chunk-vendors.de5939f2.js
+│           └── chunk-vendors.de5939f2.js.map
+└── auth.json
+</code></pre></p><p>重新访问网址 <code>http://localhost:9000</code>来访问好看的文档。</p><p>✌️耶~！我们有接口文档啦！O(∩_∩)O哈哈~！</p><p>继续还有更强大的。</p><p>同时，我们的panda-api或已经开始为我们的前端提供了接口服务，我们的前端开发人员，或者我们用postman就可以测试请求用户登录接口，也就是请求 <code>http://localhost:9000/login/</code> 这个地址。提交的参数就是username和password。</p><p>当我们提交的参数是<pre><code class=".language-json">{&quot;username&quot;:&quot;edison&quot;, &quot;password&quot;:&quot;123&quot;}
 </code></pre></p><p>我们会得到返回结果<pre><code class=".language-json">{&quot;code&quot;:-1, &quot;msg&quot;:&quot;密码输入不正确&quot;}
 </code></pre></p><p>当我们提交的参数是<pre><code class=".language-json">{&quot;username&quot;:&quot;root&quot;, &quot;password&quot;:&quot;123&quot;}
 </code></pre></p><p>我们会得到返回结果<pre><code class=".language-json">{&quot;code&quot;:1, &quot;msg&quot;:&quot;登录成功&quot;, &quot;token&quot;:&quot;fjdlkfjlafjdlaj3jk2l4j&quot;}
@@ -122,7 +140,7 @@
     &quot;type&quot;:&quot;string&quot; /&#42; 字段的类型， &#40;可选&#41; 不填写时默认是string &#42;/
     &quot;required&quot;:true, /&#42; 字段是否必填，&#40;可选&#41; 不填写的时候默认是必填 &#42;/
     &quot;default&quot;:null /&#42; 字段的默认值，&#40;可选&#41; 不填写时默认是空 &#42;/
-    &quot;enum&quot;:&#91;&#93; /&#42; 字段的枚举值，&#40;可选&#41; 表示字段职能从这几个字段中有值，比如&#91;&quot;edison&quot;,&quot;lemon&quot;,&quot;jay&quot;&#93;, 
+    &quot;enum&quot;:&#91;&#93; /&#42; 字段的枚举值，&#40;可选&#41; 表示字段只能从这几个字段中有值，比如&#91;&quot;edison&quot;,&quot;lemon&quot;,&quot;jay&quot;&#93;, 
     那么username只能是这3个值中的一个 &#42;/
 }
 </code></pre></p><p>当我们不写<code>desc</code>属性时，默认为空，不写<code>required</code>属性时，默认为true, 也就是这个字段是必填的。</p><h3>type 字段的类型</h3><p>type 字段的类型一共有这几种</p><ol><li>string 字符串 "aaa"</li><li>number 数字 1、2</li><li>bool 布尔值 true、false</li><li>object 对象 {}</li><li>array 数组 []</li></ol><h3>response</h3><p>response表示请求后返回的结果字段说明，里面的字段由自己根据前后端约定去定义</p><h3>test_data</h3><p>test_data是非常强大和方便的一个功能，表示前端请求的数据和对应返回的数据集，我们定义好了这个数据集，系统才会接收对应的数据请求，然后返回对应的数据。里面的字段就可以根据真实情况，自己按要求去定义和模拟就好了。</p><p>test_data里面完整的有三个字段<pre><code class=".language-json">{
@@ -233,7 +251,7 @@
         },
     ....
 </code></pre><h3>注意事项</h3><p>如果不同的接口，同一个url, 但是请求方法不同，有GET,有POST是允许的。</p><p>如果不同的接口，同一个url, 请求方法也相同，都是GET或者都是POST，那么系统会判定，只允许一个。</p><h3>结尾</h3><p>至此，我们的建议教学就结束了，可以试着找一个以前的项目或者新项目，开始写自己的接口文档，遇到有任何的问题或者意见建议，欢迎和我讨论。</p><p>下一篇，开启高级教学，一些复杂的用法，以及代码和数据的重用，让我们更简单快速的维护接口文档。</p>
-            <p class="text-left text-muted">2020-01-17 09:12</p>
+            <p class="text-left text-muted">2020-01-17 10:10</p>
         </div>
         <div class="container">
             <div class="row mt-4">
