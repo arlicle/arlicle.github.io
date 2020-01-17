@@ -64,7 +64,7 @@
     {
         &quot;name&quot;:&quot;用户退出登录&quot;,
         &quot;method&quot;:&quot;GET&quot;,
-        &quot;url&quot;:&quot;/logout/&quot;
+        &quot;url&quot;:&quot;/logout/&quot;,
         &quot;query&quot;:{
             &quot;id&quot;:{&quot;name&quot;:&quot;用户id&quot;},
             &quot;username&quot;:{&quot;name&quot;:&quot;用户名&quot;}
@@ -75,14 +75,14 @@
         },
         &quot;test&#95;data&quot;:&#91;
             {
-                &quot;query&quot;:{&quot;id&quot;:1, &quot;username&quot;:&quot;root&quot;}
+                &quot;query&quot;:{&quot;id&quot;:1, &quot;username&quot;:&quot;root&quot;},
                 &quot;response&quot;:{&quot;code&quot;:1, &quot;msg&quot;:&quot;退出成功&quot;}
             },
             {
                 &quot;response&quot;:{&quot;code&quot;:-1, &quot;msg&quot;:&quot;非法操作&quot;}
             },
             {
-                &quot;query&quot;:{&quot;id&quot;:3, &quot;username&quot;:&quot;lily&quot;}
+                &quot;query&quot;:{&quot;id&quot;:3, &quot;username&quot;:&quot;lily&quot;},
                 &quot;response&quot;:{&quot;code&quot;:-1, &quot;msg&quot;:&quot;用户名和id不匹配&quot;}
             }
         &#93;
@@ -233,7 +233,7 @@
         },
     ....
 </code></pre><h3>注意事项</h3><p>如果不同的接口，同一个url, 但是请求方法不同，有GET,有POST是允许的。</p><p>如果不同的接口，同一个url, 请求方法也相同，都是GET或者都是POST，那么系统会判定，只允许一个。</p><h3>结尾</h3><p>至此，我们的建议教学就结束了，可以试着找一个以前的项目或者新项目，开始写自己的接口文档，遇到有任何的问题或者意见建议，欢迎和我讨论。</p><p>下一篇，开启高级教学，一些复杂的用法，以及代码和数据的重用，让我们更简单快速的维护接口文档。</p>
-            <p class="text-left text-muted">2020-01-17 08:47</p>
+            <p class="text-left text-muted">2020-01-17 09:12</p>
         </div>
         <div class="container">
             <div class="row mt-4">
