@@ -126,7 +126,7 @@
     &quot;username&quot;:{&quot;name&quot;:&quot;用户名&quot;},
     &quot;password&quot;:{&quot;name&quot;:&quot;用户登录密码&quot;}
 },
-&quot;query&quot;:{} /&#42; url上的query参数（可选） 比如aaa=3&amp;bbb=4 不填写时默认为空 &#42;/
+&quot;query&quot;:{}, /&#42; url上的query参数（可选） 比如aaa=3&amp;bbb=4 不填写时默认为空 &#42;/
 &quot;response&quot;:{
     &quot;code&quot;:{&quot;name&quot;:&quot;返回结果的代码&quot;, &quot;type&quot;:&quot;int&quot;, &quot;desc&quot;:&quot;登录成功只返回1&quot;},
     &quot;msg&quot;:{&quot;name&quot;:&quot;登录成功返回消息&quot;, &quot;type&quot;:&quot;string&quot;, &quot;desc&quot;:&quot;通常返回都是空&quot;},
@@ -137,15 +137,15 @@
 </code></pre><p>其中当请求method是POST的时候，body_mode和body字段设置了才会有效，当请求method是GET的时候，对应的字段是query。</p><h3>body 字段</h3><p>body表示post的请求body，因为我们定义body_mode是json，因此他必须提交json格式的数据。 body中的第一个字段username的属性是{"name":"用户名"}, 这个属性的完整写法是<pre><code class=".language-json">&quot;username&quot;:{
     &quot;name&quot;:&quot;用户名&quot;, /&#42; 字段的名称 &#42;/
     &quot;desc&quot;:&quot;用户名的描述&quot;, /&#42; 字段的描述说明 &#42;/
-    &quot;type&quot;:&quot;string&quot; /&#42; 字段的类型， &#40;可选&#41; 不填写时默认是string &#42;/
+    &quot;type&quot;:&quot;string&quot;, /&#42; 字段的类型， &#40;可选&#41; 不填写时默认是string &#42;/
     &quot;required&quot;:true, /&#42; 字段是否必填，&#40;可选&#41; 不填写的时候默认是必填 &#42;/
-    &quot;default&quot;:null /&#42; 字段的默认值，&#40;可选&#41; 不填写时默认是空 &#42;/
+    &quot;default&quot;:null, /&#42; 字段的默认值，&#40;可选&#41; 不填写时默认是空 &#42;/
     &quot;enum&quot;:&#91;&#93; /&#42; 字段的枚举值，&#40;可选&#41; 表示字段只能从这几个字段中有值，比如&#91;&quot;edison&quot;,&quot;lemon&quot;,&quot;jay&quot;&#93;, 
     那么username只能是这3个值中的一个 &#42;/
 }
 </code></pre></p><p>当我们不写<code>desc</code>属性时，默认为空，不写<code>required</code>属性时，默认为true, 也就是这个字段是必填的。</p><h3>type 字段的类型</h3><p>type 字段的类型一共有这几种</p><ol><li>string 字符串 "aaa"</li><li>number 数字 1、2</li><li>bool 布尔值 true、false</li><li>object 对象 {}</li><li>array 数组 []</li></ol><h3>response</h3><p>response表示请求后返回的结果字段说明，里面的字段由自己根据前后端约定去定义</p><h3>test_data</h3><p>test_data是非常强大和方便的一个功能，表示前端请求的数据和对应返回的数据集，我们定义好了这个数据集，系统才会接收对应的数据请求，然后返回对应的数据。里面的字段就可以根据真实情况，自己按要求去定义和模拟就好了。</p><p>test_data里面完整的有三个字段<pre><code class=".language-json">{
-    &quot;body&quot;: {...} /&#42; request body 请求值， 只在POST请求是才有 &#40;可选&#41; &#42;/
-    &quot;query&quot;:{...} /&#42; url query 请求值 在POST和GET中都可以有 &#40;可选&#41; &#42;/
+    &quot;body&quot;: {...}, /&#42; request body 请求值， 只在POST请求是才有 &#40;可选&#41; &#42;/
+    &quot;query&quot;:{...}, /&#42; url query 请求值 在POST和GET中都可以有 &#40;可选&#41; &#42;/
     &quot;response&quot;:{...} /&#42; 返回结果 &#42;/
 }
 </code></pre></p><h3>用户退出登录接口</h3><p>这里因为是为了模拟GET请求中的query参数，所以可以加了username和id字段。我们可以看到,当请求method是GET的时候，我们的query参数就要放到query字段中，当然query这个字段的参数在POST请求时也是有效的，你可以同时还有body参数和query参数</p><p>在退出登录接口中，因为请求方法是GET, 所以请求参数放到了query中<pre><code class=".language-json">&quot;query&quot;:{
@@ -251,7 +251,7 @@
         },
     ....
 </code></pre><h3>注意事项</h3><p>如果不同的接口，同一个url, 但是请求方法不同，有GET,有POST是允许的。</p><p>如果不同的接口，同一个url, 请求方法也相同，都是GET或者都是POST，那么系统会判定，只允许一个。</p><h3>结尾</h3><p>至此，我们的建议教学就结束了，可以试着找一个以前的项目或者新项目，开始写自己的接口文档，遇到有任何的问题或者意见建议，欢迎和我讨论。</p><p>下一篇，开启高级教学，一些复杂的用法，以及代码和数据的重用，让我们更简单快速的维护接口文档。</p>
-            <p class="text-left text-muted">2020-01-18 01:02</p>
+            <p class="text-left text-muted">2020-01-18 01:04</p>
         </div>
         <div class="container">
             <div class="row mt-4">
