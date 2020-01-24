@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[Panda-api中文说明](https://www.debugmyself.com/p/2020/1/24/Panda-api中文说明/)  
+
 [Windows下安装Panda Api](https://www.debugmyself.com/p/2020/1/18/Windows下安装Panda-Api/)  
 
 [Mac下安装Panda Api](https://www.debugmyself.com/p/2020/1/17/Mac下安装Panda-Api/)  
