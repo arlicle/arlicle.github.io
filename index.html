@@ -18,11 +18,14 @@
 
 
 
-            <p>Panda api中， test_data是一个非常非常重要的设计，可以方便前端进行各种情况的测试。</p><p>test_data中，有这么几个字段可以进行数据匹配</p><p>{<pre><code>url:&quot;/post/10/&quot;, // 网址匹配
-query: {}, // query/GET 参数匹配
-body: {}, // post中body参数匹配
-response:{} // 匹配成功后返回的结果 </code></pre>}</p><p><code>url</code>、<code>query</code>、<code>body</code> 这三者是可以同时存在或者只有其中一个存在，或者都不存在， 匹配成功后返回response中的结果</p>
-            <p class="text-left text-muted">2020-01-27 02:23</p>
+            <p>Panda api中， test_data是一个非常非常重要的设计，可以方便前端进行各种情况的测试。</p><p>test_data中，有这么几个字段可以进行数据匹配</p><pre><code class=".language-json5">{
+    url:&quot;/post/10/&quot;, // 网址匹配
+    query: {}, // query/GET 参数匹配
+    body: {}, // post中body参数匹配
+    response:{} // 匹配成功后返回的结果
+}
+</code></pre><p><code>url</code>、<code>query</code>、<code>body</code> 这三者是可以同时存在或者只有其中一个存在，或者都不存在， 匹配成功后返回response中的结果</p>
+            <p class="text-left text-muted">2020-01-27 02:24</p>
         </div>
         <div class="container">
             <div class="row mt-4">
