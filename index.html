@@ -24,8 +24,126 @@
     body: {}, // post中body参数匹配
     response:{} // 匹配成功后返回的结果
 }
-</code></pre><p><code>url</code>、<code>query</code>、<code>body</code> 这三者是可以同时存在或者只有其中一个存在，或者都不存在， 匹配成功后返回response中的结果</p>
-            <p class="text-left text-muted">2020-01-27 02:24</p>
+</code></pre><p><code>url</code>、<code>query</code>、<code>body</code> 这三者是可以同时存在或者只有其中一个存在，或者都不存在， 匹配成功后返回response中的结果</p><h3>使用url匹配的test_data</h3><pre><code class=".language-json5">{
+    name:&quot;Article view&quot;,
+    method:&quot;GET&quot;,
+    url:&quot;/post/{id:\\d+}/&quot;, // the url support regex match
+    response:{
+        code:{name:&quot;response result code&quot;, type:&quot;int&quot;, desc:&quot;success is 1&quot;},
+        msg:{name:&quot;response result message&quot;, type:&quot;string&quot;, desc:&quot;&quot;},
+        data: {
+            &quot;-name&quot;:&quot;data field name&quot;,
+            &quot;-desc&quot;:&quot;data field description&quot;,
+            &quot;-required&quot;:false,
+            id:{name:&quot;article id&quot;, type:&quot;number&quot;},
+            title:{name:&quot;article title&quot;},
+            summary:{name:&quot;article summary&quot;},
+            content:{name:&quot;article content&quot;},
+            category&#95;name:{name:&quot;article category name&quot;},
+            author&#95;name:{name:&quot;article author name&quot;},
+            source:{name:&quot;article source&quot;},
+            tag:{name:&quot;article tag&quot;},
+            read&#95;count:{name:&quot;article read count&quot;, type:&quot;number&quot;},
+            created:{name:&quot;article created time&quot;, type:&quot;number&quot;},
+            }
+    },
+    test&#95;data:&#91;
+        {
+            url:&quot;/post/1/&quot;, // use url match
+            response:{
+                code:1,
+                msg:&quot;&quot;,
+                data: {
+                    id:1,
+                    title:&quot;Hello World&quot;,
+                    summary:&quot;This is the first post&quot;,
+                    content:&quot;This is the first post, and it is a test case data&quot;,
+                    category&#95;name:&quot;Other Category&quot;,
+                    author&#95;name:&quot;Edison&quot;,
+                    source:&quot;Panda api&quot;,
+                    tag:&quot;test&quot;,
+                    read&#95;count:1,
+                    created:1580048711
+                }
+            },
+        },
+        {
+            url:&quot;/post/3000/&quot;,
+            response:{
+                code:-1,
+                msg:&quot;article not found&quot;
+            },
+        }
+    &#93;
+},
+
+</code></pre><p>首先，我们的url是一个正则匹配<code>/post/{id:\\d+}/</code>，<code>/post/&#40;数字&#41;/</code>的都满足匹配条件，</p><p>test_data中的第一个元素，<code>url:&quot;/post/1/&quot;</code>， 必须请求url是<code>/post/1/</code>, 才会返回其对应的 <code>response</code>；</p><p>test_data中的第二个元素，<code>url:&quot;/post/3000/&quot;</code>, 必须请求url是 <code>/post/3000/</code>，才会返回其对应的<code>response</code>；</p><h3>使用query 进行匹配</h3><pre><code class=".language-json5">{
+    name:&quot;user logout&quot;,
+    method:&quot;GET&quot;,
+    url:&quot;/logout/&quot;,
+    query:{
+        id:{name:&quot;user id&quot;},
+        username:{}
+    },
+    response:{
+        code:{name:&quot;response result code&quot;, type:&quot;int&quot;, desc:&quot;success is 1&quot;},
+        msg:{name:&quot;response result message&quot;, type:&quot;string&quot;, desc:&quot;&quot;}
+    },
+    test&#95;data:&#91;
+        {
+            query:{id:1, username:&quot;root&quot;},
+            response:{code:1, msg:&quot;logout success&quot;}
+        },
+        {
+            response:{code:-1, msg:&quot;error&quot;}
+        },
+        {
+            query:{id:3, username:&quot;lily&quot;},
+            response:{code:-1, msg:&quot;username and id not match&quot;}
+        }
+    &#93;
+}
+
+</code></pre><h3>使用body进行匹配</h3><pre><code class=".language-json5">{
+    name:&quot;user login&quot;,
+    desc:&quot;if user login success, will get a token&quot;,
+    method: &quot;POST&quot;,
+    url:&quot;/login/&quot;,
+    body&#95;mode:&quot;json&quot;, // form-data, text, json, html, xml, javascript, binary
+    body:{
+        username:{name: &quot;username&quot;},
+        password:{name: &quot;password&quot;}
+    },
+    response:{
+        code:{name:&quot;response result code&quot;, type:&quot;int&quot;, desc:&quot;success is 1&quot;},
+        msg:{name:&quot;response result message&quot;, type:&quot;string&quot;, desc:&quot;&quot;},
+        token:{name:&quot;login success, get a user token; login failed, no token&quot;, type:&quot;string&quot;, required:false}
+    },
+    test&#95;data:&#91;
+        {
+            body:{username:&quot;edison&quot;, password:&quot;123&quot;},
+            response:{code:-1, msg:&quot;password incorrect&quot;}
+        },
+        {
+            body:{username:&quot;lily&quot;, password:&quot;123&quot;},
+            response:{code:-2, msg:&quot;username not exist&quot;}
+        },
+        {
+            body:{username:&quot;root&quot;, password:&quot;123&quot;},
+            response:{code:1, msg:&quot;login success&quot;, token:&quot;fjdlkfjlafjdlaj3jk2l4j&quot;}
+        },
+        {
+            body:{username:&quot;lily&quot;},
+            response:{code:-1, msg:&quot;password is required&quot;}
+        },
+        {
+            body:{password:&quot;123&quot;},
+            response:{code:-1, msg:&quot;username is required&quot;}
+        }
+    &#93;
+},
+</code></pre>
+            <p class="text-left text-muted">2020-01-27 13:29</p>
         </div>
         <div class="container">
             <div class="row mt-4">
