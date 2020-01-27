@@ -1,5 +1,5 @@
-/* PrismJS 1.17.1
-https://prismjs.com/download.html#themes=prism-okaidia&languages=markup+css+clike+javascript+bash+clojure+markup-templating+git+go+java+php+json+latex+sql+python+rust */
+/* PrismJS 1.19.0
+https://prismjs.com/download.html#themes=prism-okaidia&languages=markup+css+clike+javascript+bash+c+csharp+cpp+clojure+dart+git+java+json+json5+markdown+markup-templating+objectivec+php+python+regex+rust+sql+typescript+wasm+wiki+yaml */
 /**
  * okaidia theme for JavaScript, CSS and HTML
  * Loosely based on Monokai textmate theme by http://www.monokai.nl/
@@ -61,7 +61,7 @@ pre[class*="language-"] {
 	color: #f8f8f2;
 }
 
-.namespace {
+.token.namespace {
 	opacity: .7;
 }
 
