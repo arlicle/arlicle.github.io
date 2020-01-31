@@ -50,8 +50,20 @@
 // 随机返回 长度在300到1600长度的英文段落
 </code></pre><h2>cparagraph | cp 大段的中文段落</h2><p>拥有额外参数<code>content&#95;type</code>标记内容类型，目前可选为：<code>html</code>、<code>markdown</code>。<code>html</code>输出带有html标记标签<code>&lt;p&gt;</code>的内容段落；<code>markdown</code>输出带有<code>\n\n</code>作为换行分隔的内容段落，默认是<code>markdown</code></p><pre><code class=".language-json5">{name: &quot;大段的中文段落&quot;, type: &quot;cparagraph&quot;},
 // 随机返回 长度在300到1600长度的英文段落
-</code></pre><h2>name 英文人名</h2><h2>cname 中文人名</h2><h2>address 英文地址</h2><h2>caddress 中文地址</h2><h2>image 图像</h2><h2>url 网址</h2><h2>ip IP地址</h2><h2>email 邮箱</h2>
-            <p class="text-left text-muted">2020-01-31 00:27</p>
+</code></pre><h2>name 英文人名</h2><p>随机返回一个英文人名<pre><code class=".language-json5">{name: &quot;人名&quot;, type: &quot;name&quot;},
+// 随机返回英文人名：Cynthia Kenneth Wilson
+</code></pre></p><p>返回的英文人名随机输出含有middle name 或者不含有middle name的英文名</p><h2>cname 中文人名</h2><p>随机返回一个中文名<pre><code class=".language-json5">{name: &quot;人名&quot;, type: &quot;cname&quot;},
+// 随机返回中文人名：黎梦
+</code></pre></p><p>随机返回的中文名，有可能有是两个字，也有可能是三个字的</p><h2>url 网址</h2><p>随机返回一个网址<pre><code class=".language-json5">{name: &quot;网址&quot;, type: &quot;url&quot;},
+// 随机返回网址：https://www.debugmyself.com/aa/
+</code></pre></p><h2>domain 域名</h2><p>随机返回一个域名<pre><code class=".language-json5">{name: &quot;域名&quot;, type: &quot;domain&quot;},
+// 随机返回域名：debugmyself.com
+</code></pre></p><h2>ip IP地址</h2><p>随机返回一个ip地址<pre><code class=".language-json5">{name: &quot;ip地址&quot;, type: &quot;ip&quot;},
+// 随机返回ip地址：192.168.5.12
+</code></pre></p><h2>email 邮箱</h2><p>随机返回一个邮箱地址<pre><code class=".language-json5">{name: &quot;邮箱地址&quot;, type: &quot;email&quot;},
+// 随机返回邮箱地址：fdsalf2@qq.com
+</code></pre></p><h2>image 图像</h2><p>image拥有额外属性参数：</p><ul><li><code>size</code> 图像尺寸，例如"200x100", "300x250", 如果没有设置，默认就随机返回一个尺寸</li><li><code>foreground</code> 图像上的文字颜色，例如:"#868e96"，"#000000", 默认随机一个颜色</li><li><code>background</code> 图像上的背景色，例如:"#ffffff"，"#007bff", 默认随机一个颜色</li><li><code>format</code> 图像格式，可选格式有："png"、"gif"、"jpg", 默认从三个随机返回</li><li><code>text</code> 需要显示在图像上的文字,默认为空</li></ul>
+            <p class="text-left text-muted">2020-01-31 00:55</p>
         </div>
         <div class="container">
             <div class="row mt-4">
