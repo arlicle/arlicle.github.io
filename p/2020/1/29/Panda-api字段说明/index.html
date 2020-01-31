@@ -68,8 +68,112 @@
 // 随机返回一个尺寸、颜色的图像地址：https://dummyimage.com/720x300/ffc107/fff/?text=
 </code></pre></p><p>使用指定的尺寸和颜色生成图像<pre><code class=".language-json5">{name: &quot;头像&quot;, type: &quot;image&quot;, size:&quot;300x300&quot;, foreground:&quot;#fff&quot;, background:&quot;#ff3e00&quot;, format:&quot;png&quot;, text:&quot;Panda Api&quot;},
 // 返回 https://dummyimage.com/300x300/ff3e00/fff/?text=Panda Api
-</code></pre></p>
-            <p class="text-left text-muted">2020-01-31 01:57</p>
+</code></pre></p><h2>object 对象字段</h2><p>对象字段表示这个字段存储的是一个对象，里面还有属性字段，例如：</p><pre><code class=".language-json5">category: {
+    id: {name:&quot;分类id&quot;, type:&quot;PosInt&quot;},
+    name: {name:&quot;分类名称&quot;, type:&quot;cword&quot;, min&#95;length:4, max&#95;length:10}
+}
+// 将会输出mock数据
+&quot;category&quot;: {
+    &quot;id&quot;: 3408247458278907748,
+    &quot;name&quot;: &quot;因没国众北去题养化&quot;
+}
+</code></pre><p>这里<code>category</code>就是一个对象字段，系统已经知道category是一个object了，可以不需要单独写，但是因为对象的属性可能会和原始的字段描述<code>type</code>、<code>name</code>、<code>desc</code>等的属性发生命名冲突，因此这里如果需要是用这些属性，前面需要加一个英文的<code>-</code>(减号)。例如：<pre><code class=".language-json5">category: {
+    &quot;-name&quot;:&quot;文章分类&quot;,
+    &quot;-desc&quot;:&quot;文章分类描述&quot;,
+    id: {name:&quot;分类id&quot;, type:&quot;PosInt&quot;},
+    name: {name:&quot;分类名称&quot;, type:&quot;cword&quot;, min&#95;length:4, max&#95;length:10}
+}
+// 将会输出mock数据
+&quot;category&quot;: {
+    &quot;id&quot;: 5528385245714244033,
+    &quot;name&quot;: &quot;价农自江响规领&quot;
+}
+</code></pre></p><h2>array 数组字段</h2><p>数组字段标书数据是一个列表，列表里面的元素可以是单独一个元素如，整数、字符串，也可以是一个对象。数组字段可以通过属性限定数组的长度：<code>-length</code> 固定长度的数组；<code>-min&#95;length</code> 最小数组长度， <code>-max&#95;length</code> 最大数组长度。设定了<code>-min&#95;length</code>和<code>-max&#95;length</code>后，数组会在这个范围内随机返回一个长度；默认返回3到10范围长度的数组。写法如下：<pre><code class=".language-json5">// 分类列表, 列表里面的元素是一个分类对象
+items: &#91;{
+    id: {name:&quot;分类id&quot;, type:&quot;PosInt&quot;},
+    name: {name:&quot;分类名称&quot;, type:&quot;cword&quot;, min&#95;length:4, max&#95;length:10}
+}&#93;
+// 将会输出mock数据
+&quot;items&quot;: &#91;
+    {
+        &quot;id&quot;: 4866056297678518960,
+        &quot;name&quot;: &quot;连地织地阶&quot;
+    },
+    {
+        &quot;id&quot;: 5312498283148111047,
+        &quot;name&quot;: &quot;目下西却列&quot;
+    },
+    {
+        &quot;id&quot;: 5674167607527511114,
+        &quot;name&quot;: &quot;约反况条权然究&quot;
+    }
+&#93;,
+</code></pre></p><p>默认随机返回3到10条数组元素，不需要标记类型，系统会自动知道这个类型就是一个数组。也可以手动进行标记：</p><pre><code class=".language-json5">// 分类列表，列表里面的元素是一个分类对象
+items: &#91;{
+    &quot;-name&quot;:&quot;分类列表&quot;,
+    &quot;-desc&quot;:&quot;按分类的添加时间进行排序输出&quot;,
+    &quot;-length&quot;:5, // 每次数组固定返回5条数据
+    id: {name:&quot;分类id&quot;, type:&quot;PosInt&quot;},
+    name: {name:&quot;分类名称&quot;, type:&quot;cword&quot;, min&#95;length:3, max&#95;length:10}
+}&#93;
+// 将会输出mock数据
+
+&quot;items&quot;: &#91;
+    {
+        &quot;id&quot;: 523127155952452383,
+        &quot;name&quot;: &quot;两照精名七消水管其&quot;
+    },
+    {
+        &quot;id&quot;: 5217556273572555303,
+        &quot;name&quot;: &quot;本最毛何劳个南&quot;
+    },
+    {
+        &quot;id&quot;: 861716532598225950,
+        &quot;name&quot;: &quot;记青亲十风于热管&quot;
+    },
+    {
+        &quot;id&quot;: 7493601546937027951,
+        &quot;name&quot;: &quot;写光府那是太运&quot;
+    },
+    {
+        &quot;id&quot;: 3356699170396899346,
+        &quot;name&quot;: &quot;气育位还克团高关&quot;
+    }
+&#93;,
+
+</code></pre><p>设定一个返回id列表的数组</p><pre><code class=".language-json5">// id列表，列表里面的元素是一个数字
+items: &#91;{
+    &quot;-name&quot;:&quot;分类id列表&quot;,
+    &quot;-desc&quot;:&quot;分类id列表描述&quot;,
+    &quot;-length&quot;:3,
+    name: &quot;分类id&quot;,
+    type: &quot;PosInt&quot;
+}&#93;
+// 将会输出mock数据
+&quot;items&quot;: &#91;
+    1953408354386511745,
+    476051422826867276,
+    8882528644658661510
+&#93;,
+</code></pre><p><code>注意：</code> <code>&quot;-name&quot;</code>和<code>&quot;-desc&quot;</code>是用来描述<code>items</code>的，<code>name</code>是用来描述数组元素的</p><p>设定一个返回人名列表的数组</p><pre><code class=".language-json5">items: &#91;{
+    &quot;-name&quot;:&quot;人名列表&quot;,
+    &quot;-desc&quot;:&quot;人员姓名列表描述&quot;,
+    &quot;-min&#95;length&quot;:5,
+    &quot;-max&#95;length&quot;:8,
+    name: &quot;人员姓名&quot;,
+    type: &quot;cname&quot;
+}&#93;
+// 将会输出mock数据
+&quot;items&quot;: &#91;
+    &quot;谢敏&quot;,
+    &quot;汪芳&quot;,
+    &quot;苏勇&quot;,
+    &quot;乔丽&quot;,
+    &quot;苏娜&quot;,
+    &quot;谭娟&quot;
+&#93;
+</code></pre><p>这里要注意数组是单个元素和数组中是对象的不同写法。</p>
+            <p class="text-left text-muted">2020-01-31 03:30</p>
         </div>
         <div class="container">
             <div class="row mt-4">
