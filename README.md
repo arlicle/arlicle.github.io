@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[Panda-api接口权限配置说明](https://www.debugmyself.com/p/2020/2/2/Panda-api接口权限配置说明/)  
+
 [Panda-api字段说明](https://www.debugmyself.com/p/2020/1/29/Panda-api字段说明/)  
 
 [Panda-api test_data匹配说明](https://www.debugmyself.com/p/2020/1/27/Panda-api-test_data匹配说明/)  
