@@ -18,7 +18,7 @@
 
 
 
-            <p>一个系统，通常会涉及不同的权限和用户角色，每一种角色对接口的<code>增</code>、<code>删</code>、<code>改</code>、<code>查</code>的权限是不一样的，或者对同一个接口地址的请求方法<code>GET</code>、<code>POST</code>、<code>PUT</code>、<code>DELETE</code>的权限也会有不同，Panda Api在设计的时候很好的兼容了这些情况。下面我们用例子来进行说明：</p><p>首先，在我们的项目接口文档目录的根目录下创建<code>&#95;auth.json5</code>文件，该文件和<code>&#95;settings.json5</code>在同一级目录。</p><p><code>注意：</code> 只有接口文档中<code>auth:true</code>的情况下，Panda Api才会对接口进行权限验证。你可以在接口文档中设置，也可以在<code>&#95;settings.json5</code>中进行全局开启，然后在不需要权限验证的接口的地方再单独关闭。例如：</p><pre><code class=".language-json5">// &#95;settings.json5
+            <p>一个系统，通常会涉及不同的权限和用户角色，每一种角色对接口的<code>增</code>、<code>删</code>、<code>改</code>、<code>查</code>的权限是不一样的，或者对同一个接口地址的请求方法<code>GET</code>、<code>POST</code>、<code>PUT</code>、<code>DELETE</code>的权限也会有不同，Panda Api在设计的时候很好的兼容了这些情况。下面我们用例子来进行说明：</p><p>首先，在我们的项目接口文档目录的根目录下创建<code>&#95;auth.json5</code>文件，该文件和<code>&#95;settings.json5</code>在同一级目录。</p><p><code>注意：</code> 只有接口文档中<code>auth:true</code>的情况下，Panda Api才会对接口进行权限验证，如果<code>auth:false</code>，那么会跳过auth验证。你可以在接口文档中设置，也可以在<code>&#95;settings.json5</code>中进行全局开启，然后在不需要权限验证的接口的地方再单独关闭。例如：</p><pre><code class=".language-json5">// &#95;settings.json5
 {
   project&#95;name: &quot;Panda Api&quot;,
   project&#95;desc: &quot;Panda api is a simple api manage tool&quot;,
@@ -60,7 +60,7 @@
     }
     &#93;
 }
-</code></pre></p><p>这个文档表示：用户root，token是<code>9&#41;N2Ck&#42;&#126;nB1tMj3le7dstcX3ymfM3LqB6y!Kk!NZlg91&#40;st&amp;EY&#126;etZN1&#40;&#41;vU</code>，他拥有全部的接口访问权限，除了<code>/admin/user/</code>这个接口的<code>DELETE</code>请求方法。</p><h2>auth_type</h2><p>表示Authentication类型，默认是Bearer</p><h2>auth_place</h2><p>表示token放的位置，可以放到headers,body或者query，默认是headers</p><h2>no_perm_response</h2><p>表示没有权限时返回的错误内容，可以在根节点，全局设置一个，然后所有test_data列表中的权限都会继承，test_data中的权限也可以重写自己的no_perm_response，如果都没有设置，系统在遇到没有权限的时候，会返回：<pre><code class=".language-json">{
+</code></pre></p><p>这个文档表示：用户root，token是<code>9&#41;N2Ck&#42;&#126;nB1tMj3le7dstcX3ymfM3LqB6y!Kk!NZlg91&#40;st&amp;EY&#126;etZN1&#40;&#41;vU</code>，他拥有全部的接口访问权限，除了<code>/admin/user/</code>这个接口的<code>DELETE</code>请求方法。</p><h2>auth_type</h2><p>表示Authentication类型，默认是Bearer</p><h2>auth_place</h2><p>表示token放的位置，可以放到headers,body或者query，默认是headers</p><h2>no_perm_response</h2><p>表示没有权限时返回的错误内容，可以在根节点，全局设置一个，然后所有groups列表中的权限都会继承，groups中的权限也可以重写自己的no_perm_response，如果都没有设置，系统在遇到没有权限的时候，会返回：<pre><code class=".language-json">{
     &quot;code&quot;:-1,
     &quot;error&quot;:&quot;no perm to visit&quot;
 }
@@ -97,7 +97,7 @@ cKT8Nd76z!%6Iq0hN&#40;Ac&#94;83UCru%#vVT&#126;zK&amp;aldWJ1&#42;1Phi#hdj2LG8K1m&
 PxtKs9YgbaZbiWtolsK8xIizeJKaYfg$pJL7Jz1p54RTHi!R4&amp;9NVjn6uyjo
 xUtBNQIlp&#40;Jd04p$%COM0g&#42;q0yiP$l&#42;&#126;ah&#94;WkKwlqTONQ0#Z9u#FWF!QmueS
 </code></pre><p>意思是生成长度为60的10个token，每一行是一个。60可以改为你想要的token长度。默认每次生成10个，如果想要更多个，就多执行几次命令。未来这里会和jwt生成算法进行结合。</p>
-            <p class="text-left text-muted">2020-02-02 11:25</p>
+            <p class="text-left text-muted">2020-02-02 11:31</p>
         </div>
         <div class="container">
             <div class="row mt-4">
