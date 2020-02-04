@@ -18,9 +18,9 @@
 
 
 
-            <p>为了更人方便、更人性化的进行body、query或者response中的字段设计，我又拓展了字段类型，一方面可以更快速的进行字段设计，另外一方面，可以生成更符合实际情况的mock数据。系统会在test_data匹配不到数据的时候，默认返回response设定好的字段里面的mock数据。</p><h2>number | int</h2><p><code>int</code> 就是整数类型，他有这么几个范围的参数，他们分别是（按有效优先级别展示）：</p><ul><li><code>value</code> : 一旦设置了<code>value</code>, 那么mock就一直只会返回<code>value</code>的值，其它所有值范围属性都会忽略，例如<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, value:10},
+            <p>为了更人方便、更人性化的进行body、query或者response中的字段设计，我又拓展了字段类型，一方面可以更快速的进行字段设计，另外一方面，可以生成更符合实际情况的mock数据。系统会在test_data匹配不到数据的时候，默认返回response设定好的字段里面的mock数据。</p><h2>字段的公共属性</h2><p>所有字段都共有的属性</p><ul><li><code>name</code> : 字段名称</li><li><code>desc</code> : 字段描述</li><li><code>required</code> : 字段是否必填，(可选) 不填写的时候默认是必填</li><li><code>type</code> : 字段类型</li><li><code>default</code> :  字段的默认值，(可选) 不填写时默认是空</li><li><code>value</code> : 一旦设置了<code>value</code>, 那么mock就一直只会返回<code>value</code>的值，其它所有值范围属性都会忽略<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, value:10},
 </code></pre>设定后mock只会一直返回值 10</li><li><code>enum</code> : <code>enum</code>是一个数组，mock会随机返回<code>enum</code>数组中的值，例如<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, enum:&#91;10,20,30&#93;},
-</code></pre>mock会随机返回<code>enum</code>列表[10,20,30]中的其中一个</li></ul><ul><li><code>min&#95;value</code> 最小值，设定后，所有mock的值会大于这个值，例如：<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, min&#95;value:1},
+</code></pre>mock会随机返回<code>enum</code>列表[10,20,30]中的其中一个</li></ul><h2>number | int</h2><p><code>int</code> 就是整数类型，他有这么几个范围的参数，他们分别是（按有效优先级别展示）：</p><ul><li><code>min&#95;value</code> 最小值，设定后，所有mock的值会大于这个值，例如：<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, min&#95;value:1},
 </code></pre></li><li><code>max&#95;value</code> 最大值，设定后，所有mock的值会小于这个值，例如：<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, max&#95;value:1000},
 </code></pre></li></ul><p>通常<code>min&#95;value</code>和<code>max&#95;value</code>会同时使用，例如<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, min&#95;value:1, max&#95;value:1000},
 </code></pre></p><h2>其它数字类型</h2><p>我们还有其它数字类型，如：正整数<code>PosInt</code>、负整数<code>NegInt</code>，浮点数<code>Float</code>，正浮点数<code>PosFloat</code>，负浮点数<code>NegFloat</code>，时间戳<code>Timestamp</code>。</p><h2>PosInt</h2><p>表示正整数</p><h2>NegInt</h2><p>表示负整数</p><h2>Float</h2><p>表示小数</p><h2>PosFloat</h2><p>表示正小数</p><h2>NegFloat</h2><p>表示负小数</p><p>小数比整数多了三个参数：</p><ul><li><code>decimal&#95;places</code> 表示小数的固定位数，默认是2位<pre><code class=".language-json5">money: {name: &quot;Money&quot;, type: &quot;float&quot;, decimal&#95;places:2},
@@ -175,7 +175,7 @@ items: &#91;{
     &quot;谭娟&quot;
 &#93;
 </code></pre><p>这里要注意数组是单个元素和数组中是对象的不同写法。</p>
-            <p class="text-left text-muted">2020-01-31 07:01</p>
+            <p class="text-left text-muted">2020-02-04 03:38</p>
         </div>
         <div class="container">
             <div class="row mt-4">
