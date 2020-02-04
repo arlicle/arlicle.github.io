@@ -18,107 +18,106 @@
 
 
 
-            <h3>全局字段属性，不需要重复写相同的字段</h3><p>我们在上一篇的简易教学文章中，用户登录接口和用户退出接口的response返回字段，都有一个<code>code</code>字段和<code>msg</code>字段，<pre><code class=".language-json">&quot;response&quot;:{
-    &quot;code&quot;:{...},
-    &quot;msg&quot;:{...}
+            <h3>全局字段属性，不需要重复写相同的字段</h3><p>我们在上一篇的简易教学文章中，用户登录接口和用户退出接口的response返回字段，都有一个<code>code</code>字段和<code>msg</code>字段，<pre><code class=".language-json5">response:{
+    code:{...},
+    msg:{...}
 }
-</code></pre></p><p>实际上，很有可能，我们整个系统的接口，都遵循同样的标准，所有接口都有<code>code</code>字段和<code>msg</code>字段，那么，每个地方的body和response都去写岂不是很麻烦；另外，可能我们整个网站绝大部分的接口都是要登录的，只有很少的一小部分不需要登录，每个都去设置也很麻烦啊。我承认就是懒，所以Panda api提供了一个简单的全局设置方法。</p><p>打开<code>&#95;settings.json</code>文件<pre><code class=".language-json">{
-  &quot;project&#95;name&quot;: &quot;Panda Api&quot;, /&#42; 项目名称 &#42;/
-  &quot;project&#95;desc&quot;: &quot;Panda Api is a simple api manage tool&quot; /&#42; 项目简述 &#42;/
+</code></pre></p><p>实际上，很有可能，我们整个系统的接口，都遵循同样的标准，所有接口都有<code>code</code>字段和<code>msg</code>字段，那么，每个地方的body和response都去写岂不是很麻烦；另外，可能我们整个网站绝大部分的接口都是要登录的，只有很少的一小部分不需要登录，每个都去设置也很麻烦啊。我承认就是懒，所以Panda api提供了一个简单的全局设置方法。</p><p>打开<code>&#95;settings.json</code>文件<pre><code class=".language-json5">{
+  project&#95;name: &quot;Panda Api&quot;, /&#42; 项目名称 &#42;/
+  project&#95;desc: &quot;Panda Api is a simple api manage tool&quot; /&#42; 项目简述 &#42;/
 }
-</code></pre></p><p>我们增加<code>global</code>字段，内容变为：</p><pre><code class=".language-json">{
-  &quot;project&#95;name&quot;: &quot;Panda Api&quot;,
-  &quot;project&#95;desc&quot;: &quot;Panda Api is a simple api manage tool&quot;,
-  &quot;global&quot;: {
-    &quot;api&quot;:{
-      &quot;auth&quot;: true,
-      &quot;response&quot;:{
-        &quot;code&quot;:{&quot;name&quot;:&quot;返回的状态码&quot;, &quot;type&quot;:&quot;number&quot;},
-        &quot;msg&quot;:{&quot;name&quot;:&quot;返回的状态说明&quot;}
+</code></pre></p><p>我们增加<code>global</code>字段，内容变为：</p><pre><code class=".language-json5">{
+  project&#95;name: &quot;Panda Api&quot;,
+  project&#95;desc: &quot;Panda Api is a simple api manage tool&quot;,
+  global: {
+    apis:{
+      auth: true,
+      response:{
+        code:{name:&quot;返回的状态码&quot;, type:&quot;number&quot;},
+        msg:{name:&quot;返回的状态说明&quot;}
       }
     },
   }
 }
-</code></pre><p>这样我们设置了全局api接口的<code>auth</code>字段全部为<code>true</code>，全局的<code>response</code>都有了字段<code>code</code>和<code>msg</code>，我们可以打开我们的接口文档来查看<code>http://localhost:9000</code></p><p>当然，我们的用户登录接口<code>/login</code>是不需要验证用户登录的，我们可以在用户登录接口中单独设置<code>auth</code>为<code>false</code>，这就像继承的概念一样。<pre><code class=".language-json">{
-    &quot;name&quot;:&quot;用户登录&quot;,
-    &quot;desc&quot;:&quot;用户登录成功，接口会返回一个token&quot;,
-    &quot;method&quot;: &quot;POST&quot;,
-    &quot;url&quot;:&quot;/login/&quot;,
-    &quot;auth&quot;:false, /&#42; 单独设置登录接口不需要验证和用户登录状态 &#42;/
-    &quot;body&#95;mode&quot;:&quot;json&quot;,
-    &quot;body&quot;:...
-</code></pre></p><p><code>code</code>字段和<code>msg</code>字段，如果有的地方不需要这两个字段，就不能简单的像auth字段一样修改一个值，你要做的是再不需要的地方设置删除。</p><pre><code class=".language-json">&quot;response&quot;:{
-    &quot;code&quot;:&quot;$del&quot;, /&#42; 删除继承得来的code字段 &#42;/
-    &quot;msg&quot;:&quot;$del&quot;, /&#42; 删除继承得来的msg字段 &#42;/
+</code></pre><p>这样我们设置了全局所有api接口的<code>auth</code>字段全部为<code>true</code>，全部都有权限验证，全局的<code>response</code>都有了字段<code>code</code>和<code>msg</code>，我们可以打开我们的接口文档来查看<code>http://localhost:9000</code></p><p>当然，我们的用户登录接口<code>/login</code>是不需要验证用户登录的，我们可以在用户登录接口中单独设置<code>auth</code>为<code>false</code>，这就像继承的概念一样。</p><p>如果某一个请求的<code>response</code>返回中不需要<code>code</code>或者不需要<code>msg</code>，我们也可以去掉。</p><pre><code class=".language-json5">{
+    name:&quot;用户登录&quot;,
+    desc:&quot;用户登录成功，接口会返回一个token&quot;,
+    method: &quot;POST&quot;,
+    url:&quot;/login/&quot;,
+    auth:false, /&#42; 单独设置登录接口不需要验证和用户登录状态 &#42;/
+    body&#95;mode:&quot;json&quot;,
+    body:...
+</code></pre><p><code>code</code>字段和<code>msg</code>字段，如果有的地方不需要这两个字段，就不能简单的像auth字段一样修改一个值，你要做的是再不需要的地方设置删除。</p><pre><code class=".language-json5">response:{
+    code:&quot;$del&quot;, /&#42; 删除继承得来的code字段 &#42;/
+    msg:&quot;$del&quot;, /&#42; 删除继承得来的msg字段 &#42;/
     ...
 }
-</code></pre><p>这个时候设置了值为<code>$del</code>的字段就没有了，我们可以刷新前端文档看一下。</p><h3>重用相同的数据模型</h3><p>有时候，几个接口的字段差不多，又只是几个接口会这样，是不能用全局设置来表示的，比如用户操作的文章列表的字段、文章添加的字段、文章查看的字段差不多，如果字段很多，每个都重复写就很累，虽然可以复制粘贴，但是维护的时候又要同时维护多个地方，带来了麻烦。</p><p>所以Panda api上我参考swagger设计了<code>$ref</code>语法，方便的引用数据模型，此外又增加了<code>$exclude</code>语法、<code>$include</code>语法和继承语法，让我们使用起来更方便，我们来看例子吧。</p><p>我们的文章的接口文档是这样的：</p><pre><code class=".language-json">{
-    &quot;name&quot;:&quot;文章接口&quot;,
-    &quot;api&quot;:&#91;
+</code></pre><p>这个时候设置了值为<code>$del</code>的字段就没有了，我们可以刷新前端文档看一下。</p><h3>重用相同的数据模型</h3><p>有时候，几个接口的字段差不多，又只是几个接口会这样，是不能用全局设置来表示的，比如用户操作的文章列表的字段、文章添加的字段、文章查看的字段差不多，如果字段很多，每个都重复写就很累，虽然可以复制粘贴，但是维护的时候又要同时维护多个地方，带来了麻烦。</p><p>所以Panda api上我参考swagger设计了<code>$ref</code>语法，方便的引用数据模型，此外又增加了<code>$exclude</code>语法、<code>$include</code>语法和继承语法，让我们使用起来更方便，我们来看例子吧。</p><p>我们的文章的接口文档是这样的：</p><pre><code class=".language-json5">{
+    name:&quot;文章接口&quot;,
+    api:&#91;
         {
-            &quot;name&quot;:&quot;文章添加/编辑&quot;,
-            &quot;url&quot;:&quot;/post/add/&quot;,
-            &quot;body&quot;:{
-                &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;}, &quot;required&quot;:false},
-                &quot;title&quot;:{&quot;name&quot;:&quot;文章标题&quot;},
-                &quot;summary&quot;:{&quot;name&quot;:&quot;文章摘要&quot;},
-                &quot;category&#95;id&quot;:{&quot;name&quot;:&quot;文章分类id&quot;, &quot;type&quot;:&quot;number&quot;},
-                &quot;author&#95;name&quot;:{&quot;name&quot;:&quot;文章作者姓名&quot;},
-                &quot;source&quot;:{&quot;name&quot;:&quot;文章来源&quot;},
-                &quot;tag&quot;:{&quot;name&quot;:&quot;文章标签&quot;}
+            name:&quot;文章添加/编辑&quot;,
+            url:&quot;/post/add/&quot;,
+            body:{
+                id:{name:&quot;文章id&quot;, desc:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, type:&quot;PosInt&quot;}, required:false}, // PosInt 表示正整数
+                title:{name:&quot;文章标题&quot;},
+                summary:{name:&quot;文章摘要&quot;, type:&quot;csummary&quot;}, // csummary表示中文一小段文字
+                category&#95;id:{name:&quot;文章分类id&quot;, type:&quot;PosInt&quot;},
+                author&#95;name:{name:&quot;文章作者姓名&quot;, type:&quot;cname&quot;}, // cname表示中文姓名
+                source:{name:&quot;文章来源&quot;},
+                tag:{name:&quot;文章标签&quot;}
             },
-            &quot;response&quot;:{
+            response:{
                 /&#42; code 和 msg 字段来自全局了 &#42;/
-                &quot;id&quot;: {&quot;name&quot;:&quot;文章id&quot;}
+                id: {name:&quot;文章id&quot;}
             }
         },
         {
-            &quot;name&quot;:&quot;查看文章&quot;,
-            &quot;method&quot;:&quot;POST&quot;,
-            &quot;url&quot;:&quot;/post/{id:\\d+}/&quot;,
-            &quot;body&quot;:{
-                &quot;page&quot;:{&quot;name&quot;:&quot;分页&quot;, &quot;type&quot;:&quot;number&quot;}
+            name:&quot;查看文章&quot;,
+            method:&quot;GET&quot;,
+            url:&quot;/post/{id:\\d+}/&quot;,
+            query:{
+                page:{name:&quot;分页&quot;, type:&quot;PosInt&quot;} // PosInt 表示正整数
             },
-            &quot;response&quot;:{
+            response:{
                 /&#42; code 和 msg 字段来自全局了 &#42;/
-                &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
-                &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
-                &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
-                &quot;result&quot;: 
+                total&#95;page: {name:&quot;总页数&quot;, type:&quot;PosInt&quot;},
+                total&#95;count: {name:&quot;总记录数&quot;, type:&quot;PosInt&quot;},
+                current&#95;page: {name:&quot;当前页码&quot;, type:&quot;PosInt&quot;},
+                result:
                     &#91;{
-                        &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;}, /&#42; 这时id是必有的 &#42;/
-                        &quot;title&quot;:{&quot;name&quot;:&quot;文章标题&quot;},
-                        &quot;summary&quot;:{&quot;name&quot;:&quot;文章摘要&quot;},
-                        &quot;category&#95;name&quot;:{&quot;name&quot;:&quot;文章分类名称&quot;},
-                        &quot;author&#95;name&quot;:{&quot;name&quot;:&quot;文章作者姓名&quot;},
-                        &quot;source&quot;:{&quot;name&quot;:&quot;文章来源&quot;},
-                        &quot;tag&quot;:{&quot;name&quot;:&quot;文章标签&quot;},
-                        &quot;read&#95;count&quot;:{&quot;name&quot;:&quot;阅读次数&quot;, &quot;type&quot;:&quot;number&quot;},
-                        &quot;created&quot;:{&quot;name&quot;:&quot;创建时间&quot;, &quot;type&quot;:&quot;number&quot;},
-                        &quot;create&#95;username&quot;:{&quot;name&quot;:&quot;文章创建人姓名&quot;}
+                        id:{name:&quot;文章id&quot;, desc:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, type:&quot;PosInt&quot;},
+                        title:{name:&quot;文章标题&quot;},
+                        summary:{name:&quot;文章摘要&quot;, type:&quot;csummary&quot;},
+                        category&#95;name:{name:&quot;文章分类名称&quot;},
+                        author&#95;name:{name:&quot;文章作者姓名&quot;, type:&quot;cname&quot;},
+                        source:{name:&quot;文章来源&quot;},
+                        tag:{name:&quot;文章标签&quot;},
+                        read&#95;count:{name:&quot;阅读次数&quot;, type:&quot;PosInt&quot;},
+                        created:{name:&quot;创建时间&quot;, type:&quot;PosInt&quot;},
+                        create&#95;username:{name:&quot;文章创建人姓名&quot;}
                     }&#93;
-                
             }
         },
         {
-            &quot;name&quot;:&quot;文章列表&quot;,
-            &quot;method&quot;:&quot;POST&quot;,
-            &quot;url&quot;:&quot;/post/star/list/&quot;,
-            &quot;body&quot;:{
-                &quot;page&quot;:{&quot;name&quot;:&quot;分页&quot;, &quot;type&quot;:&quot;number&quot;}
+            name:&quot;文章列表&quot;,
+            method:&quot;POST&quot;,
+            url:&quot;/post/star/list/&quot;,
+            body:{
+                page:{name:&quot;分页&quot;, type:&quot;number&quot;}
             },
-            &quot;response&quot;:{
-                &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
-                &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
-                &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
-                &quot;result&quot;: 
+            response:{
+                total&#95;page: {name:&quot;总页数&quot;, type:&quot;number&quot;},
+                total&#95;count: {name:&quot;总记录数&quot;, type:&quot;number&quot;},
+                current&#95;page: {name:&quot;当前页码&quot;, type:&quot;number&quot;},
+                result:
                     &#91;{
-                        &quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;}, /&#42; 这时id是必有的 &#42;/
-                        &quot;title&quot;:{&quot;name&quot;:&quot;文章标题&quot;},
-                        &quot;category&#95;name&quot;:{&quot;name&quot;:&quot;文章分类名称&quot;},
-                        &quot;author&#95;name&quot;:{&quot;name&quot;:&quot;文章作者姓名&quot;},
-                        &quot;tag&quot;:{&quot;name&quot;:&quot;文章标签&quot;},
-                        &quot;created&quot;:{&quot;name&quot;:&quot;创建时间&quot;},
+                        id:{name:&quot;文章id&quot;, desc:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, type:&quot;PosInt&quot;}, /&#42; 这时id是必有的 &#42;/
+                        title:{name:&quot;文章标题&quot;},
+                        category&#95;name:{name:&quot;文章分类名称&quot;},
+                        author&#95;name:{name:&quot;文章作者姓名&quot;, type:&quot;cname&quot;},
+                        tag:{name:&quot;文章标签&quot;},
+                        created:{name:&quot;创建时间&quot;},
                     }&#93;
             }
         }
@@ -173,7 +172,7 @@
                 &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
-                &quot;result&quot;: 
+                &quot;result&quot;:
                     &#91;{
                         &quot;$ref&quot;: &quot;./&#95;data/models.json:Article&quot;,
                         &quot;$exclude&quot;:&#91;&quot;category&#95;id&quot;&#93;
@@ -191,7 +190,7 @@
                 &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
-                &quot;result&quot;: 
+                &quot;result&quot;:
                     &#91;{
                         &quot;$ref&quot;: &quot;./&#95;data/models.json:Article&quot;,
                         &quot;$include&quot;:&#91;&quot;id&quot;, &quot;title&quot;, &quot;category&#95;name&quot;, &quot;author&#95;name&quot;, &quot;tag&quot;, &quot;created&quot;&#93;
@@ -211,7 +210,7 @@
         &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
         &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
         &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
-        &quot;result&quot;: 
+        &quot;result&quot;:
             &#91;{
                 &quot;id&quot;:{&quot;$ref&quot;: &quot;./&#95;data/models.json:Article.id&quot;},
                 &quot;title&quot;:{&quot;$ref&quot;: &quot;./&#95;data/models.json:Article.title&quot;}
@@ -250,7 +249,7 @@
                 &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
-                &quot;result&quot;: 
+                &quot;result&quot;:
                     &#91;{
                         &quot;$ref&quot;: &quot;$article&quot;,
                         &quot;$exclude&quot;:&#91;&quot;category&#95;id&quot;&#93;
@@ -268,7 +267,7 @@
                 &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
-                &quot;result&quot;: 
+                &quot;result&quot;:
                     &#91;{
                         &quot;$ref&quot;: &quot;$article&quot;,
                         &quot;$include&quot;:&#91;&quot;id&quot;, &quot;title&quot;, &quot;category&#95;name&quot;, &quot;author&#95;name&quot;, &quot;tag&quot;, &quot;created&quot;&#93;
@@ -286,7 +285,7 @@
                 &quot;total&#95;page&quot;: {&quot;name&quot;:&quot;总页数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;total&#95;count&quot;: {&quot;name&quot;:&quot;总记录数&quot;, &quot;type&quot;:&quot;number&quot;},
                 &quot;current&#95;page&quot;: {&quot;name&quot;:&quot;当前页码&quot;, &quot;type&quot;:&quot;number&quot;},
-                &quot;result&quot;: 
+                &quot;result&quot;:
                     &#91;{
                         &quot;id&quot;:{&quot;$ref&quot;: &quot;$article.id&quot;},
                         &quot;title&quot;:{&quot;$ref&quot;: &quot;$article.title&quot;}
@@ -363,7 +362,7 @@
 }
 
 </code></pre><p>同样的，继承过来以后还是可以自定义里面的字段属性，比如这里<code>name</code>字段就进行了自定义，这里主要还有就是写上<code>name</code>方便维护的时候看</p><h3>文件上传接口</h3><p>在照片上传的接口中，有两个特殊的地方，首先：我们的<code>body&#95;mode</code>是<code>form-data</code>，也必须是<code>form-data</code>才会进行文件的接收。</p><p>在<code>test&#95;data</code>中，<code>body</code>中的上传文件的匹配用的是文件名进行匹配，</p><p><code>test&#95;data</code>的返回值<code>response</code>中，我们还可以获取文件的访问<code>url</code>地址，<code>url</code>访问地址为：<code>&#95;upload/</code> + 文件名。即如果我们的文件名是：<code>aaa.jpg</code>, 那么我们访问的文件url地址是：<code>/&#95;upload/aaa.jpg</code>。当你访问这个地址: <code>http://localhost:9000/&#95;upload/aaa.jpg</code>时，就可以访问到文件。</p><h3>引入cvs外部数据</h3><p>正在搞...</p>
-            <p class="text-left text-muted">2020-01-17 09:14</p>
+            <p class="text-left text-muted">2020-02-04 06:47</p>
         </div>
         <div class="container">
             <div class="row mt-4">
