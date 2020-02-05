@@ -19,12 +19,15 @@
 
 
             <p>Panda api中， test_data是一个非常非常重要的设计，可以方便前端进行各种情况的测试。</p><p>test_data中，有这么几个字段可以进行数据匹配</p><pre><code class=".language-json5">{
+    method: &quot;GET&quot;, // 请求方法匹配
     url:&quot;/post/10/&quot;, // 网址匹配
     query: {}, // query/GET 参数匹配
     body: {}, // post中body参数匹配
+    form&#95;data: {}, // post中请求数据在form&#95;data中的参数匹配
+
     response:{} // 匹配成功后返回的结果
 }
-</code></pre><p><code>url</code>、<code>query</code>、<code>body</code> 这三者是可以同时存在或者只有其中一个存在，或者都不存在， 匹配成功后返回response中的结果</p><h3>使用url匹配的test_data</h3><pre><code class=".language-json5">{
+</code></pre><p><code>method</code>, <code>url</code>、<code>query</code>、<code>body</code> 或 <code>form&#95;data</code> 这四者是可以同时存在或者只有其中一个存在，或者都不存在， 匹配成功后返回response中的结果</p><h3>使用url匹配的test_data</h3><pre><code class=".language-json5">{
     name:&quot;Article view&quot;,
     method:&quot;GET&quot;,
     url:&quot;/post/{id:\\d+}/&quot;, // the url support regex match
@@ -142,8 +145,53 @@
         }
     &#93;
 },
+</code></pre><h3>form_data匹配</h3><p>把上个例子中<code>body</code>字段名改为<code>form&#95;data</code>即可。</p><h3>使用method进行匹配</h3><p><code>method</code>可以直接写字符串<code>method:&quot;GET&quot;</code>，单个方法匹配，也可以写数组，一次匹配多种方法，<code>method:&#91;&quot;GET&quot;, &quot;POST&quot;&#93;</code>，也可以匹配全部方法：<code>method:&quot;&#42;&quot;</code></p><p>如果不在test_data中设置<code>method</code>，表示<code>method</code>请求方法默认都是匹配的。</p><pre><code class=".language-json">{
+    // 假设在这个接口中，编辑获取数据和提交保存是一个接口，真实开发中，不建议这么做
+    name:&quot;Article add&quot;,
+    desc:&quot;Article add or edit&quot;,
+    method:&#91;&quot;GET&quot;, &quot;POST&quot;&#93;,
+    url:&quot;/post/add/&quot;,
+    body&#95;mode:&quot;json&quot;, // form-data, text, json, html, xml, javascript, binary
+    body:{
+        id:{name: &quot;article id&quot;},
+        title:{name: &quot;article title&quot;, required:false},
+        content:{name: &quot;article content&quot;, required:false}
+    },
+    response:{
+        id: {name: &quot;Article id&quot;, type:&quot;PosInt&quot;},
+        title:{name: &quot;article title&quot;},
+        content:{name: &quot;article content&quot;}
+    },
+    test&#95;data:&#91;
+        {
+            method:&quot;GET&quot;,
+            body:{
+                id:1
+            },
+            response: {
+                id:1,
+                title:&quot;Hello World&quot;,
+                content:&quot;Article Content&quot;
+            }
+        },
+        {
+            method:&quot;POST&quot;,
+            body:{
+                id:1,
+                title:&quot;Hello World&quot;,
+                content:&quot;Article Content&quot;
+            },
+            response: {
+                id:1,
+                title:&quot;Hello World&quot;,
+                content:&quot;Article Content&quot;
+            }
+        },
+    &#93;
+}
+
 </code></pre>
-            <p class="text-left text-muted">2020-01-27 13:39</p>
+            <p class="text-left text-muted">2020-02-05 05:16</p>
         </div>
         <div class="container">
             <div class="row mt-4">
