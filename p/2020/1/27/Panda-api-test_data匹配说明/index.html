@@ -190,8 +190,37 @@
     &#93;
 }
 
+</code></pre><h2>增加test_data数据的描述说明</h2><p>可以在<code>test&#95;data</code>的数据列表的元素中，增加<code>name</code>字段和<code>desc</code>字段，进行测试用例数据的描述，<code>name</code>字段和<code>desc</code>字段与<code>method</code>、<code>body</code>这些字段是同级的。增加了<code>name</code>和<code>desc</code>不会影响<code>test&#95;data</code>的匹配，两个字段都是可选的。</p><pre><code class=".language-json5">test&#95;data:&#91;
+    {
+        name:&quot;编辑文章时获取文章内容&quot;,
+        method:&quot;GET&quot;,
+        body:{
+            id:1
+        },
+        response: {
+            id:1,
+            title:&quot;Hello World&quot;,
+            content:&quot;Article Content&quot;
+        }
+    },
+    {
+        name:&quot;提交文章编辑内容&quot;,
+        desc:&quot;提价文章编辑内容后，数据立即更新内容&quot;,
+        method:&quot;POST&quot;,
+        body:{
+            id:1,
+            title:&quot;Hello World&quot;,
+            content:&quot;Article Content&quot;
+        },
+        response: {
+            id:1,
+            title:&quot;Hello World&quot;,
+            content:&quot;Article Content&quot;
+        }
+    },
+&#93;
 </code></pre>
-            <p class="text-left text-muted">2020-02-05 05:16</p>
+            <p class="text-left text-muted">2020-02-05 06:37</p>
         </div>
         <div class="container">
             <div class="row mt-4">

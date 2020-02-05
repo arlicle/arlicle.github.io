@@ -216,3 +216,38 @@ test_data中的第二个元素，`url:"/post/3000/"`, 必须请求url是 `/post/
 }
 
 ```
+
+## 增加test_data数据的描述说明
+可以在`test_data`的数据列表的元素中，增加`name`字段和`desc`字段，进行测试用例数据的描述，`name`字段和`desc`字段与`method`、`body`这些字段是同级的。增加了`name`和`desc`不会影响`test_data`的匹配，两个字段都是可选的。
+
+```.language-json5
+test_data:[
+    {
+        name:"编辑文章时获取文章内容",
+        method:"GET",
+        body:{
+            id:1
+        },
+        response: {
+            id:1,
+            title:"Hello World",
+            content:"Article Content"
+        }
+    },
+    {
+        name:"提交文章编辑内容",
+        desc:"提价文章编辑内容后，数据立即更新内容",
+        method:"POST",
+        body:{
+            id:1,
+            title:"Hello World",
+            content:"Article Content"
+        },
+        response: {
+            id:1,
+            title:"Hello World",
+            content:"Article Content"
+        }
+    },
+]
+```
