@@ -18,7 +18,7 @@
 
 
 
-            <p>Panda api的接口文档工具是一个简单、易用、又强大的接口文档管理工具。这里我不想讲为什么自己重复造轮子，也不想去讲他有多强大，<code>Talk is cheap, Show you my code.</code>。我们直接从一个例子开始了解他吧。</p><h2>简易快速入门</h2><h3>安装Panda api</h3><p>首先，下载对应系统的安装包，安装Panda api</p><p><a href='https://github.com/arlicle/panda-api/releases/download/0.5/mac_install_0.5.zip'>Mac下的安装包</a>    <br /> [Linux下的安装包]<br /> Windows下的安装包(暂无环境编译和测试)<br /></p><p>下载解压缩后，双击install开头的执行文件，就可以完成安装。</p><p>安装完成后会显示：<pre><code class=".language-shell">Congratulations!
+            <p>Panda api是一款接口设计工具，它能够生成文档、提供接口模拟服务(在你没写任何代码之前)、自动测试后端接口，有效提升项目的开发效率和质量。<code>Talk is cheap, Show you my code.</code>。我们直接从一个例子开始了解他吧。</p><h2>简易快速入门</h2><h3>安装Panda api</h3><p>首先，下载对应系统的安装包，安装Panda api</p><p><a href='https://github.com/arlicle/panda-api/releases/download/0.5/mac_install_0.5.zip'>Mac下的安装包</a>    <br /> [Linux下的安装包]<br /> Windows下的安装包(暂无环境编译和测试)<br /></p><p>下载解压缩后，双击install开头的执行文件，就可以完成安装。</p><p>安装完成后会显示：<pre><code class=".language-shell">Congratulations!
 Panda api install done!
 You can run pana command in your api docs folder now.
 </code></pre></p><p>恭喜，已安装完成。</p><h3>定义一个用户操作的接口文档</h3><p>我们创建一个目录，起名为<code>api&#95;docs</code>(你也可以起你想要的名字)，然后再这个目录中创建<code>auth.json5</code>文件，然后敲上下面的代码</p><pre><code class=".language-json5">{
@@ -264,7 +264,7 @@ apis:&#91;...&#93; /&#42; 当前接口文档的接口列表 &#42;/
     }
 }
 </code></pre><p>这个例子中，<code>response</code>返回的结果中，<code>result</code>字段，还有一点特殊，他是一个列表，然后列表里面有一个对象，他表示<code>result</code>的类型是<code>array</code>,然后里面的那个对象描述的是<code>array</code>中的数据的展现类型，字段有哪些。</p><p><code>result</code>中的最开头 <code>-name</code> 字段和<code>-desc</code>字段是用来描述<code>result</code>字段的名称和描述。因为为了防止和常规字段冲突，所以在前面加了<code>-</code>减号, </p><p>系统会根据<code>&#91;&#93;</code>自动识别<code>result</code>是一个数组，而且人阅读起来也很友好，因此不再需要标注类型</p><p><code>category</code>字段的类型是一个对象<code>object</code>， 里面有两个属性<code>id</code>和<code>name</code>，分别表示分类的id和分类的名称。同样的<code>-name</code>, <code>-desc</code>是用来描述<code>category</code>这个字段的。系统也会自动识别出<code>object</code>对象，因此不需要人工标注类型</p><h3>注意事项</h3><p>如果不同的接口，同一个<code>url</code>, 但是请求方法不同，有<code>GET</code>,有<code>POST</code>是允许的。你可以为每一种方法定义不同的接口</p><p>如果不同的接口，同一个<code>url</code>, 请求方法也相同，都是<code>GET</code>或者都是<code>POST</code>，那么系统会判定，只允许一个，前面的会被后面的覆盖。</p><p>教程中的代码在这里： <a href='https://github.com/arlicle/panda-api-examples/tree/master/simple'>https://github.com/arlicle/panda-api-examples/tree/master/simple</a></p><h3>结尾</h3><p>至此，我们的建议教学就结束了，可以试着找一个以前的项目或者新项目，开始写自己的接口文档，遇到有任何的问题或者意见建议，欢迎和我讨论。</p><p>下一篇，开启高级教学，一些复杂的用法，以及代码和数据的重用，让我们更简单快速的维护接口文档。</p><p><a href='/p/2020/1/15/Panda-api%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/'>Panda-api高级使用说明</a></p>
-            <p class="text-left text-muted">2020-02-05 11:25</p>
+            <p class="text-left text-muted">2020-02-05 11:29</p>
         </div>
         <div class="container">
             <div class="row mt-4">
