@@ -80,12 +80,12 @@
     &#93;
 },
 
-</code></pre><p>首先，我们的url是一个正则匹配<code>/post/{id:\\d+}/</code>，<code>/post/&#40;数字&#41;/</code>的都满足匹配条件，</p><p>test_data中的第一个元素，<code>url:&quot;/post/1/&quot;</code>， 必须请求url是<code>/post/1/</code>, 才会返回其对应的 <code>response</code>；</p><p>test_data中的第二个元素，<code>url:&quot;/post/3000/&quot;</code>, 必须请求url是 <code>/post/3000/</code>，才会返回其对应的<code>response</code>；</p><h3>使用query 进行匹配</h3><pre><code class=".language-json5">{
+</code></pre><p>首先，我们的url是一个正则匹配<code>/post/{id:\\d+}/</code>，<code>/post/&#40;数字&#41;/</code>的都满足匹配条件，</p><p>test_data中的第一个元素，<code>url:&quot;/post/1/&quot;</code>， 必须请求url是<code>/post/1/</code>, 才会返回其对应的 <code>response</code>；</p><p>test_data中的第二个元素，<code>url:&quot;/post/3000/&quot;</code>, 必须请求url是 <code>/post/3000/</code>，才会返回其对应的<code>response</code>；</p><p>test_data中<code>url</code>的匹配有一点特殊，如果设置test_data中的<code>url</code>，表示忽略<code>url</code>匹配，也就是默认<code>url</code>是匹配的。</p><p>其它字段不一样，就是没有设置，也会拿着空去匹配</p><h3>使用query 进行匹配</h3><pre><code class=".language-json5">{
     name:&quot;user logout&quot;,
     method:&quot;GET&quot;,
     url:&quot;/logout/&quot;,
     query:{
-        id:{name:&quot;user id&quot;},
+        id:{name:&quot;user id&quot;, type:&quot;int&quot;},
         username:{}
     },
     response:{
@@ -107,7 +107,23 @@
     &#93;
 }
 
-</code></pre><h3>使用body进行匹配</h3><pre><code class=".language-json5">{
+</code></pre><p>注意，这里接口中定义域<code>query</code>的<code>id</code>为<code>id:{name:&quot;user id&quot;, type:&quot;int&quot;}</code>，<code>id</code>是一个整数，那么<code>test&#95;data</code>中<code>query</code>里<code>id</code>的值也必须是整数，否则不会匹配。也就是</p><pre><code class=".language-json5">// 接口中query定义
+query:{
+    id:{name:&quot;user id&quot;, type:&quot;int&quot;}
+    ....
+}
+// 请求 /logout/?id=1&amp;username=root
+query:{id:1, username:&quot;root&quot;}, // 会匹配
+query:{id:&quot;1&quot;, username:&quot;root&quot;}, // 不会匹配
+</code></pre><p>如果我们把接口<code>query</code>的定义改为：<code>id:{name:&quot;user id&quot;, type:&quot;string&quot;}</code>，<code>id</code>是一个字符串，那么<code>test&#95;data</code>中<code>query</code>里<code>id</code>的值也必须为整数，否则不会匹配。也就是</p><pre><code class=".language-json5">// 接口中query定义
+query:{
+    id:{name:&quot;user id&quot;, type:&quot;string&quot;}
+    ....
+}
+// 请求 /logout/?id=1&amp;username=root
+query:{id:1, username:&quot;root&quot;}, // 不会匹配
+query:{id:&quot;1&quot;, username:&quot;root&quot;}, // 会匹配
+</code></pre><p>如果没有定义接口的<code>response</code>或者<code>query</code>，那么请求的所有query中的整数都是当做字符串处理，写在<code>test&#95;data</code>中也必须全部写为字符串</p><h3>使用body进行匹配</h3><pre><code class=".language-json5">{
     name:&quot;user login&quot;,
     desc:&quot;if user login success, will get a token&quot;,
     method: &quot;POST&quot;,
@@ -190,7 +206,11 @@
     &#93;
 }
 
-</code></pre><h2>增加test_data数据的描述说明</h2><p>可以在<code>test&#95;data</code>的数据列表的元素中，增加<code>name</code>字段和<code>desc</code>字段，进行测试用例数据的描述，<code>name</code>字段和<code>desc</code>字段与<code>method</code>、<code>body</code>这些字段是同级的。增加了<code>name</code>和<code>desc</code>不会影响<code>test&#95;data</code>的匹配，两个字段都是可选的。</p><pre><code class=".language-json5">test&#95;data:&#91;
+</code></pre><p>如果请求的method不匹配，那么将会返回错误<pre><code class=".language-json5">{
+  &quot;code&quot;: -1,
+  &quot;msg&quot;: &quot;this api address /logout/ not defined method POST&quot;
+}
+</code></pre></p><h2>增加test_data数据的描述说明</h2><p>可以在<code>test&#95;data</code>的数据列表的元素中，增加<code>name</code>字段和<code>desc</code>字段，进行测试用例数据的描述，<code>name</code>字段和<code>desc</code>字段与<code>method</code>、<code>body</code>这些字段是同级的。增加了<code>name</code>和<code>desc</code>不会影响<code>test&#95;data</code>的匹配，两个字段都是可选的。</p><pre><code class=".language-json5">test&#95;data:&#91;
     {
         name:&quot;编辑文章时获取文章内容&quot;,
         method:&quot;GET&quot;,
@@ -219,8 +239,12 @@
         }
     },
 &#93;
-</code></pre>
-            <p class="text-left text-muted">2020-02-05 06:37</p>
+</code></pre><p>如果请求的url不匹配，那么将会返回错误<pre><code class=".language-json5">{
+  &quot;code&quot;: -1,
+  &quot;msg&quot;: &quot;this api address /logout/aaa/ not defined method POST&quot;
+}
+</code></pre></p><h3>其它</h3><p>虽然不推荐，但是其实你可以这么做，就是不定义<code>response</code>，直接写<code>test&#95;data</code>里面的数据就开始前端访问。</p><p>这么做可以快速的提供接口服务，不好的是，没有了<code>response</code>文档，同时也不会自动生成<code>mock</code>数据。</p>
+            <p class="text-left text-muted">2020-02-05 22:29</p>
         </div>
         <div class="container">
             <div class="row mt-4">

@@ -72,7 +72,7 @@ basic 0.1.0
         method:&quot;GET&quot;,
         url:&quot;/logout/&quot;,
         query:{
-            id:{name:&quot;用户id&quot;},
+            id:{name:&quot;用户id&quot;, type:&quot;int&quot;},
             username:{name:&quot;用户名&quot;}
         },
         response:{
@@ -95,11 +95,17 @@ basic 0.1.0
     }
 &#93;}
 
-</code></pre><p>我们保存好这个文档，在<code>api&#95;docs</code>目录下，运行命令 <code>panda</code>，就会运行起接口文档服务，</p><p>我们就可以在浏览器中输入网址 <code>http://localhost:9000</code>来访问这个文档了。</p><p><code>如果遇到报错</code>，1 请确认是否是在文档目录<code>api&#95;docs/</code>下运行命令；2 如果是端口冲突，可以自行更换端口<code>panda -p 9002</code>，那么你接下来的访问都是<code>http://localhost:9002</code>地址；</p><p>在浏览器打开页面，你将看到下面的页面： <img src="/static/2020/1/panda-api1.png" alt="avatar" /> 然后点击用户看用户的接口文档 <img src="/static/2020/1/panda-api2.png" alt="avatar" /></p><p>✌️耶~！我们拥有了可以在线浏览的接口文档啦！O(∩_∩)O哈哈~！</p><p>继续还有更强大的</p><h3>Panda api可以为前端提供请求服务</h3><p>我们的Panda-api或已经开始为我们的前端提供了接口服务，我们的前端开发人员，或者我们用postman就可以测试请求用户登录接口，也就是用<code>POST</code>方法，请求 <code>http://localhost:9000/login/</code> 这个地址。提交的body参数就是username和password。</p><p>当我们提交post请求，body为：<pre><code class=".language-json">{&quot;username&quot;:&quot;edison&quot;, &quot;password&quot;:&quot;123&quot;}
+</code></pre><p>我们保存好这个文档，在<code>api&#95;docs</code>目录下，运行命令 <code>panda</code>，就会运行起接口文档服务，</p><p>我们就可以在浏览器中输入网址 <code>http://localhost:9000</code>来访问这个文档了。</p><p><code>如果遇到报错</code>，1 请确认是否是在文档目录<code>api&#95;docs/</code>下运行命令；2 如果是端口冲突，可以自行更换端口<code>panda -p 9002</code>，那么你接下来的访问都是<code>http://localhost:9002</code>地址；</p><p>在浏览器打开页面，你将看到下面的页面： <img src="/static/2020/1/panda-api1.png" alt="avatar" /> 然后点击用户看用户的接口文档 <img src="/static/2020/1/panda-api2.png" alt="avatar" /></p><p>✌️耶~！我们拥有了可以在线浏览的接口文档啦！O(∩_∩)O哈哈~！</p><p>继续还有更强大的</p><h3>Panda api可以为前端提供请求服务</h3><p>我们的Panda-api或已经开始为我们的前端提供了接口服务，我们的前端开发人员，或者我们用postman就可以测试请求用户登录接口，也就是用<code>POST</code>方法，请求 <code>http://localhost:9000/login/</code> 这个地址。提交的body参数就是<code>username</code>和<code>password</code>。</p><p>我们使用<code>/login/</code>接口的<code>test&#95;data</code>第一个元素的<code>body</code>值提交，提交post请求接口<code>/login/</code>，body为：<pre><code class=".language-json">{&quot;username&quot;:&quot;edison&quot;, &quot;password&quot;:&quot;123&quot;}
 </code></pre></p><p>我们会得到返回结果<pre><code class=".language-json">{&quot;code&quot;:-1, &quot;msg&quot;:&quot;密码输入不正确&quot;}
+</code></pre></p><p>当我们提交post请求，body为：<pre><code class=".language-json">{&quot;username&quot;:&quot;lily&quot;, &quot;password&quot;:&quot;123&quot;}
+</code></pre></p><p>我们会得到返回结果<pre><code class=".language-json">{&quot;code&quot;:-2, &quot;msg&quot;:&quot;用户名不存在&quot;}
 </code></pre></p><p>当我们提交post请求，body为：<pre><code class=".language-json">{&quot;username&quot;:&quot;root&quot;, &quot;password&quot;:&quot;123&quot;}
 </code></pre></p><p>我们会得到返回结果<pre><code class=".language-json">{&quot;code&quot;:1, &quot;msg&quot;:&quot;登录成功&quot;, &quot;token&quot;:&quot;5lCadRru&#40;ADn2IE!$LV%x%JF3JNmz&#42;Nf5nFieUG!r&#40;&#40;&amp;esi2CLI$jb!227Lh&quot;}
-</code></pre></p><p>注意到没，我们请求的参数和返回结果，就是我们再test_data里面设置的数据集，这个数据集中body和response是一一对应的，</p><p>我们前端就可以使用这个数据集进行开发了，测试前端请求和返回的各种不同类型的状态，以及各种各样我们想要的特殊情况，我们还可以继续往里面增加各种测试数据。</p><p><code>注意：</code> 在test_data中的数据匹配规则规则是，从列表第一条数据按顺序往后匹配的，只要前面的数据匹配了，就立即返回。</p><h3>Panda api 自动支持mock</h3><p>当然，Panda api也是支持mock数据的，如果你请求的数据不是test_data数据集里面的数据，你将会得到系统自动mock数据的返回。</p><p>我们提交post请求，body为：<pre><code class=".language-json">{&quot;username&quot;:&quot;hello&quot;, &quot;password&quot;:&quot;123&quot;}
+</code></pre></p><p>当我们提交post请求，body为：<pre><code class=".language-json">{&quot;username&quot;:&quot;lily&quot;}
+</code></pre></p><p>我们会得到返回结果<pre><code class=".language-json">{&quot;code&quot;: -1,&quot;msg&quot;: &quot;密码是必填的&quot;}
+</code></pre></p><p>当我们提交post请求，body为：<pre><code class=".language-json">{&quot;password&quot;:&quot;123&quot;}
+</code></pre></p><p>我们会得到返回结果<pre><code class=".language-json">{&quot;code&quot;: -1,&quot;msg&quot;: &quot;用户名是必填的&quot;}
+</code></pre></p><p>注意到没，我们请求的参数和返回结果，就是我们在<code>test&#95;data</code>里面设置的数据集，这个数据集中<code>body</code>和<code>response</code>是一一对应的，</p><p>我们前端就可以使用这个数据集进行开发了，测试前端请求和返回的各种不同类型的状态，以及各种各样我们想要的特殊情况，我们还可以继续往里面增加各种测试数据。</p><p><code>注意：</code> 在<code>test&#95;data</code>中的数据匹配规则规则是，从列表第一条数据按顺序往后匹配的，只要前面的数据匹配了，就立即返回。</p><h3>Panda api 自动支持mock</h3><p>当然，Panda api也是支持mock数据的，如果你请求的数据不是<code>test&#95;data</code>数据集里面的数据，你将会得到系统自动mock数据的返回。</p><p>我们提交post请求，body为：<pre><code class=".language-json">{&quot;username&quot;:&quot;hello&quot;, &quot;password&quot;:&quot;123&quot;}
 </code></pre></p><p>因为没有test_data数据匹配，就会得到mock数据返回结果<pre><code class=".language-json">{
     &quot;code&quot;: -5217373750860980588,
     &quot;msg&quot;: &quot;3&#94;m&#41;v8TbukaRauosV&quot;
@@ -112,7 +118,7 @@ basic 0.1.0
     &quot;msg&quot;: &quot;hJLaTF&amp;75tPnsZ%wSjUp1qr&#126;QwH&quot;,
     &quot;token&quot;: &quot;1JOU0s&#41;sunBOM5!Lo4Ao&quot;
 }
-</code></pre></p><p>这样的mock数据稍微有点和我们想要的有点差距，我们来改进一下 <code>/login/</code> 接口的 <code>response</code>字段定义<pre><code class=".language-json5">// 这是 原始 response
+</code></pre></p><p>我们可以不停的就用这个数据请求，会不停的得到随机mock的数据。不过这样的mock数据稍微有点和我们想要的有点差距，我们来改进一下 <code>/login/</code> 接口的 <code>response</code>字段定义<pre><code class=".language-json5">// 这是 原始 response
 response:{ 
     code:{name:&quot;返回结果的代码&quot;, type:&quot;int&quot;, desc:&quot;登录成功只返回1&quot;},
     msg:{name:&quot;登录成功返回消息&quot;, type:&quot;string&quot;, desc:&quot;通常返回都是空&quot;},
@@ -154,7 +160,9 @@ apis:&#91;...&#93; /&#42; 当前接口文档的接口列表 &#42;/
         username:{name:&quot;用户名&quot;},
         password:{name:&quot;用户登录密码&quot;}
     },
-    query:{}, /&#42; url上的query参数（可选） 比如aaa=3&amp;bbb=4 不填写时默认为空 &#42;/
+    query:null, /&#42; url上的query参数（可选） 比如aaa=3&amp;bbb=4 不填写时默认为空 &#42;/
+    request&#95;headers:null, /&#42; 请求头的参数要求（可选），通常用于定义多版本接口 默认为空 &#42;/
+    response&#95;headeres:null, /&#42; 设置返回值的头的字段值（可选），例如：返回状态码、content&#95;type等 &#42;/
     response:{ // 请求成功后的返回数据结构和字段
         code:{name:&quot;返回结果的代码&quot;, type:&quot;int&quot;, desc:&quot;登录成功只返回1&quot;, enum:&#91;-1, 1&#93;},// 设置了字段类型是int, 增加了code的值范围 是-1或1
         msg:{name:&quot;登录成功返回消息&quot;, type:&quot;csentence&quot;, desc:&quot;通常返回都是空&quot;}, // 字段类型为 csentence， 表示中文句子，也可以使用简写cs
@@ -162,7 +170,7 @@ apis:&#91;...&#93; /&#42; 当前接口文档的接口列表 &#42;/
     },
     test&#95;data:&#91;...&#93; // 前端请求和返回的测试用例数据
 }&#93;
-</code></pre><h3>method</h3><p>其中当请求<code>method</code>是<code>POST</code>的时候，<code>body&#95;mode</code>和<code>body</code>字段设置了才会有效，当请求<code>method</code>是<code>GET</code>的时候，对应的字段是<code>query</code>。</p><p><code>method</code>可以设置为单个方法，例如:<code>method:&quot;POST&quot;</code> 或者 <code>method:&quot;GET&quot;</code>；</p><p><code>method</code>还支持多方法，例如：<code>method:&#91;&quot;GET&quot;, &quot;POST&quot;, &quot;PUT&quot;&#93;</code></p><p>还可以直接设置<code>method</code> 支持所有方法：<code>method:&quot;&#42;&quot;</code></p><p>目前<code>method</code>一共支持的方法有：<code>POST</code>、<code>GET</code>、<code>PUT</code>、<code>DELETE</code>、<code>OPTIONS</code>、<code>PATCH</code>、<code>HEAD</code></p><h3>body 字段</h3><p><code>body</code>表示<code>post</code>的请求<code>body</code>，因为我们定义<code>body&#95;mode</code>是<code>json</code>，因此他必须提交<code>json</code>格式的数据。 body中的第一个字段username的属性是{name:"用户名"}, 这个属性的完整写法是<pre><code class=".language-json5">username:{
+</code></pre><h3>method</h3><p>其中当请求<code>method</code>是<code>POST</code>的时候，<code>body&#95;mode</code>和<code>body</code>字段设置了才会有效，当请求<code>method</code>是<code>GET</code>的时候，对应的字段是<code>query</code>。</p><p><code>method</code>可以设置为单个方法，例如:<code>method:&quot;POST&quot;</code> 或者 <code>method:&quot;GET&quot;</code>；</p><p><code>method</code>还支持多方法，例如：<code>method:&#91;&quot;GET&quot;, &quot;POST&quot;, &quot;PUT&quot;&#93;</code></p><p>还可以直接设置<code>method</code> 支持所有方法：<code>method:&quot;&#42;&quot;</code></p><p>目前<code>method</code>一共支持的方法有：<code>POST</code>、<code>GET</code>、<code>PUT</code>、<code>DELETE</code>、<code>OPTIONS</code>、<code>PATCH</code>、<code>HEAD</code></p><ul><li>GET：读取（Read）</li><li>POST：新建，新增（Create, Add）</li><li>PUT：更新（Update）</li><li>PATCH：更新（Update），通常是部分更新</li><li>DELETE：删除（Delete）</li></ul><h3>body 字段</h3><p><code>body</code>表示<code>post</code>的请求<code>body</code>，因为我们定义<code>body&#95;mode</code>是<code>json</code>，因此他必须提交<code>json</code>格式的数据。 body中的第一个字段username的属性是{name:"用户名"}, 这个属性的完整写法是<pre><code class=".language-json5">username:{
     name:&quot;用户名&quot;, /&#42; 字段的名称 &#42;/
     desc:&quot;用户名的描述&quot;, /&#42; 字段的描述说明 &#42;/
     type:&quot;string&quot;, /&#42; 字段的类型， &#40;可选&#41; 不填写时默认是string &#42;/
@@ -171,9 +179,34 @@ apis:&#91;...&#93; /&#42; 当前接口文档的接口列表 &#42;/
     value:null, /&#42; 字段的固定值，&#40;可选&#41; 不填写时默认是空 &#42;/
     enum:&#91;&#93; /&#42; 字段的枚举值，&#40;可选&#41; 表示字段只能从这几个字段中有值，比如&#91;&quot;edison&quot;,&quot;lemon&quot;,&quot;jay&quot;&#93;, 那么username只能是这3个值中的一个 &#42;/
 }
-</code></pre></p><p><code>enum</code>有两种写法，一种直接就是值: <code>enum:&#91;-1, 1&#93;</code>，或者是值加值的描述 <code>enum:&#91;{&quot;-value&quot;:-1, &quot;-desc&quot;:&quot;失败&quot;}, {&quot;-value&quot;:1, &quot;-desc&quot;:&quot;成功&quot;}&#93;</code> 两种写法的结果是一样的，值只会从-1和1中选取。</p><p>当我们不写<code>desc</code>属性时，默认为空，不写<code>required</code>属性时，默认为true, 也就是这个字段是必填的。</p><h3>type 字段的类型说明</h3><p>type 字段基础类型一共有这几种</p><ol><li>string 字符串 "aaa"</li><li>number 数字 1、2</li><li>bool 布尔值 true、false</li><li>object 对象 {}</li><li>array 数组 []</li></ol><p>除了基础类型，还有更好用的子类型 以及属性的说明 更多在</p><p><a href='/p/2020/1/29/Panda-api%E5%AD%97%E6%AE%B5%E8%AF%B4%E6%98%8E/'>Panda api 字段type类型说明</a></p><h3>response</h3><p>response表示请求后返回的结果字段说明，里面的字段由自己根据前后端约定去定义</p><h3>test_data</h3><p>test_data是非常强大和方便的一个功能，表示前端请求的数据和对应返回的数据集，我们定义好了这个数据集，系统才会接收对应的数据请求，然后返回对应的数据。里面的字段就可以根据真实情况，自己按要求去定义和模拟就好了。</p><p>test_data里面完整的有三个字段<pre><code class=".language-json5">{
+</code></pre></p><p><code>enum</code>有两种写法，一种直接就是值: <code>enum:&#91;-1, 1&#93;</code>，或者是值加值的描述 <code>enum:&#91;{&quot;-value&quot;:-1, &quot;-desc&quot;:&quot;失败&quot;}, {&quot;-value&quot;:1, &quot;-desc&quot;:&quot;成功&quot;}&#93;</code> 两种写法的结果是一样的，值只会从-1和1中选取。</p><p>当我们不写<code>desc</code>属性时，默认为空，不写<code>required</code>属性时，默认为true, 也就是这个字段是必填的。</p><h3>type 字段的类型说明</h3><p>type 字段基础类型一共有这几种</p><ol><li>string 字符串 "aaa"</li><li>number 数字 1、2</li><li>bool 布尔值 true、false</li><li>object 对象 {}</li><li>array 数组 []</li></ol><p>除了基础类型，还有更好用的子类型 以及属性的说明 更多在</p><p><a href='/p/2020/1/29/Panda-api%E5%AD%97%E6%AE%B5%E8%AF%B4%E6%98%8E/'>Panda api 字段type类型说明</a></p><h3>request_headers</h3><p>表示请求头的参数要求，一旦定义了，那么请求头上必须含有这些参数和值，才可以访问该接口，否则就不能访问。通常用于接口多版本的定义，例如：</p><pre><code class=".language-json5">request&#95;headers:{
+　　Accept: vnd.example-com.foo+json; version=1.0 // 表示1.0版本的接口
+}
+
+request&#95;headers:{
+　　Accept: vnd.example-com.foo+json; version=1.1 // 表示1.1版本的接口
+}
+
+request&#95;headers:{
+　　Accept: vnd.example-com.foo+json; version=2.0 // 表示2.0版本的接口
+}
+</code></pre><p>如果这么定义后，不同的接口，就算是同一个url，同一个请求方法，但是因为request_headers不一样，就会路由到不同的接口上。</p><p>因为不同的版本，可以理解成同一种资源的不同表现形式，所以应该采用同一个URI。版本号可以在HTTP请求头信息的Accept字段中进行区分（参见<a href='http://www.informit.com/articles/article.aspx?p=1566460'>Versioning REST Services</a>）</p><h3>response_headers</h3><p>设定返回结果的response，通常用于定义返回状态码，修改<code>content-type</code>等。例如：</p><pre><code class=".language-json5">response&#95;headers:{
+    status&#95;code: 202, // 异步接口
+}
+
+// 请求接口后，服务器会返回
+
+HTTP/1.1 202 Accepted
+Location: /proccese/status/
+
+</code></pre><p>这是一个异步接口，服务器返回202， 202 Accepted告诉客户端，请求已经接受，但还没有处理，可以去Location字段查询进展。</p><p>除了上面的头信息，服务器的回应如果有数据体，可以返回一些有效信息（比如任务完成的估计时间、当前状态等等）。</p><p>默认服务器返回的<code>content-type</code>都是<code>application/json</code>，我们可以设定返回的内容类型，例如：</p><pre><code class=".language-json5">response&#95;headers:{
+    &quot;content-type&quot;: &quot;image/png&quot;, // 返回一张图片
+}
+</code></pre><h3>response</h3><p>response表示请求后返回的结果字段说明</p><h3>test_data</h3><p>test_data是非常强大和方便的一个功能，表示前端请求的数据和对应返回的数据集，我们定义好了这个数据集，系统才会接收对应的数据请求，然后返回对应的数据。里面的字段就可以根据真实情况，自己按要求去定义和模拟就好了。</p><p>test_data里面完整的有:<pre><code class=".language-json5">{
+    method:&quot;&quot;, /&#42; 请求方法 &#42;/
     body: {...}, /&#42; request body 请求值， 只在POST请求是才有 &#40;可选&#41; &#42;/
     query:{...}, /&#42; url query 请求值 在POST和GET中都可以有 &#40;可选&#41; &#42;/
+    form&#95;data:{...} /&#42; 请求的form&#95;data &#42;/
     url:&quot;/post/10/&quot;, /&#42; 在接口url是一个正则匹配时，test&#95;data可以指定具体的url匹配 &#42;/
     response:{...} /&#42; 返回结果 &#42;/
 }
@@ -182,7 +215,7 @@ apis:&#91;...&#93; /&#42; 当前接口文档的接口列表 &#42;/
     method:&quot;GET&quot;, // 使用GET方法请求
     url:&quot;/logout/&quot;,
     query:{ // GET 方法请求的query参数的数据结构字段说明
-        id:{name:&quot;用户id&quot;},
+        id:{name:&quot;用户id&quot;, type:&quot;int&quot;},
         username:{name:&quot;用户名&quot;}
     },
     response:{
@@ -267,7 +300,7 @@ apis:&#91;...&#93; /&#42; 当前接口文档的接口列表 &#42;/
     }
 }
 </code></pre><p>这个例子中，<code>response</code>返回的结果中，<code>result</code>字段，还有一点特殊，他是一个列表，然后列表里面有一个对象，他表示<code>result</code>的类型是<code>array</code>,然后里面的那个对象描述的是<code>array</code>中的数据的展现类型，字段有哪些。</p><p><code>result</code>中的最开头 <code>-name</code> 字段和<code>-desc</code>字段是用来描述<code>result</code>字段的名称和描述。因为为了防止和常规字段冲突，所以在前面加了<code>-</code>减号, </p><p>系统会根据<code>&#91;&#93;</code>自动识别<code>result</code>是一个数组，而且人阅读起来也很友好，因此不再需要标注类型</p><p><code>category</code>字段的类型是一个对象<code>object</code>， 里面有两个属性<code>id</code>和<code>name</code>，分别表示分类的id和分类的名称。同样的<code>-name</code>, <code>-desc</code>是用来描述<code>category</code>这个字段的。系统也会自动识别出<code>object</code>对象，因此不需要人工标注类型</p><h3>注意事项</h3><p>如果不同的接口，同一个<code>url</code>, 但是请求方法不同，有<code>GET</code>,有<code>POST</code>是允许的。你可以为每一种方法定义不同的接口</p><p>如果不同的接口，同一个<code>url</code>, 请求方法也相同，都是<code>GET</code>或者都是<code>POST</code>，那么系统会判定，只允许一个，前面的会被后面的覆盖。</p><p>教程中的代码在这里： <a href='https://github.com/arlicle/panda-api-examples/tree/master/simple'>https://github.com/arlicle/panda-api-examples/tree/master/simple</a></p><h3>结尾</h3><p>至此，我们的建议教学就结束了，可以试着找一个以前的项目或者新项目，开始写自己的接口文档，遇到有任何的问题或者意见建议，欢迎和我讨论。</p><p>下一篇，开启高级教学，一些复杂的用法，以及代码和数据的重用，让我们更简单快速的维护接口文档。</p><p><a href='/p/2020/1/15/Panda-api%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/'>Panda-api高级使用说明</a></p>
-            <p class="text-left text-muted">2020-02-05 12:04</p>
+            <p class="text-left text-muted">2020-02-07 06:31</p>
         </div>
         <div class="container">
             <div class="row mt-4">

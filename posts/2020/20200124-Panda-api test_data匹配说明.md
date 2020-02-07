@@ -84,6 +84,10 @@ test_data中的第一个元素，`url:"/post/1/"`， 必须请求url是`/post/1/
 
 test_data中的第二个元素，`url:"/post/3000/"`, 必须请求url是 `/post/3000/`，才会返回其对应的`response`；
 
+test_data中`url`的匹配有一点特殊，如果设置test_data中的`url`，表示忽略`url`匹配，也就是默认`url`是匹配的。
+
+其它字段不一样，就是没有设置，也会拿着空去匹配
+
 ### 使用query 进行匹配
 
 ```.language-json5
@@ -92,7 +96,7 @@ test_data中的第二个元素，`url:"/post/3000/"`, 必须请求url是 `/post/
     method:"GET",
     url:"/logout/",
     query:{
-        id:{name:"user id"},
+        id:{name:"user id", type:"int"},
         username:{}
     },
     response:{
@@ -115,7 +119,32 @@ test_data中的第二个元素，`url:"/post/3000/"`, 必须请求url是 `/post/
 }
 
 ```
+注意，这里接口中定义域`query`的`id`为`id:{name:"user id", type:"int"}`，`id`是一个整数，那么`test_data`中`query`里`id`的值也必须是整数，否则不会匹配。也就是
 
+```.language-json5
+// 接口中query定义
+query:{
+    id:{name:"user id", type:"int"}
+    ....
+}
+// 请求 /logout/?id=1&username=root
+query:{id:1, username:"root"}, // 会匹配
+query:{id:"1", username:"root"}, // 不会匹配
+```
+
+如果我们把接口`query`的定义改为：`id:{name:"user id", type:"string"}`，`id`是一个字符串，那么`test_data`中`query`里`id`的值也必须为整数，否则不会匹配。也就是
+
+```.language-json5
+// 接口中query定义
+query:{
+    id:{name:"user id", type:"string"}
+    ....
+}
+// 请求 /logout/?id=1&username=root
+query:{id:1, username:"root"}, // 不会匹配
+query:{id:"1", username:"root"}, // 会匹配
+```
+如果没有定义接口的`response`或者`query`，那么请求的所有query中的整数都是当做字符串处理，写在`test_data`中也必须全部写为字符串
 
 ### 使用body进行匹配
 
@@ -217,6 +246,14 @@ test_data中的第二个元素，`url:"/post/3000/"`, 必须请求url是 `/post/
 
 ```
 
+如果请求的method不匹配，那么将会返回错误
+```.language-json5
+{
+  "code": -1,
+  "msg": "this api address /logout/ not defined method POST"
+}
+```
+
 ## 增加test_data数据的描述说明
 可以在`test_data`的数据列表的元素中，增加`name`字段和`desc`字段，进行测试用例数据的描述，`name`字段和`desc`字段与`method`、`body`这些字段是同级的。增加了`name`和`desc`不会影响`test_data`的匹配，两个字段都是可选的。
 
@@ -251,3 +288,19 @@ test_data:[
     },
 ]
 ```
+
+
+如果请求的url不匹配，那么将会返回错误
+```.language-json5
+{
+  "code": -1,
+  "msg": "this api address /logout/aaa/ not defined method POST"
+}
+```
+
+### 其它
+
+虽然不推荐，但是其实你可以这么做，就是不定义`response`，直接写`test_data`里面的数据就开始前端访问。
+
+这么做可以快速的提供接口服务，不好的是，没有了`response`文档，同时也不会自动生成`mock`数据。
+
