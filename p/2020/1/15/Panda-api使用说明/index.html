@@ -179,7 +179,7 @@ apis:&#91;...&#93; /&#42; 当前接口文档的接口列表 &#42;/
     value:null, /&#42; 字段的固定值，&#40;可选&#41; 不填写时默认是空 &#42;/
     enum:&#91;&#93; /&#42; 字段的枚举值，&#40;可选&#41; 表示字段只能从这几个字段中有值，比如&#91;&quot;edison&quot;,&quot;lemon&quot;,&quot;jay&quot;&#93;, 那么username只能是这3个值中的一个 &#42;/
 }
-</code></pre></p><p><code>enum</code>有两种写法，一种直接就是值: <code>enum:&#91;-1, 1&#93;</code>，或者是值加值的描述 <code>enum:&#91;{&quot;-value&quot;:-1, &quot;-desc&quot;:&quot;失败&quot;}, {&quot;-value&quot;:1, &quot;-desc&quot;:&quot;成功&quot;}&#93;</code> 两种写法的结果是一样的，值只会从-1和1中选取。</p><p>当我们不写<code>desc</code>属性时，默认为空，不写<code>required</code>属性时，默认为true, 也就是这个字段是必填的。</p><h3>type 字段的类型说明</h3><p>type 字段基础类型一共有这几种</p><ol><li>string 字符串 "aaa"</li><li>number 数字 1、2</li><li>bool 布尔值 true、false</li><li>object 对象 {}</li><li>array 数组 []</li></ol><p>除了基础类型，还有更好用的子类型 以及属性的说明 更多在</p><p><a href='/p/2020/1/29/Panda-api%E5%AD%97%E6%AE%B5%E8%AF%B4%E6%98%8E/'>Panda api 字段type类型说明</a></p><h3>request_headers</h3><p>表示请求头的参数要求，一旦定义了，那么请求头上必须含有这些参数和值，才可以访问该接口，否则就不能访问。通常用于接口多版本的定义，例如：</p><pre><code class=".language-json5">request&#95;headers:{
+</code></pre></p><p><code>enum</code>有两种写法，一种直接就是值: <code>enum:&#91;-1, 1&#93;</code>，或者是值加值的描述  <code>enum:&#91;&quot;$desc&quot;, &#91;-1,&quot;失败&quot;&#93;, &#91;1, &quot;成功&quot;&#93;&#93;</code>, <code>enum</code>数组的第一个元素<code>$desc</code>，表示后面的袁术是以数组形式表现，元素的第一个是值，第二个是值的描述。 两种写法的结果是一样的，值只会从-1和1中选取。</p><p>当我们不写<code>desc</code>属性时，默认为空，不写<code>required</code>属性时，默认为true, 也就是这个字段是必填的。</p><h3>type 字段的类型说明</h3><p>type 字段基础类型一共有这几种</p><ol><li>string 字符串 "aaa"</li><li>number 数字 1、2</li><li>bool 布尔值 true、false</li><li>object 对象 {}</li><li>array 数组 []</li></ol><p>除了基础类型，还有更好用的子类型 以及属性的说明 更多在</p><p><a href='/p/2020/1/29/Panda-api%E5%AD%97%E6%AE%B5%E8%AF%B4%E6%98%8E/'>Panda api 字段type类型说明</a></p><h3>request_headers</h3><p>表示请求头的参数要求，一旦定义了，那么请求头上必须含有这些参数和值，才可以访问该接口，否则就不能访问。通常用于接口多版本的定义，例如：</p><pre><code class=".language-json5">request&#95;headers:{
 　　Accept: vnd.example-com.foo+json; version=1.0 // 表示1.0版本的接口
 }
 
@@ -300,7 +300,7 @@ Location: /proccese/status/
     }
 }
 </code></pre><p>这个例子中，<code>response</code>返回的结果中，<code>result</code>字段，还有一点特殊，他是一个列表，然后列表里面有一个对象，他表示<code>result</code>的类型是<code>array</code>,然后里面的那个对象描述的是<code>array</code>中的数据的展现类型，字段有哪些。</p><p><code>result</code>中的最开头 <code>-name</code> 字段和<code>-desc</code>字段是用来描述<code>result</code>字段的名称和描述。因为为了防止和常规字段冲突，所以在前面加了<code>-</code>减号, </p><p>系统会根据<code>&#91;&#93;</code>自动识别<code>result</code>是一个数组，而且人阅读起来也很友好，因此不再需要标注类型</p><p><code>category</code>字段的类型是一个对象<code>object</code>， 里面有两个属性<code>id</code>和<code>name</code>，分别表示分类的id和分类的名称。同样的<code>-name</code>, <code>-desc</code>是用来描述<code>category</code>这个字段的。系统也会自动识别出<code>object</code>对象，因此不需要人工标注类型</p><h3>注意事项</h3><p>如果不同的接口，同一个<code>url</code>, 但是请求方法不同，有<code>GET</code>,有<code>POST</code>是允许的。你可以为每一种方法定义不同的接口</p><p>如果不同的接口，同一个<code>url</code>, 请求方法也相同，都是<code>GET</code>或者都是<code>POST</code>，那么系统会判定，只允许一个，前面的会被后面的覆盖。</p><p>教程中的代码在这里： <a href='https://github.com/arlicle/panda-api-examples/tree/master/simple'>https://github.com/arlicle/panda-api-examples/tree/master/simple</a></p><h3>结尾</h3><p>至此，我们的建议教学就结束了，可以试着找一个以前的项目或者新项目，开始写自己的接口文档，遇到有任何的问题或者意见建议，欢迎和我讨论。</p><p>下一篇，开启高级教学，一些复杂的用法，以及代码和数据的重用，让我们更简单快速的维护接口文档。</p><p><a href='/p/2020/1/15/Panda-api%E9%AB%98%E7%BA%A7%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/'>Panda-api高级使用说明</a></p>
-            <p class="text-left text-muted">2020-02-07 14:20</p>
+            <p class="text-left text-muted">2020-02-07 14:29</p>
         </div>
         <div class="container">
             <div class="row mt-4">
