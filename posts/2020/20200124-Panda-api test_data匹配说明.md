@@ -19,7 +19,64 @@ test_data中，有这么几个字段可以进行数据匹配
 }
 ```
 
-`method`, `url`、`query`、`body` 或 `form_data` 这四者是可以同时存在或者只有其中一个存在，或者都不存在， 匹配成功后返回response中的结果
+`method`, `url`、`query`、`body` 或 `form_data` 是请求时的相关数据，这四者是可以同时存在或者只有其中一个存在，或者都不存在， 匹配成功后返回`response`中的结果
+
+### 定义test_data某个字段的mock
+在写用户登录的`test_data`数据匹配的时候，我们是这么写的：
+
+```.language-json5
+...
+body:{
+    username:{name:"用户名"},
+    password:{name:"用户登录密码"}
+},
+response:{
+    code:{name:"返回结果的代码", type:"int", desc:"登录成功只返回1"},
+    msg:{name:"登录成功返回消息", type:"string", desc:"通常返回都是空"},
+    token:{name:"登录成功返回的用户token", type:"string", required:false}
+},
+test_data:[
+    {
+        body:{username:"edison", password:"123"},
+        response:{code:-1, msg:"密码输入不正确"}
+    },
+    {
+        body:{username:"lily", password:"123"},
+        response:{code:-2, msg:"用户名不存在"}
+    },
+    {
+        body:{username:"root", password:"123"},
+        response:{code:1, msg:"登录成功", token:"5lCadRru(ADn2IE!$LV%x%JF3JNmz*Nf5nFieUG!r((&esi2CLI$jb!227Lh"}
+    },
+    {
+        body:{username:"lily"},
+        response:{code:-1, msg:"密码是必填的"}
+    },
+    {
+        body:{password:"123"},
+        response:{code:-1, msg:"用户名是必填的"}
+    }
+]
+...
+```
+这个是一个登陆成功的测试数据，他已经可以满足满足我们前端开发的需求，但是稍微有一点不完美，就是正常情况下，我们每次登陆返回的`token`应该是动态随机生成的，而不应该是固定的，我们需要对`token`字段使用`mock`，所以我们改一下这一组数据：
+```.language-json5
+{
+test_data:[
+    ...
+    {
+        body:{username:"root", password:"123"},
+        response:{code:1, msg:"登录成功", token:{$mock:true, required:true}}
+    }
+    ...
+]
+},
+```
+保存文档，然后请求接口`/login/`，请求`body`数据为`{username:"root", password:"123"}`，你就会得到动态的符合要求的`token`。
+
+这里修改中，我们把`token`原设置的字符串给为了一个对象`{$mock:true}`，表示这个字段开启`mock`数据生成，这要求`token`字段必须在接口`response`文档中中有对应的定义，否则这个字段就会被忽略。然后在接口`response`中`token`字段是可有可无的`required:false`，生成的mock有时候回有，有时候没有，但是在我们指定了用户名密码是登录成功的状态下，`token`是必须有的，所以我们重写了`token`字段的`required:true`，这样就每次请求，一定有token返回。
+
+在`token:{$mock:true, required:true}`这里，你可以重写你想要的任何`token`字段的属性。
 
 ### 使用url匹配的test_data
 ```.language-json5
