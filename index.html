@@ -74,8 +74,45 @@ test&#95;data:&#91;
       }
   }
 }
-</code></pre></p><p>配置<code>servers</code>中，<code>dev</code>和<code>pro</code>表示这个服务器调用的<code>key</code>，可以让我们很方便的在线或者命令行下切换要测试服务器。<code>dev</code>和<code>pro</code>里面的值就是具体的服务器的信息。</p><ul><li><code>name</code> 表示服务器环境名称；</li><li><code>desc</code> 表示备注，可以不要，默认为空；</li><li><code>add</code> 表示服务器的请求地址，如果有端口，也要写到里面</li></ul>
-            <p class="text-left text-muted">2020-02-10 22:15</p>
+</code></pre></p><p>配置<code>servers</code>中，<code>dev</code>和<code>pro</code>表示这个服务器调用的<code>key</code>，可以让我们很方便的在线或者命令行下切换要测试服务器。<code>dev</code>和<code>pro</code>里面的值就是具体的服务器的信息。</p><ul><li><code>name</code> 表示服务器环境名称；</li><li><code>desc</code> 表示备注，可以不要，默认为空；</li><li><code>add</code> 表示服务器的请求地址，如果有端口，也要写到里面  </li></ul><h3>运行测试</h3><p>你可以访问<code>http://localhost:9000</code>访问在线文档，然后在对应接口文档的地方进行测试，也可以在命令行下进行测试。命令行下你可以对整个系统进行测试以及自动化测试。</p><p>以下是Panda Api 在命令行下执行测试的相关用例，更多执行<code>panda test &ndash;help</code>查看：<pre><code class=".language-shell"># 测试dev服务器 单个接口
+panda test -s dev -u /login/
+
+# 测试dev服务器 单个文档接口
+panda test -s dev -d auth.json5
+
+# 测试dev服务器 多个文档的接口
+panda test -s dev -d auth.json5 article.json5
+
+# 测试dev服务器 所有接口
+panda test -s dev -u &#42;
+
+# 测试dev服务器 单个接口 并监听 默认每5分钟进行1次测试
+panda test -s dev -u /login/ -w
+
+# 测试dev服务器 单个接口 并监听 每10分钟进行1次测试
+panda test -s dev -u /login/ -w 10
+
+# 测试dev服务器 单个文档接口 并监听 默认每5分钟进行1次测试
+panda test -s dev -d auth.json5 -w
+
+
+# 测试dev服务器 多个文档的接口 并监听 默认每5分钟进行1次测试
+panda test -s dev -d auth.json5 article.json5 -w
+
+# 测试dev服务器 所有接口
+panda test -s dev -u &#42; -w
+
+# 测试所有服务器，所有接口 并监听
+panda test -s &#42; -u &#42; -w
+
+</code></pre></p><h3>相关函数</h3><p>在和后端接口交互的时候，通常会用到一些函数，比如需要把请求参数按照规则 进行签名加密，<pre><code class=".language-json5">body: {
+    time:{name:&quot;订单时间戳&quot;, type:timestamp},
+    no: {name:&quot;订单号&quot;},
+    product: {name: &quot;商品名称&quot;},
+    sign:{name: &quot;签名&quot;, value:&quot;$sha256&#40;no={$no}&amp;product={$product}&amp;time={$time}&#41;&quot;}
+}
+</code></pre></p>
+            <p class="text-left text-muted">2020-02-10 22:46</p>
         </div>
         <div class="container">
             <div class="row mt-4">
