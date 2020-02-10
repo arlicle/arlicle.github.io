@@ -8,7 +8,7 @@
 ### 最新     
 
 
-[Panda-api后端接口测试](https://www.debugmyself.com/p/2020/2/11/Panda-api后端接口测试/)  
+[Panda-api后端接口测试](https://www.debugmyself.com/p/2020/2/11/panda-api-backend-test/)  
 
 [Json5 语法说明](https://www.debugmyself.com/p/2020/2/5/json5/)  
 
