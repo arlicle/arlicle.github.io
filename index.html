@@ -111,7 +111,7 @@ panda test -s &#42; -u &#42; -w
     product: {name: &quot;商品名称&quot;},
     sign:{name: &quot;签名&quot;, value:&quot;$sha256&#40;no={$no}&amp;product={$product}&amp;time={$time}&#41;&quot;}
 }
-</code></pre></p><p>支持调用系统本身的命令行，形成功能函数<pre><code class=".language-json5">body: {
+</code></pre></p><p>支持调用系统本身的命令行，形成功能函数，因为有的时候需要本都证书，usb key之类的，Panda Api函数搞不定，就可以使用命令函数，调用本地程序，取回结果。<pre><code class=".language-json5">body: {
     time:{name:&quot;订单时间戳&quot;, type:timestamp},
     no: {name:&quot;订单号&quot;},
     product: {name: &quot;商品名称&quot;},
@@ -124,7 +124,7 @@ panda test -s &#42; -u &#42; -w
     sign:{name: &quot;签名&quot;, value:&quot;$request&#40;&quot;https://www.debugmyself.com/sha256/&quot;, no={$no}&amp;product={$product}&amp;time={$time}&#41;&quot;}
 }
 </code></pre></p>
-            <p class="text-left text-muted">2020-02-11 02:24</p>
+            <p class="text-left text-muted">2020-02-11 02:28</p>
         </div>
         <div class="container">
             <div class="row mt-4">
