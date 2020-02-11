@@ -88,9 +88,9 @@ test_data:[
         code:{name:"response result code", type:"int", desc:"success is 1"},
         msg:{name:"response result message", type:"string", desc:""},
         data: {
-            "-name":"data field name",
-            "-desc":"data field description",
-            "-required":false,
+            $name:"data field name",
+            $desc:"data field description",
+            $required:false,
             id:{name:"article id", type:"number"},
             title:{name:"article title"},
             summary:{name:"article summary"},

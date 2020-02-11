@@ -78,9 +78,9 @@ test&#95;data:&#91;
         code:{name:&quot;response result code&quot;, type:&quot;int&quot;, desc:&quot;success is 1&quot;},
         msg:{name:&quot;response result message&quot;, type:&quot;string&quot;, desc:&quot;&quot;},
         data: {
-            &quot;-name&quot;:&quot;data field name&quot;,
-            &quot;-desc&quot;:&quot;data field description&quot;,
-            &quot;-required&quot;:false,
+            $name:&quot;data field name&quot;,
+            $desc:&quot;data field description&quot;,
+            $required:false,
             id:{name:&quot;article id&quot;, type:&quot;number&quot;},
             title:{name:&quot;article title&quot;},
             summary:{name:&quot;article summary&quot;},
@@ -287,7 +287,7 @@ query:{id:&quot;1&quot;, username:&quot;root&quot;}, // 会匹配
   &quot;msg&quot;: &quot;this api address /logout/aaa/ not defined method POST&quot;
 }
 </code></pre></p><h3>其它</h3><p>虽然不推荐，但是其实你可以这么做，就是不定义<code>response</code>，直接写<code>test&#95;data</code>里面的数据就开始前端访问。</p><p>这么做可以快速的提供接口服务，不好的是，没有了<code>response</code>文档，同时也不会自动生成<code>mock</code>数据。</p>
-            <p class="text-left text-muted">2020-02-09 21:47</p>
+            <p class="text-left text-muted">2020-02-11 07:08</p>
         </div>
         <div class="container">
             <div class="row mt-4">
