@@ -105,7 +105,7 @@ panda test -s dev -u &#42; -w
 # 测试所有服务器，所有接口 并监听
 panda test -s &#42; -u &#42; -w
 
-</code></pre></p><h3>相关函数</h3><p>在和后端接口交互的时候，通常会用到一些函数，比如需要把请求参数按照规则 进行签名加密等第三方函数。这些功能函数在很多接口交互厘米，非常关键。<pre><code class=".language-json5">body: {
+</code></pre></p><p>如果进行所有接口的一次测试，需要进行<code>auth</code>的<code>token</code>接口获取配置，以及配置好接口测试的顺序；</p><h3>auth 的配置</h3><h3>测试顺序的配置</h3><h3>相关函数</h3><p>在和后端接口交互的时候，通常会用到一些函数，比如需要把请求参数按照规则 进行签名加密等第三方函数。这些功能函数在很多接口交互厘米，非常关键。<pre><code class=".language-json5">body: {
     time:{name:&quot;订单时间戳&quot;, type:timestamp},
     no: {name:&quot;订单号&quot;},
     product: {name: &quot;商品名称&quot;},
@@ -123,8 +123,8 @@ panda test -s &#42; -u &#42; -w
     product: {name: &quot;商品名称&quot;},
     sign:{name: &quot;签名&quot;, value:&quot;$request&#40;&quot;https://www.debugmyself.com/sha256/&quot;, no={$no}&amp;product={$product}&amp;time={$time}&#41;&quot;}
 }
-</code></pre></p>
-            <p class="text-left text-muted">2020-02-11 02:28</p>
+</code></pre></p><h1>未来可能会做的功能</h1><h2><ul><li>性能测试</h2></li></ul>
+            <p class="text-left text-muted">2020-02-11 02:31</p>
         </div>
         <div class="container">
             <div class="row mt-4">
