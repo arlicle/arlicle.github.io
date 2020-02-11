@@ -27,7 +27,7 @@ body:{
     password:{name:&quot;用户登录密码&quot;, min&#95;length:6, max&#95;length:30}
 },
 response:{
-    code:{name:&quot;返回结果的代码&quot;, type:&quot;int&quot;, desc:&quot;登录成功只返回1&quot;, enum:&#91;$desc, &#91;-1, &quot;失败&quot;&#93;, &#91;1, &quot;成功&quot;&#93;&#93;},
+    code:{name:&quot;返回结果的代码&quot;, type:&quot;int&quot;, desc:&quot;登录成功只返回1&quot;, enum:&#91;&quot;$desc&quot;, &#91;-1, &quot;失败&quot;&#93;, &#91;1, &quot;成功&quot;&#93;&#93;},
     msg:{name:&quot;登录成功返回消息&quot;, type:&quot;csentence&quot;, desc:&quot;通常返回都是空&quot;},
     token:{name:&quot;登录成功返回的用户token&quot;, type:&quot;string&quot;, required:false, length:60}
 },
@@ -124,7 +124,7 @@ panda test -s &#42; -u &#42; -w
     sign:{name: &quot;签名&quot;, value:&quot;$request&#40;&quot;https://www.debugmyself.com/sha256/&quot;, no={$no}&amp;product={$product}&amp;time={$time}&#41;&quot;}
 }
 </code></pre></p><h3>测试完成后有测试报告</h3><h3>正在思考</h3><p>如何根据业务逻辑来设计用例？比如： 1、登录失败5次，就需要等待15分钟之后再登录 2、新注册的用户需要过了实习期才能发帖 3、删除帖子扣除积分 4、充值金额后，需要审核，余额才会增加 ...</p><h3>未来可能会做的功能</h3><ul><li>性能测试</li></ul>
-            <p class="text-left text-muted">2020-02-11 05:19</p>
+            <p class="text-left text-muted">2020-02-11 07:02</p>
         </div>
         <div class="container">
             <div class="row mt-4">
