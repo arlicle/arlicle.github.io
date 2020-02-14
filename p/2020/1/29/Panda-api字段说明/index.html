@@ -32,7 +32,9 @@
 </code></pre></p><p>同样可以设置最小值<code>min&#95;value</code>和最大值<code>max&#95;value</code>，但是整数 <code>min&#95;value</code>默认的最小值是当前时间戳提前两年，最大值的时间戳是当前时间戳</p><h2>string 字符串类型</h2><p>除了<code>array</code>和<code>object</code>字段,其它字段中如果没有设置<code>type</code>，则默认都为<code>string</code>类型，<code>string</code>类型返回的是随机的应为字符串。 <code>string</code>除了<code>value</code>属性和<code>enum</code>属性，<code>string</code>特有的属性是：<code>length</code>字符串固定长度，<code>min&#95;length</code>字符串最小长度，<code>max&#95;length</code>字符串最大长度，</p><pre><code class=".language-json5">{name: &quot;字符串&quot;, type: &quot;string&quot;},
 // 随机返回长度在5到30的英文字符串，例如：1@AK&#40;&#41;r8r&#42;N2vvVEkWk6Fg
 </code></pre><p><code>string</code>的默认长度范围是<code>min&#95;length:5</code>, <code>max&#95;length:30</code></p><p><code>string</code> 一样有很多的子类型。以下类型均为<code>string</code>类型，拥有<code>string</code>的全部属性</p><h2>date 和 datetime</h2><p><code>date</code>和<code>datetime</code>都是<code>string</code>的子集 <code>date</code>日期类型， <code>datetime</code>是日期+时间类型，两个的所有属性都一样，只是返回日期的格式不一样。 <code>date</code>返回的格式是：2020-01-30 ， <code>datetime</code> 返回的是 <code>2020-01-30 10:03 15</code>这样的格式，具体返回格式可以自定义。</p><pre><code class=".language-json5">created: {name: &quot;Created Time&quot;, type: &quot;datetime&quot;, format:&quot;%Y-%m-%d %H:%M&quot; min&#95;value:&quot;1999-1-1&quot;, max&#95;value:&quot;2020-12-12&quot;},
-</code></pre><p><code>date</code> 和 <code>datetime</code>这么几个属性：</p><ul><li>format 表示日期格式</li><li>min_value 表示日期的最小值范围，默认是当前时间提前两年</li><li>max_value 表示日期的最大值范围，默认是当前时间</li></ul><h2>word 英文单词</h2><p>是<code>string</code>的子集， 例如：<pre><code class=".language-json5">{name: &quot;English Word&quot;, type: &quot;word&quot;},
+</code></pre><p><code>date</code> 和 <code>datetime</code>这么几个属性：</p><ul><li>format 表示日期格式</li><li>min_value 表示日期的最小值范围，默认是当前时间提前两年</li><li>max_value 表示日期的最大值范围，默认是当前时间</li></ul><h2>regex 正则表达式</h2><p>是<code>string</code>的子集，可以写正则表达式来生成字符串 例如，生成一个手机号码：<pre><code class=".language-json5">mobile:{name:&quot;手机号码&quot;, type:&quot;regex&quot;, regex:&quot;&#94;1&#91;3456789&#93;\\d{9}&quot;},
+// 随机返回手机号码，例如：13854309473 , 15413021985
+</code></pre></p><p><code>regex:&quot;&#94;1&#91;3456789&#93;\\d{9}&quot;</code>里面的就是正则表达式,注意一下的是平时我们的<code>\d</code>在这里要写为<code>\\d</code>,因为json5里面单个`&#8216;变成了一个转义字符.</p><h2>word 英文单词</h2><p>是<code>string</code>的子集， 例如：<pre><code class=".language-json5">{name: &quot;English Word&quot;, type: &quot;word&quot;},
 // 随机返回长度在3到10的英文字符串，例如：bnsjnw
 </code></pre></p><p><code>word</code>的默认长度范围是<code>min&#95;length:3</code>, <code>max&#95;length:10</code>，默认返回长度在3到10的英文字符串</p><h2>cword | cw 中文单词</h2><p>是<code>string</code>的子集， 你在标记属性的时候，可以使用<code>cword</code>，也可以使用简写<code>cw</code>，例如：<pre><code class=".language-json5">{name: &quot;Chinese Word&quot;, type: &quot;cword&quot;},
 // 随机返回长度在1到4的中文字符串，例如：向放路
@@ -176,7 +178,7 @@ items: &#91;{
     &quot;谭娟&quot;
 &#93;
 </code></pre><p>这里要注意数组是单个元素和数组中是对象的不同写法。</p>
-            <p class="text-left text-muted">2020-02-11 10:44</p>
+            <p class="text-left text-muted">2020-02-14 12:16</p>
         </div>
         <div class="container">
             <div class="row mt-4">
