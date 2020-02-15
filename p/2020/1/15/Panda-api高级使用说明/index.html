@@ -212,7 +212,19 @@ tag:{name:&quot;文章标签&quot;}
         }
     &#93;
 }
-</code></pre><h3><code>$include</code>和<code>$exclude</code>语法</h3><p>在文件添加接口中，我们使用<code>$ref</code>引用了文章模型，语法是:<code>./&#95;data/models.json5:Article</code> 就是文件路径，后面是冒号<code>:</code>，后是具体的模型引用路径，如果只引用一个title字段，也可以这么写:<code>$ref:&quot;./&#95;data/models.json5:Article.title&quot;</code>，</p><p>接着有的字段我们是不要的，我们就可以使用<code>$exclude</code>语法，排除一些字段，<code>$exclude:&#91;&quot;category&#95;name&quot;, &quot;read&#95;count&quot;, &quot;created&quot;, &quot;create&#95;username&quot;&#93;,</code>，放入<code>$exclude</code>中的字段就不会被加载进来。</p><p>最后，重写了<code>id</code>字段，<code>&quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;, &quot;required&quot;:false}</code>。当把字段在当前重写了，那么就会以当前字段为准。</p><p>文章列表中，我们一样的引入了<code>Article</code>模型，然后没用<code>$exclude</code>，而是用<code>$include</code>语法指定我们需要的字段，这么的好处是，当我们再Article模型中增加了字段，增加的字段不会在模型自动加载出来，因为系统只会加载<code>$include</code>里面的字段；但是<code>$exclude</code>语法因为一开始没有设置这个新增加的字段，所以在<code>$exclude</code>模型的情况，模型<code>Article</code>中增加的字段会自动加载出来。</p><p>如果同时使用了<code>$exclude</code>和<code>$include</code>字段，那么只有<code>$include</code>会起作用</p><p>所以一共是三部操作：</p><ol><li>写一个文章模型</li><li>引入模型, 当前就会继承引入模型的字段</li><li>排除不需要的字段</li><li>重写不一样的字段</li></ol><h3>指定按字段引用</h3><p>我们还可以只引入某一个字段，比如有一个简单的文章列表接口，只需要文章标题和文章id，<pre><code class=".language-json5">{
+</code></pre><h3><code>$include</code>和<code>$exclude</code>语法</h3><p>在文件添加接口中，我们使用<code>$ref</code>引用了文章模型，语法是:<code>./&#95;data/models.json5:Article</code> 就是文件路径，后面是冒号<code>:</code>，后是具体的模型引用路径，如果只引用一个title字段，也可以这么写:<code>$ref:&quot;./&#95;data/models.json5:Article.title&quot;</code>，</p><p>接着有的字段我们是不要的，我们就可以使用<code>$exclude</code>语法，排除一些字段，<code>$exclude:&#91;&quot;category&#95;name&quot;, &quot;read&#95;count&quot;, &quot;created&quot;, &quot;create&#95;username&quot;&#93;,</code>，放入<code>$exclude</code>中的字段就不会被加载进来。</p><p>如果字段存在对象或数组的嵌套,可以用<code>/</code>标识字段路径来删除,例如, 假设<code>$ref</code>的文章模型里面还有嵌套的对象和数组<pre><code class=".language-json5">Article:{
+    id: {name:&quot;用户id&quot;, type:&quot;number&quot;},
+    title: {name:&quot;文章标题&quot;},
+    category: {
+        id:{name:&quot;分类id&quot;, type:&quot;number&quot;},
+        name:{name:&quot;分类名称&quot;, type:&quot;string&quot;}
+    },
+    tags:&#91;{
+        id:{name:&quot;标签id&quot;},
+        title:{name:&quot;标签内容&quot;}
+    }&#93;
+}
+</code></pre></p><p>假设我们<code>$ref</code>这个<code>Article</code>, 不要<code>category</code>对象的<code>id</code>, 不要<code>tags</code>对象列表的<code>id</code>.可以这么写: </p><p><code>$exclude:&#91;&quot;category/id&quot;, tags/0/id&#93;</code></p><p>最后，重写了<code>id</code>字段，<code>&quot;id&quot;:{&quot;name&quot;:&quot;文章id&quot;, &quot;desc&quot;:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, &quot;type&quot;:&quot;number&quot;, &quot;required&quot;:false}</code>。当把字段在当前重写了，那么就会以当前字段为准。</p><p>文章列表中，我们一样的引入了<code>Article</code>模型，然后没用<code>$exclude</code>，而是用<code>$include</code>语法指定我们需要的字段，这么的好处是，当我们再Article模型中增加了字段，增加的字段不会在模型自动加载出来，因为系统只会加载<code>$include</code>里面的字段；但是<code>$exclude</code>语法因为一开始没有设置这个新增加的字段，所以在<code>$exclude</code>模型的情况，模型<code>Article</code>中增加的字段会自动加载出来。</p><p>如果同时使用了<code>$include</code>和<code>$exclude</code>字段，那么先加载<code>$include</code>中设置的字段,然后再删除掉<code>$exclude</code>中设置的字段.</p><p>所以一共是四步操作：</p><ol><li>写一个文章模型</li><li>引入模型, 当前就会继承引入模型的字段</li><li>设置需要的字段,排除不需要的字段</li><li>重写不一样的字段</li></ol><h3>指定按字段引用</h3><p>我们还可以只引入某一个字段，比如有一个简单的文章列表接口，只需要文章标题和文章id，<pre><code class=".language-json5">{
     name:&quot;简要文章列表&quot;,
     method:&quot;POST&quot;,
     url:&quot;/post/simple/list/&quot;,
@@ -375,7 +387,7 @@ tag:{name:&quot;文章标签&quot;}
 }
 
 </code></pre><p>同样的，继承过来以后还是可以自定义里面的字段属性，比如这里<code>name</code>字段就进行了自定义，这里主要还有就是写上<code>name</code>方便维护的时候看</p><h3>文件上传接口</h3><p>在照片上传的接口中，有两个特殊的地方，首先：我们的<code>body&#95;mode</code>是<code>form-data</code>，也必须是<code>form-data</code>才会进行文件的接收。</p><p>在<code>test&#95;data</code>中，<code>body</code>中的上传文件的匹配用的是文件名进行匹配，</p><p><code>test&#95;data</code>的返回值<code>response</code>中，我们还可以获取文件的访问<code>url</code>地址，<code>url</code>访问地址为：<code>&#95;upload/</code> + 文件名。即如果我们的文件名是：<code>aaa.jpg</code>, 那么我们访问的文件url地址是：<code>/&#95;upload/aaa.jpg</code>。当你访问这个地址: <code>http://localhost:9000/&#95;upload/aaa.jpg</code>时，就可以访问到文件。</p><h3>引入cvs外部数据</h3><p>正在搞...</p>
-            <p class="text-left text-muted">2020-02-15 10:10</p>
+            <p class="text-left text-muted">2020-02-15 23:59</p>
         </div>
         <div class="container">
             <div class="row mt-4">
