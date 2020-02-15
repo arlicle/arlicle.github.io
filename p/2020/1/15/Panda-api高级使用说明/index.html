@@ -52,7 +52,20 @@
     msg:&quot;$del&quot;, /&#42; 删除继承得来的msg字段 &#42;/
     ...
 }
-</code></pre><p>这个时候设置了值为<code>$del</code>的字段就没有了，我们可以刷新前端文档看一下。</p><h3>重用相同的数据模型</h3><p>有时候，几个接口的字段差不多，又只是几个接口会这样，是不能用全局设置来表示的，比如用户操作的文章列表的字段、文章添加的字段、文章查看的字段差不多，如果字段很多，每个都重复写就很累，虽然可以复制粘贴，但是维护的时候又要同时维护多个地方，带来了麻烦。</p><p>所以Panda api上我参考swagger设计了<code>$ref</code>语法，方便的引用数据模型，此外又增加了<code>$exclude</code>语法、<code>$include</code>语法和继承语法，让我们使用起来更方便，我们来看例子吧。</p><p>我们的文章的接口文档是这样的：</p><pre><code class=".language-json5">{
+</code></pre><p>这个时候设置了值为<code>$del</code>的字段就没有了，我们可以刷新前端文档看一下。 或者也可以这么写:<pre><code class=".language-json5">response:{
+    code:{$del:true}, /&#42; 删除继承得来的code字段 &#42;/
+    msg:{$del:true}, /&#42; 删除继承得来的msg字段 &#42;/
+    ...
+}
+</code></pre></p><p>如果平时我们调试的时候,想让某个设置的字段不出现,也可以用这个方法.例如:</p><pre><code class=".language-json5">body:{
+    title:{name:&quot;文章标题&quot;},
+    summary:{name:&quot;文章摘要&quot;},
+    category&#95;id:{name:&quot;文章分类id&quot;, type:&quot;number&quot;},
+    author&#95;name:{name:&quot;文章作者姓名&quot;},
+    source:{name:&quot;文章来源&quot;, $del:true}, // 标记为不要source字段
+    tag:{name:&quot;文章标签&quot;, $del:true} // 标记为不要标签字段
+},
+</code></pre><h3>重用相同的数据模型</h3><p>有时候，几个接口的字段差不多，又只是几个接口会这样，是不能用全局设置来表示的，比如用户操作的文章列表的字段、文章添加的字段、文章查看的字段差不多，如果字段很多，每个都重复写就很累，虽然可以复制粘贴，但是维护的时候又要同时维护多个地方，带来了麻烦。</p><p>所以Panda api上我参考swagger设计了<code>$ref</code>语法，方便的引用数据模型，此外又增加了<code>$exclude</code>语法、<code>$include</code>语法和继承语法，让我们使用起来更方便，我们来看例子吧。</p><p>我们的文章的接口文档是这样的：</p><pre><code class=".language-json5">{
     name:&quot;文章接口&quot;,
     apis:&#91;
         {
@@ -362,7 +375,7 @@ tag:{name:&quot;文章标签&quot;}
 }
 
 </code></pre><p>同样的，继承过来以后还是可以自定义里面的字段属性，比如这里<code>name</code>字段就进行了自定义，这里主要还有就是写上<code>name</code>方便维护的时候看</p><h3>文件上传接口</h3><p>在照片上传的接口中，有两个特殊的地方，首先：我们的<code>body&#95;mode</code>是<code>form-data</code>，也必须是<code>form-data</code>才会进行文件的接收。</p><p>在<code>test&#95;data</code>中，<code>body</code>中的上传文件的匹配用的是文件名进行匹配，</p><p><code>test&#95;data</code>的返回值<code>response</code>中，我们还可以获取文件的访问<code>url</code>地址，<code>url</code>访问地址为：<code>&#95;upload/</code> + 文件名。即如果我们的文件名是：<code>aaa.jpg</code>, 那么我们访问的文件url地址是：<code>/&#95;upload/aaa.jpg</code>。当你访问这个地址: <code>http://localhost:9000/&#95;upload/aaa.jpg</code>时，就可以访问到文件。</p><h3>引入cvs外部数据</h3><p>正在搞...</p>
-            <p class="text-left text-muted">2020-02-11 10:42</p>
+            <p class="text-left text-muted">2020-02-15 10:10</p>
         </div>
         <div class="container">
             <div class="row mt-4">
