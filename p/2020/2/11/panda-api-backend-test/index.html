@@ -67,11 +67,12 @@ request body: Object&#40;{&quot;username&quot;: String&#40;&quot;lily&quot;&#41;
 response Object&#40;{&quot;code&quot;: Number&#40;-1&#41;, &quot;msg&quot;: String&#40;&quot;密码是必填的&quot;&#41;}&#41;
 request body: Object&#40;{&quot;password&quot;: String&#40;&quot;123&quot;&#41;}&#41;
 response Object&#40;{&quot;code&quot;: Number&#40;-1&#41;, &quot;msg&quot;: String&#40;&quot;用户名是必填的&quot;&#41;}&#41;
-</code></pre></p><p>从输出日志可以看到，Panda Api的测试工具自动把<code>test&#95;data</code>里面的数据一条一条的对接口进行了请求，获取返回数据，并打印了出来，如果我们指定的是开发服务器，或者测试服务器，这样一条命令就完成了传统我们需要手工一条一条的操作。</p><p>我们已经在设计了用户登录的接口文档，文档中约定了请求地址<code>/login/</code>、请求方法<code>POST</code>以及数据提交的格式，约定了我们<code>body</code>提交的数据为<code>username</code>和<code>password</code>两个字符串，<code>response</code>中有<code>code</code>、<code>msg</code>和<code>token</code>， Panda Api首先会用<code>test&#95;data</code>里面的数据去请求我们指定开发环境的服务器，把<code>test&#95;data</code>里面的数据<code>body</code>请求，看返回是不是我们期望的<code>response</code>，如果不是，会有响应的错误信息提示出来。然后Panda Api会按照<code>body</code>字段的约定，自动mock数据进行各种数据对接口进行合法数据和不合法数据的检查。例如，请求<code>body</code>数据<code>{username:&quot;edison&quot;, password:&quot;123&quot;}</code>，返回的是不是：<code>{code:-1, msg:&quot;密码输入不正确&quot;}</code>，请求<code>username</code>长度大于30或者小于3，返回数据是不是<code>response</code>中的约定。</p><p>由此可见，如果我们的请求参数的<code>body</code>相关文档信息写的越详细，越清晰，我们浏览文档会获得更准确的信息，让开发更明确，也会让测试的质量变更好。</p><h2>指定数据进行测试</h2><p><code>test&#95;data</code>主要是给前端做模拟后端数据返回的，有的时候我们后端数据和前端会不一样，我们可以写到后端专属的测试数据<code>test&#95;case</code>。</p><p>只要运行期后端接口测试服务，Panda Api就会持续去请求各个接口，监听接口是否按约定返回。无论何时后端对代码进行修改，都可以运行测试来确保接口是否正确。</p><p>Panda Api可以通过命令行或者在线文档的方式完成单个接口 、一个接口文档或者整个系统的接口的测试。</p><h2>mock模糊测试任务</h2><p>根据请求的<code>body</code>、<code>query</code>、<code>form&#95;data</code>等模拟各种请求数据，以及<code>header</code>，完成随机模糊测试任务。 </p><p>mock测试中包含了 数据的边界内测试和边界外测试</p><p>进行mock模糊测试的是时候，Panda Api是根据 <code>response</code>定义的规则，去校验请求返回值是否满足这个规则，来验证返回结果是否正确。</p><h2>编写业务逻辑测试</h2><h3>配置服务器</h3><p>首先，我们需要配置需要测试服务的相关信息，编辑<code>&#95;settings.json5</code>，增加<code>servers</code>信息<pre><code class=".language-json5">{
+</code></pre></p><p>从输出日志可以看到，Panda Api的测试工具自动把<code>test&#95;data</code>里面的数据一条一条的对接口进行了请求，获取返回数据，并打印了出来，如果我们指定的是开发服务器，或者测试服务器，这样一条命令就完成了传统我们需要手工一条一条的操作。</p><p>我们已经在设计了用户登录的接口文档，文档中约定了请求地址<code>/login/</code>、请求方法<code>POST</code>以及数据提交的格式，约定了我们<code>body</code>提交的数据为<code>username</code>和<code>password</code>两个字符串，<code>response</code>中有<code>code</code>、<code>msg</code>和<code>token</code>， Panda Api首先会用<code>test&#95;data</code>里面的数据去请求我们指定开发环境的服务器，把<code>test&#95;data</code>里面的数据<code>body</code>请求，看返回是不是我们期望的<code>response</code>，如果不是，会有响应的错误信息提示出来。然后Panda Api会按照<code>body</code>字段的约定，自动mock数据进行各种数据对接口进行合法数据和不合法数据的检查。例如，请求<code>body</code>数据<code>{username:&quot;edison&quot;, password:&quot;123&quot;}</code>，返回的是不是：<code>{code:-1, msg:&quot;密码输入不正确&quot;}</code>，请求<code>username</code>长度大于30或者小于3，返回数据是不是<code>response</code>中的约定。</p><p>由此可见，如果我们的请求参数的<code>body</code>相关文档信息写的越详细，越清晰，我们浏览文档会获得更准确的信息，让开发更明确，也会让测试的质量变更好。</p><h2>指定数据进行测试</h2><p><code>test&#95;data</code>主要是给前端做模拟后端数据返回的，有的时候我们后端数据和前端会不一样，我们可以写到后端专属的测试数据<code>test&#95;case</code>。</p><p>只要运行期后端接口测试服务，Panda Api就会持续去请求各个接口，监听接口是否按约定返回。无论何时后端对代码进行修改，都可以运行测试来确保接口是否正确。</p><p>Panda Api可以通过命令行或者在线文档的方式完成单个接口 、一个接口文档或者整个系统的接口的测试。</p><h2>mock模糊测试任务</h2><p>根据请求的<code>body</code>、<code>query</code>、<code>form&#95;data</code>等模拟各种请求数据，以及<code>header</code>，完成随机模糊测试任务。 </p><p>mock测试中包含了 数据的边界内测试和边界外测试</p><p>进行mock模糊测试的是时候，Panda Api是根据 <code>response</code>定义的规则，去校验请求返回值是否满足这个规则，来验证返回结果是否正确。</p><h2>编写业务逻辑测试</h2><h3>配置服务器</h3><p>首先，我们需要配置需要测试服务的相关信息，编辑<code>&#95;settings.json5</code>，增加<code>servers</code>信息<pre><code class=".language-json5">// &#95;settings.json5
+{
   project&#95;name: &quot;Panda Api&quot;,
   project&#95;desc: &quot;Panda Api is a simple api manage tool&quot;,
   global: {
-    api: {
+    apis: {
       auth:true
     }
   },
@@ -132,11 +133,11 @@ panda test -s dev -A -c
     sign:{name: &quot;签名&quot;, value:&quot;$request&#40;&quot;https://www.debugmyself.com/sha256/&quot;, no={$no}&amp;product={$product}&amp;time={$time}&#41;&quot;}
 }
 </code></pre></p><h3>测试完成后有测试报告</h3><h3>正在思考</h3><p>如何根据业务逻辑来设计用例？比如： 1、登录失败5次，就需要等待15分钟之后再登录 2、新注册的用户需要过了实习期才能发帖 3、删除帖子扣除积分 4、充值金额后，需要审核，余额才会增加 ...</p><h3>未来可能会做的功能</h3><ul><li>性能测试</li></ul>
-            <p class="text-left text-muted">2020-02-14 11:52</p>
+            <p class="text-left text-muted">2020-02-16 06:57</p>
         </div>
         <div class="container">
             <div class="row mt-4">
-                <div class="col-6 text-left"></div>
+                <div class="col-6 text-left"><a href="/p/2020/2/16/panda_api_settings/">上一篇: Panda Api _settings配置说明</a></div>
                 <div class="col-6 text-right"><a href="/p/2020/2/5/json5/">下一篇:Json5 语法说明</a></div>
             </div>
         </div>

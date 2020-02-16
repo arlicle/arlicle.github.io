@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[Panda Api _settings配置说明](https://www.debugmyself.com/p/2020/2/16/panda_api_settings/)  
+
 [Panda-api后端接口测试](https://www.debugmyself.com/p/2020/2/11/panda-api-backend-test/)  
 
 [Json5 语法说明](https://www.debugmyself.com/p/2020/2/5/json5/)  
