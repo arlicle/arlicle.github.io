@@ -204,7 +204,7 @@ query:{id:&quot;1&quot;, username:&quot;root&quot;}, // 会匹配
         }
     &#93;
 },
-</code></pre><h3>form_data匹配</h3><p>把上个例子中<code>body</code>字段名改为<code>form&#95;data</code>即可。</p><h3>使用method进行匹配</h3><p><code>method</code>可以直接写字符串<code>method:&quot;GET&quot;</code>，单个方法匹配，也可以写数组，一次匹配多种方法，<code>method:&#91;&quot;GET&quot;, &quot;POST&quot;&#93;</code>，也可以匹配全部方法：<code>method:&quot;&#42;&quot;</code></p><p>如果不在test_data中设置<code>method</code>，表示<code>method</code>请求方法默认都是匹配的。</p><pre><code class=".language-json">{
+</code></pre><h3>form_data匹配</h3><p>把上个例子中<code>body</code>字段名改为<code>form&#95;data</code>即可。</p><h3>使用method进行匹配</h3><p><code>method</code>可以直接写字符串<code>method:&quot;GET&quot;</code>，单个方法匹配，也可以写数组，一次匹配多种方法，<code>method:&#91;&quot;GET&quot;, &quot;POST&quot;&#93;</code>，也可以匹配全部方法：<code>method:&quot;&#42;&quot;</code></p><p>如果不在test_data中设置<code>method</code>，表示<code>method</code>请求方法默认都是匹配的。</p><pre><code class=".language-json5">{
     // 假设在这个接口中，编辑获取数据和提交保存是一个接口，真实开发中，不建议这么做
     name:&quot;Article add&quot;,
     desc:&quot;Article add or edit&quot;,
@@ -287,7 +287,7 @@ query:{id:&quot;1&quot;, username:&quot;root&quot;}, // 会匹配
   &quot;msg&quot;: &quot;this api address /logout/aaa/ not defined method POST&quot;
 }
 </code></pre></p><h3>其它</h3><p>虽然不推荐，但是其实你可以这么做，就是不定义<code>response</code>，直接写<code>test&#95;data</code>里面的数据就开始前端访问。</p><p>这么做可以快速的提供接口服务，不好的是，没有了<code>response</code>文档，同时也不会自动生成<code>mock</code>数据。</p>
-            <p class="text-left text-muted">2020-02-11 07:08</p>
+            <p class="text-left text-muted">2020-02-16 07:33</p>
         </div>
         <div class="container">
             <div class="row mt-4">

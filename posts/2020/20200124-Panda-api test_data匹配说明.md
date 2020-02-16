@@ -255,7 +255,7 @@ query:{id:"1", username:"root"}, // 会匹配
 
 如果不在test_data中设置`method`，表示`method`请求方法默认都是匹配的。
 
-```.language-json
+```.language-json5
 {
     // 假设在这个接口中，编辑获取数据和提交保存是一个接口，真实开发中，不建议这么做
     name:"Article add",
