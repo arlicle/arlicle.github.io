@@ -268,14 +268,14 @@ tag:{name:&quot;文章标签&quot;}
         title:{name:&quot;标签内容&quot;}
     }&#93;
 }
-</code></pre></p><p>如果我们<code>$ref</code>了<code>Article</code>, 并且要重写<code>category</code>对象的<code>id</code>属性, 同时为<code>catebory</code>对象增加一个<code>order</code>, 为<code>tags</code>对象增加一个<code>order</code>, 可以这么写:</p><pre><code class=".language-json5">...
+</code></pre></p><p>如果我们<code>$ref</code>了<code>Article</code>, 并且要重写<code>category</code>对象的<code>id</code>属性, 同时为<code>category</code>对象增加一个<code>order</code>, 为<code>tags</code>对象增加一个<code>order</code>, 可以这么写:</p><pre><code class=".language-json5">...
 {
     name:&quot;文章添加/编辑&quot;,
     url:&quot;/post/add/&quot;,
     body:{
         $ref: &quot;./&#95;data/models.json5:Article&quot;,
-        &quot;catebory/id&quot;:{name:&quot;新的分类id&quot;, type:&quot;PosInt&quot;},
-        &quot;catebory/order&quot;:{name:&quot;分类排序&quot;, type:&quot;int&quot;},
+        &quot;category/id&quot;:{name:&quot;新的分类id&quot;, type:&quot;PosInt&quot;},
+        &quot;category/order&quot;:{name:&quot;分类排序&quot;, type:&quot;int&quot;},
         &quot;tags/0/order&quot;:{name:&quot;标签排序&quot;, type:&quot;int&quot;}
     },
     response:{
@@ -425,7 +425,7 @@ tag:{name:&quot;文章标签&quot;}
                 ocr:{name:&quot;OCR识别数据&quot;, desc:&quot;上传文件系统自动识别OCR返回的结果,目前只有部分处方单和身份证有这个数据&quot;, required:false}
             }
         },
-        test&#95;data:&#91;                {
+        test&#95;data:&#91;{
             body:{file:&quot;aaa.jpg&quot;, file&#95;type:&quot;id&#95;no&quot;},
             response:{
                 code: 1,
@@ -469,7 +469,7 @@ tag:{name:&quot;文章标签&quot;}
 }
 
 </code></pre><p>同样的，继承过来以后还是可以自定义里面的字段属性，比如这里<code>name</code>字段就进行了自定义，这里主要还有就是写上<code>name</code>方便维护的时候看</p><h3>文件上传接口</h3><p>在照片上传的接口中，有两个特殊的地方，首先：我们的<code>body&#95;mode</code>是<code>form-data</code>，也必须是<code>form-data</code>才会进行文件的接收。</p><p>在<code>test&#95;data</code>中，<code>body</code>中的上传文件的匹配用的是文件名进行匹配，</p><p><code>test&#95;data</code>的返回值<code>response</code>中，我们还可以获取文件的访问<code>url</code>地址，<code>url</code>访问地址为：<code>&#95;upload/</code> + 文件名。即如果我们的文件名是：<code>aaa.jpg</code>, 那么我们访问的文件url地址是：<code>/&#95;upload/aaa.jpg</code>。当你访问这个地址: <code>http://localhost:9000/&#95;upload/aaa.jpg</code>时，就可以访问到文件。</p><h3>引入cvs外部数据</h3><p>正在搞...</p>
-            <p class="text-left text-muted">2020-02-16 01:56</p>
+            <p class="text-left text-muted">2020-02-16 02:01</p>
         </div>
         <div class="container">
             <div class="row mt-4">
