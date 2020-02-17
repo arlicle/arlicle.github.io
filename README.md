@@ -14,7 +14,7 @@
 
 [Json5 语法说明](https://www.debugmyself.com/p/2020/2/5/json5/)  
 
-[Panda-api接口权限配置说明](https://www.debugmyself.com/p/2020/2/2/Panda-api接口权限配置说明/)  
+[Panda-api接口权限Auth配置说明](https://www.debugmyself.com/p/2020/2/2/Panda-api接口权限配置说明/)  
 
 [Panda-api字段说明](https://www.debugmyself.com/p/2020/1/29/Panda-api字段说明/)  
 
