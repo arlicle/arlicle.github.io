@@ -31,7 +31,7 @@
 │   ├── $3 接口测试号申请.md
 │   ├── $4 报警排查指引.md
 │   └── $5 常见问题.md
-</code></pre><h3>使用文件名控制菜单排序和名称</h3><p>目录名和文件名的最开始有一个美元符号<code>$</code>加一个数字，这个表示菜单和文档在菜单上显示的排序，这个只会在文件夹上显示，不会在菜单上展示出来。</p><p><code>api</code>接口文档和<code>markdown</code>纯文档的顺序的统一的，也就是通过调整排序，使得纯<code>markdown</code>的文档可以穿插到<code>api</code>接口文档之间。</p><p><code>api</code>接口文档和<code>markdown</code>接口文档都支持多级目录，多级目录会对应到前端的多级菜单上。</p><h3>在文档中配置排序和名称</h3><p>如果不想把排序<code>order</code>写在文件名上，或者文件名和显示的菜单名不一致，我们可以在对应<code>md</code>文件的内容头进行配置，例如我们把　想让<code>更新日志</code>在菜单上显示为：<code>接口更新日志</code>，　排序改为<code>７</code>，可以在<code>$2 更新日志.md</code>内容的开头进行设置：</p><p><img src="/static/2020/2/img/2x.png" alt="Panda Api纯文档设置截图" /></p><p>在<code>$2 更新日志.md</code>的内容开头用<code>三个反引号</code>包裹，中间一个json5的配置，<code>{menu&#95;title: &quot;接口更新日志&quot;,order:7}</code>，　<code>menu&#95;title</code>表示在菜单上显示的名称，<code>order</code>表示排序，如果在文件内容中设置了<code>order</code>，那么就以文件内容中的为准。如果文件名开头和文件内容开头都没有设置，那么默认的排序<code>order</code>是<code>０</code>，　默认的<code>menu&#95;title</code>就是文件名。</p><h3>配置文件夹菜单</h3><p>所有的文件夹菜单，作为一个父级菜单，默认情况下，仅只是一个菜单，只能点开查看下级菜单，是不能点开查看这个菜单对应的页面内容的。</p><p>我们还可以在要展示内容的文件夹中创建一个文件<code>$&#95;folder.md</code>来配置　是否可以点开展示内容<code>show&#95;content</code>，以及要展示的内容，同时还可以配置这个菜单的排序<code>order</code>，名称<code>menu&#95;title</code>，</p><p>例如我们想让<code>开发前必读</code>这个父级菜单，也可以点开展示内容，那么就在<code>开发者必读</code>这个文件夹中创建文件<code>$&#95;folder.md</code>，内容如下：<pre><code class=".language-json5">\`\`\` // -&gt; 这里是三个反引号,为了显示，所以加了三个反斜杆, 如果要复制使用，要去掉反斜杠
+</code></pre><h3>使用文件名控制菜单排序和名称</h3><p>目录名和文件名的最开始有一个美元符号<code>$</code>加一个数字，这个表示菜单和文档在菜单上显示的排序，这个美元符号<code>$</code>和数字不会在菜单上展示出来。例如： <code>$1 开发前必读</code>，里面的<code>1</code>是排序，<code>开发前必读</code>是菜单名称。<code>$1</code>后面的空格是可选的。</p><p><code>api</code>接口文档和<code>markdown</code>纯文档的顺序的统一的，也就是通过调整排序，使得纯<code>markdown</code>的文档可以穿插到<code>api</code>接口文档之间。</p><p><code>api</code>接口文档和<code>markdown</code>接口文档都支持多级目录，多级目录会对应到前端的多级菜单上。</p><h3>在文档中配置排序和名称</h3><p>如果不想把排序<code>order</code>写在文件名上，或者文件名和显示的菜单名不一致，我们可以在对应<code>md</code>文件的内容头进行配置，例如我们把　想让<code>更新日志</code>在菜单上显示为：<code>接口更新日志</code>，　排序改为<code>７</code>，可以在<code>$2 更新日志.md</code>内容的开头进行设置：</p><p><img src="/static/2020/2/img/2x.png" alt="Panda Api纯文档设置截图" /></p><p>在<code>$2 更新日志.md</code>的内容开头用<code>三个反引号</code>包裹，中间一个json5的配置，<code>{menu&#95;title: &quot;接口更新日志&quot;,order:7}</code>，　<code>menu&#95;title</code>表示在菜单上显示的名称，<code>order</code>表示排序，如果在文件内容中设置了<code>order</code>，那么就以文件内容中的为准。如果文件名开头和文件内容开头都没有设置，那么默认的排序<code>order</code>是<code>０</code>，　默认的<code>menu&#95;title</code>就是文件名。</p><h3>配置文件夹菜单</h3><p>所有的文件夹菜单，作为一个父级菜单，默认情况下，仅只是一个菜单，只能点开查看下级菜单，是不能点开查看这个菜单对应的页面内容的。</p><p>我们还可以在要展示内容的文件夹中创建一个文件<code>$&#95;folder.md</code>来配置　是否可以点开展示内容<code>show&#95;content</code>，以及要展示的内容，同时还可以配置这个菜单的排序<code>order</code>，名称<code>menu&#95;title</code>，</p><p>例如我们想让<code>开发前必读</code>这个父级菜单，也可以点开展示内容，那么就在<code>开发者必读</code>这个文件夹中创建文件<code>$&#95;folder.md</code>，内容如下：<pre><code class=".language-json5">\`\`\` // -&gt; 这里是三个反引号,为了显示，所以加了三个反斜杆, 如果要复制使用，要去掉反斜杠
 {
     menu&#95;title: &quot;6666&quot;,
     order:10,
@@ -44,7 +44,7 @@
 </code></pre></p><p>配置后，<code>开发前必读</code>就变成了一个可以点开，并展示页面内容的菜单。点开展示的内容就是</p><pre><code class=".language-html">&lt;h1&gt;这里是内容&lt;/h1&gt;
 &lt;h1&gt;Hello World&lt;/h1&gt;
 </code></pre>
-            <p class="text-left text-muted">2020-02-17 23:20</p>
+            <p class="text-left text-muted">2020-02-18 01:08</p>
         </div>
         <div class="container">
             <div class="row mt-4">
