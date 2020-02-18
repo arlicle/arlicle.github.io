@@ -77,3 +77,10 @@ Panda Api也支持这样的文档编写，使用Markdown语法，文档展示出
 <h1>Hello World</h1>
 ```
 
+### 静态文件　图片或其它存放
+写`markdown`文档的时候，经常会用到一些图片，我们可以把图片放到接口文档根目录的`media`目录或者`static`目录，比如一张图片`a.png`放到`media`目录里面，这时的路径是：`media/a.png`，我们在`markdown`文档中使用这个图片要这么写：
+```.language-markdown
+![xxx](/media/a.png)
+```
+xxx 是图片标签，根据自己的需要设置即可。
+
