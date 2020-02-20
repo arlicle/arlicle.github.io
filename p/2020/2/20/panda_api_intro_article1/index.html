@@ -52,9 +52,9 @@
             }
         &#93;
     },
-    ... // 用户退出接口
+    ...
 &#93;}
-</code></pre></p><h4>查看在线文档</h4><p>这就是我们的接口文档，写好这个文档后，我们在文档目录运行:<code>panda</code>命令，就可以访问<code>http://localhost:9000</code>查看在线文档了。</p><p><img src="/static/2020/2/img/panda_intro.png" alt="Panda Api在线文档" /></p><p>这个在线文档已经非常方便查看接口的各个信息未读，并可以在线点击进行后端接口测试。不过，它的杀手锏是为前端提供接口服务。</p><h4>请求接口</h4><p>我们可以请求接口<code>http://localhost:9000/login/</code>，使用<code>test&#95;data</code>里面的第一组的<code>body</code>数据请求<code>/login/</code>接口：</p><pre><code class=".language-shell">curl localhost:9000/login/ -X POST -H &quot;Content-Type:application/json&quot; -d '{&quot;username&quot;:&quot;edison&quot;,&quot;password&quot;:&quot;123&quot;}'
+</code></pre></p><h4>查看在线文档</h4><p>这就是我们的接口文档，写好这个文档后，我们在文档目录运行:<code>panda</code>命令，就可以访问<code>http://localhost:9000</code>查看在线文档了。</p><p><img src="/static/2020/2/img/panda_intro.png" alt="Panda Api在线文档" /></p><p>这个在线文档已经非常方便查看接口的各个信息，并可以在线点击进行后端接口测试。不过，它的杀手锏是为前端提供接口服务。</p><h4>请求接口</h4><p>我们可以请求接口<code>http://localhost:9000/login/</code>，使用<code>test&#95;data</code>里面的第一组的<code>body</code>数据请求<code>/login/</code>接口：</p><pre><code class=".language-shell">curl localhost:9000/login/ -X POST -H &quot;Content-Type:application/json&quot; -d '{&quot;username&quot;:&quot;edison&quot;,&quot;password&quot;:&quot;123&quot;}'
 {&quot;code&quot;:-1,&quot;msg&quot;:&quot;密码输入不正确&quot;}
 </code></pre><p>获得同一组的<code>response</code>数据。</p><p><code>test&#95;data</code>中，<code>body</code>和<code>response</code>的数据是一一对应的，只要请求的是<code>body</code>中的数据，就会返回<code>response</code>中的数据。这会非常方便我们前端模拟各种后端返回的状况然后进行前端调试。</p><p>请求第二组：<pre><code class=".language-shell">curl localhost:9000/login/ -X POST -H &quot;Content-Type:application/json&quot; -d '{&quot;username&quot;:&quot;lily&quot;,&quot;password&quot;:&quot;123&quot;}'
 {&quot;code&quot;:-1,&quot;msg&quot;:&quot;登录成功&quot;,&quot;token&quot;:&quot;5lCadRru&#40;ADn2IE!$LV%x%JF3JNmz&#42;Nf5nFieUG!r&#40;&#40;&amp;esi2CLI$jb!227Lh&quot;}
@@ -116,7 +116,7 @@ Article:{
     $exclude:&#91;&quot;category/id&quot;&#93;
 }
 </code></pre></p><p>我们在表中只要<code>id</code>、<code>title</code>、<code>category</code>、<code>created</code>，但是我们不要<code>category</code>的<code>id</code>。</p><p>我们也可以整个接口的复用，然后再进行修改。</p><h3>文档的团队协作和版本控制</h3><p>因为Panda Api写出来的文档是json5和markdown格式的文档，所以接口文档可以用版本控制工具进行版本管理和多人协作维护，非常的方便。</p><h3>Panda Api的其它功能</h3><p>Panda Api 还提供了<code>Auth</code>的接口认证服务、后端接口测试、全局字段设置、多服务器接口配置、多版本接口、纯markdown文档编写、多级文档目录等功能。更多在Panda Api的中文文档里面。</p><p>最初我在设计这个工具的时候，只是想解决自己在律品团队开发过程中的疼痛点，在逐步开发完善，工具越来越好用， 就想把这个工具开源出来，为所有有这个需求和痛点的开发者、开发团队使用。让每个人都能使用它，收集大家使用的反馈意见，把工具做得更好。</p><p>Panda Api的项目地址：</p><p>https://github.com/arlicle/panda-api</p><h3>如何使用Panda APi?</h3><p>Panda Api使用Rust语言开发，提供了强大的性能和稳定性。同时，程序编译为直接运行的安装包，下载对应操作系统的安装包，直接点击运行安装即可，无需安装环境，也不用进行编译。提供了Mac、Linux、Windows版本。</p><p>欢迎大家使用和提意见讨论。谢谢；）</p>
-            <p class="text-left text-muted">2020-02-20 12:40</p>
+            <p class="text-left text-muted">2020-02-20 12:44</p>
         </div>
         <div class="container">
             <div class="row mt-4">
