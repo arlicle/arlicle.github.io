@@ -65,7 +65,7 @@
 
 curl localhost:9000/login/ -X POST -H &quot;Content-Type:application/json&quot; -d '{&quot;username&quot;:&quot;hello&quot;,&quot;password&quot;:&quot;123&quot;}'
 {&quot;code&quot;:1,&quot;msg&quot;:&quot;又温书元往目号法局器飞证它声有现按，&quot;,&quot;token&quot;:&quot;eUYWe7cziBco&#126;NqALBVc4kOLQTs&#126;naBtQmri4G3erdAqdQVSgn!1Ix&#40;B&amp;Hvf&quot;}
-</code></pre></p><p>还可以对<code>test&#95;data</code>进行部分<code>mock数据返回</code>，比如我们想让用户名和密码输入正确的数据返回动态的<code>token</code>，这么这么写<code>test&#95;data</code>电数据：<pre><code class=".language-json5">{
+</code></pre></p><p>还可以对<code>test&#95;data</code>进行部分<code>mock</code>数据返回，比如我们想让用户名和密码输入正确的数据返回动态的<code>token</code>，这么这么写<code>test&#95;data</code>电数据：<pre><code class=".language-json5">{
     body:{username:&quot;root&quot;, password:&quot;123&quot;},
     response:{code:1, msg:&quot;登录成功&quot;, token:{$mock:true, required:true}}
 }
@@ -116,7 +116,7 @@ Article:{
     $exclude:&#91;&quot;category/id&quot;&#93;
 }
 </code></pre></p><p>我们在表中只要<code>id</code>、<code>title</code>、<code>category</code>、<code>created</code>，但是我们不要<code>category</code>的<code>id</code>。</p><p>我们也可以整个接口的复用，然后再进行修改。</p><h3>文档的团队协作和版本控制</h3><p>因为Panda Api写出来的文档是json5和markdown格式的文档，所以接口文档可以用版本控制工具进行版本管理和多人协作维护，非常的方便。</p><h3>Panda Api的其它功能</h3><p>Panda Api 还提供了<code>Auth</code>的接口认证服务、后端接口测试、全局字段设置、多服务器接口配置、多版本接口、纯markdown文档编写、多级文档目录等功能。更多在Panda Api的中文文档里面。</p><p>最初我在设计这个工具的时候，只是想解决自己在律品团队开发过程中的疼痛点，在逐步开发完善，工具越来越好用， 就想把这个工具开源出来，为所有有这个需求和痛点的开发者、开发团队使用。让每个人都能使用它，收集大家使用的反馈意见，把工具做得更好。</p><p>Panda Api的项目地址：</p><p>https://github.com/arlicle/panda-api</p><h3>如何使用Panda APi?</h3><p>Panda Api使用Rust语言开发，提供了强大的性能和稳定性。同时，程序编译为直接运行的安装包，下载对应操作系统的安装包，直接点击运行安装即可，无需安装环境，也不用进行编译。提供了Mac、Linux、Windows版本。</p><p>欢迎大家使用和提意见讨论。谢谢；）</p>
-            <p class="text-left text-muted">2020-02-20 12:39</p>
+            <p class="text-left text-muted">2020-02-20 12:40</p>
         </div>
         <div class="container">
             <div class="row mt-4">
