@@ -76,7 +76,8 @@ Panda Api也支持这样的文档编写，使用Markdown语法，文档展示出
 <h1>这里是内容</h1>
 <h1>Hello World</h1>
 ```
-`注意：` 有且只有`show_content`设置为`true`，文件夹菜单可以被点击查看内容，默认情况下`show_content`的值都是`false`
+`注意：` 有且只有`show_content`设置为`true`，文件夹菜单可以被点击查看内容，默认情况下`show_content`的值都是`true`，也就是，只要有`$_folder.md`文件，那么就会变为可以点击菜单查看内容。除非`show_content`被设置为了`false`。
+
 ### 静态文件　图片或其它存放
 写`markdown`文档的时候，经常会用到一些图片，我们可以把图片放到接口文档根目录的`media`目录或者`static`目录，比如一张图片`a.png`放到`media`目录里面，这时的路径是：`media/a.png`，我们在`markdown`文档中使用这个图片要这么写：
 ```.language-markdown
