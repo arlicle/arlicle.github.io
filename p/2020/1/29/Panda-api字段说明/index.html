@@ -177,8 +177,29 @@ items: &#91;{
     &quot;苏娜&quot;,
     &quot;谭娟&quot;
 &#93;
-</code></pre><p>这里要注意数组是单个元素和数组中是对象的不同写法。</p>
-            <p class="text-left text-muted">2020-02-23 02:59</p>
+</code></pre><p>这里要注意数组是单个元素和数组中是对象的不同写法。</p><h2>map字段</h2><p><code>map</code>字段表示这是一个<code>map</code>，有对应的<code>key</code>和<code>value</code>，<pre><code class=".language-json5">menu:{
+    $type:&quot;map&quot;,
+    $key:{name:&quot;菜单访问地址&quot;},
+    $value:{
+        name:{name:&quot;菜单名称&quot;, type:&quot;csentence&quot;},
+        order:{name:&quot;菜单排序&quot;, type:&quot;int&quot;},
+        min&#95;length:0,
+        max&#95;length:10
+    },
+}
+// 将会输出mock数据，如下
+menu:{
+    &quot;jfdsakf&quot;:{
+        name:&quot;见覅单独&quot;,
+        order:1
+    },
+    &quot;jfljkjj&quot;:{
+        name:&quot;放口袋里设计费拉丝机&quot;,
+        order:2
+    },
+}
+</code></pre></p><h2>递归字段</h2>
+            <p class="text-left text-muted">2020-02-23 10:03</p>
         </div>
         <div class="container">
             <div class="row mt-4">
