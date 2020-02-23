@@ -112,8 +112,8 @@ Panda Api `_settings.json5` 文件包含了所有的基础设置.
 可以看到,`code`字段没有了,
 
 
-### 设置全局base_url
-我们可以为所有接口的`url`设置一个`base url`, 例如有的团队的开发习惯,喜欢把版本标记在url地址上,例如`/v1/login/`, `/v3/login/`, 或者有的是子项目,所有接口的`url`都会有一个子项目的地址`/sub/login/`, `/sub/article/list/`, 遇到这样的情况,我们就可以设置全局`base_url`,
+### 设置全局base_path
+我们可以为所有接口的`url`设置一个`base path`, 例如有的团队的开发习惯,喜欢把版本标记在url地址上,例如`/v1/login/`, `/v3/login/`, 或者有的是子项目,所有接口的`url`都会有一个子项目的地址`/sub/login/`, `/sub/article/list/`, 遇到这样的情况,我们就可以设置全局`base_path`,
 
 ```.language-json5
 {
@@ -121,7 +121,7 @@ Panda Api `_settings.json5` 文件包含了所有的基础设置.
     project_desc: "Panda Api is a simple api manage tool",
     global: {
         apis:{
-            base_url:"/v2/", // 全局 base url
+            base_path:"/v2/", // 全局 base path
             auth: true,
             response:{
                 code:{name:"返回的状态码", type:"number"},
@@ -131,9 +131,9 @@ Panda Api `_settings.json5` 文件包含了所有的基础设置.
     }
 }
 ```
-我们在全局`global`中设置了`base_url`为`/v2/`, 所以我们所有接口文档中的`url`在文档输出时全部都会加上`/v2/`前缀, 比如用户登录的接口地址为`/login/`会自动变成`/v2/login/`, 所以我们请求的地址也要相应的改变为`/v2/login/`.
+我们在全局`global`中设置了`base_path`为`/v2/`, 所以我们所有接口文档中的`url`在文档输出时全部都会加上`/v2/`前缀, 比如用户登录的接口地址为`/login/`会自动变成`/v2/login/`, 所以我们请求的地址也要相应的改变为`/v2/login/`.
 
-如果我们不需要,同样可以在接口中重写`base_url`属性.
+如果我们不需要,同样可以在接口中重写`base_path`属性.
 
 ### 配置:开发服务器 测试服务器 正式服务器
 我们可以配置我们开发的各类服务器环境,然后可以使用Panda Api自动进行各类接口的测试, 还是可以在本地开发的时候, 路由请求到对应服务器上.
