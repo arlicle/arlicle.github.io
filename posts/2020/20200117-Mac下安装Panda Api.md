@@ -2,33 +2,12 @@
     :post-date "2020-01-17 19:15"
 }
 
-下载Mac版的panda-api文件
+到这个地址[https://github.com/arlicle/panda-api/releases/latest](https://github.com/arlicle/panda-api/releases/latest) 下载mac版的panda-api安装包，解压搜到自己需要的目录
+，然后点击`install`进行安装。
 
-创建文件夹`~/.panda/bin/`
-
-把panda-api 复制到 `~/.panda/bin/` 文件夹中
-
-```.language-shell
-cp panda-api ~/.panda/bin/panda
-```
-
-修改`~/.bash_profile`文件，在文件开头增加
+安装完成后，关闭终端，重新打开，就可以在自己的文档目录运行命令
 
 ```.language-shell
-export PATH=$HOME/.panda/bin:$PATH
+panda -V
 ```
-
-然后执行
-```.language-shell
-source ~/.bash_profile
-```
-
-这样，我们就可以到接口文档文件夹下，直接执行命令 `panda` 就可以把接口文档服务运行起来，在线浏览接口文档，或者请求接口文档的相关接口数据了。
-
-
-如果你使用的是`zsh`，那么应该编辑文件 `~/.zprofile` 或者 `~/.zshrc`， 然后增加
-
-```.language-shell
-export PATH=$HOME/.panda/bin:$PATH
-```
-
+如果显示了panda aip的版本好，那么就是安装成功了。

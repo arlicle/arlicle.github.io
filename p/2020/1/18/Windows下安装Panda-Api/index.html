@@ -18,11 +18,9 @@
 
 
 
-            <p>下载Windows版的panda-api压缩包，解压搜到自己需要的目录</p><p>然后在命令行下进入<code>panda-api</code>文件夹目录</p><p>然后运行命令，就可以访问文档服务了。</p><pre><code class=".language-shell">.\panda-api.exe
-</code></pre><p>如果遇到报错：<pre><code class=".language-shell">Error: Os {code: 10013, kind: PermissionDenied, message:&quot;以一种访问权限不允许的方式做了一个访问套接字的尝试。&quot;}
-</code></pre></p><p>这个原因是默认端口<code>9000</code>被占用了</p><p>我们可以改动启动端口：</p><pre><code class=".language-json">.\panda-api.exe -p 9001
-</code></pre>
-            <p class="text-left text-muted">2020-01-18 02:48</p>
+            <p>到这个地址<a href='https://github.com/arlicle/panda-api/releases/latest'>https://github.com/arlicle/panda-api/releases/latest</a> 下载Windows版的panda-api安装包，解压搜到自己需要的目录 ，然后点击<code>install.bat</code>进行安装。</p><p>安装完成后，关闭终端，重新打开，就可以在自己的文档目录运行命令</p><pre><code class=".language-shell">panda -V
+</code></pre><p>如果显示了panda aip的版本好，那么就是安装成功了。</p>
+            <p class="text-left text-muted">2020-02-24 03:44</p>
         </div>
         <div class="container">
             <div class="row mt-4">
