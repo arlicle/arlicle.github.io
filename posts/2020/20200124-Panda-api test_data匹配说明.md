@@ -1,5 +1,6 @@
 {
     :post-date "2020-01-27 10:18"
+    :slug "panda-api-test_data"
 }
 
 

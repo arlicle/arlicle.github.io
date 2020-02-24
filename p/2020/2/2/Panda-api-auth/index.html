@@ -92,12 +92,12 @@ cKT8Nd76z!%6Iq0hN&#40;Ac&#94;83UCru%#vVT&#126;zK&amp;aldWJ1&#42;1Phi#hdj2LG8K1m&
 PxtKs9YgbaZbiWtolsK8xIizeJKaYfg$pJL7Jz1p54RTHi!R4&amp;9NVjn6uyjo
 xUtBNQIlp&#40;Jd04p$%COM0g&#42;q0yiP$l&#42;&#126;ah&#94;WkKwlqTONQ0#Z9u#FWF!QmueS
 </code></pre><p>意思是生成长度为60的10个token，每一行是一个。60可以改为你想要的token长度。默认每次生成10个，如果想要更多个:</p><p><code>panda token -n 20 -l 128</code></p><p>生成20个 长度是 128 的token。<code>n</code> num 的默认长度是10， <code>l</code> length的默认长度是64，祥见<code>panda token &ndash;help</code></p><p>未来这里会和jwt生成算法进行结合。</p><h2>请求有权限认证的接口</h2><p>当我们配置好了权限接口，请求的时候，就必须使用users中某一个用户的token去访问接口，并且token必须放到约定的地方，比如请求头中，接口才会成功，否则就会返回<code>no&#95;perm&#95;response</code>中的错误信息。</p>
-            <p class="text-left text-muted">2020-02-16 11:07</p>
+            <p class="text-left text-muted">2020-02-24 09:05</p>
         </div>
         <div class="container">
             <div class="row mt-4">
                 <div class="col-6 text-left"><a href="/p/2020/2/5/json5/">上一篇: Json5 语法说明</a></div>
-                <div class="col-6 text-right"><a href="/p/2020/1/29/Panda-api字段说明/">下一篇:Panda-api字段说明</a></div>
+                <div class="col-6 text-right"><a href="/p/2020/1/29/panda-api-field/">下一篇:Panda-api字段说明</a></div>
             </div>
         </div>
 
@@ -125,7 +125,7 @@ xUtBNQIlp&#40;Jd04p$%COM0g&#42;q0yiP$l&#42;&#126;ah&#94;WkKwlqTONQ0#Z9u#FWF!Qmue
     </div>
     <script>
         var AL_configs = {
-            "post_id":"/p/2020/2/2/Panda-api接口权限配置说明/",
+            "post_id":"/p/2020/2/2/Panda-api-auth/",
             "appid":"847e226e8a46f64045d45312245a68ba1368a564"
         };
         (function() {

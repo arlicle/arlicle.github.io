@@ -82,7 +82,7 @@
     &quot;id&quot;: 3408247458278907748,
     &quot;name&quot;: &quot;因没国众北去题养化&quot;
 }
-</code></pre><p>这里<code>category</code>就是一个对象字段，系统已经知道category是一个object了，可以不需要单独写，但是因为对象的属性可能会和原始的字段描述<code>type</code>、<code>name</code>、<code>desc</code>等的属性发生命名冲突，因此这里如果需要是用这些属性，前面需要加一个英文的<code>-</code>(减号)。例如：<pre><code class=".language-json5">category: {
+</code></pre><p>这里<code>category</code>就是一个对象字段，系统已经知道category是一个object了，可以不需要单独写，但是因为对象的属性可能会和原始的字段描述<code>type</code>、<code>name</code>、<code>desc</code>等的属性发生命名冲突，因此这里如果需要是用这些属性，前面需要加一个英文的<code>$</code>(美元符号)。例如：<pre><code class=".language-json5">category: {
     $name:&quot;文章分类&quot;,
     $desc:&quot;文章分类描述&quot;,
     id: {name:&quot;分类id&quot;, type:&quot;PosInt&quot;},
@@ -93,7 +93,7 @@
     &quot;id&quot;: 5528385245714244033,
     &quot;name&quot;: &quot;价农自江响规领&quot;
 }
-</code></pre></p><h2>array 数组</h2><p>数组字段标书数据是一个列表，列表里面的元素可以是单独一个元素如，整数、字符串，也可以是一个对象。数组字段可以通过属性限定数组的长度：<code>-length</code> 固定长度的数组；<code>-min&#95;length</code> 最小数组长度， <code>-max&#95;length</code> 最大数组长度。设定了<code>-min&#95;length</code>和<code>-max&#95;length</code>后，数组会在这个范围内随机返回一个长度；默认返回3到10范围长度的数组。写法如下：<pre><code class=".language-json5">// 分类列表, 列表里面的元素是一个分类对象
+</code></pre></p><h2>array 数组</h2><p>数组字段标书数据是一个列表，列表里面的元素可以是单独一个元素如，整数、字符串，也可以是一个对象。数组字段可以通过属性限定数组的长度：<code>$length</code> 固定长度的数组；<code>$min&#95;length</code> 最小数组长度， <code>$max&#95;length</code> 最大数组长度。设定了<code>$min&#95;length</code>和<code>$max&#95;length</code>后，数组会在这个范围内随机返回一个长度；默认返回3到10范围长度的数组。写法如下：<pre><code class=".language-json5">// 分类列表, 列表里面的元素是一个分类对象
 items: &#91;{
     id: {name:&quot;分类id&quot;, type:&quot;PosInt&quot;},
     name: {name:&quot;分类名称&quot;, type:&quot;cword&quot;, min&#95;length:4, max&#95;length:10}
@@ -199,12 +199,12 @@ menu:{
     },
 }
 </code></pre></p><p><code>map</code> 类型有以下属性：</p><ul><li><code>$type</code>: <code>map</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;map&quot;</code></li><li><code>key</code> 的字段类型可以为 <code>string</code>, <code>bool</code>, <code>number</code> 以及他们的子类型。不可以为<code>object</code>和<code>array</code></li><li><code>value</code> 字段可以为任意的类型</li><li><code>length</code> 指定输出<code>map</code>的长度，<code>length</code>默认为0（选填）</li><li><code>min&#95;length</code> 指定输出<code>map</code>的最小长度，<code>min&#95;length</code>默认为0（选填）</li><li><code>max&#95;length</code> 指定输出<code>map</code>的最大长度，<code>max&#95;length</code>默认为7（选填）</li></ul><p><code>map</code>类型必须有<code>key</code>和<code>value</code>这两个字段，否则<code>mock</code>数据的时候回返回空，默认情况下<code>map</code>随机返回<code>min&#95;length</code>到<code>max&#95;length</code>个随机值（map的长度）。如果指定了<code>length</code>，那么就会返回固定<code>length</code>个随机值（map的长度）。</p><h2>递归字段</h2>
-            <p class="text-left text-muted">2020-02-24 08:06</p>
+            <p class="text-left text-muted">2020-02-24 09:01</p>
         </div>
         <div class="container">
             <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2020/2/2/Panda-api接口权限配置说明/">上一篇: Panda-api接口权限Auth配置说明</a></div>
-                <div class="col-6 text-right"><a href="/p/2020/1/27/Panda-api-test_data匹配说明/">下一篇:Panda-api test_data匹配说明</a></div>
+                <div class="col-6 text-left"><a href="/p/2020/2/2/Panda-api-auth/">上一篇: Panda-api接口权限Auth配置说明</a></div>
+                <div class="col-6 text-right"><a href="/p/2020/1/27/panda-api-test_data/">下一篇:Panda-api test_data匹配说明</a></div>
             </div>
         </div>
 
@@ -232,7 +232,7 @@ menu:{
     </div>
     <script>
         var AL_configs = {
-            "post_id":"/p/2020/1/29/Panda-api字段说明/",
+            "post_id":"/p/2020/1/29/panda-api-field/",
             "appid":"847e226e8a46f64045d45312245a68ba1368a564"
         };
         (function() {

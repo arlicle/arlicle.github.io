@@ -18,11 +18,11 @@
 
 [Json5 语法说明](https://www.debugmyself.com/p/2020/2/5/json5/)  
 
-[Panda-api接口权限Auth配置说明](https://www.debugmyself.com/p/2020/2/2/Panda-api接口权限配置说明/)  
+[Panda-api接口权限Auth配置说明](https://www.debugmyself.com/p/2020/2/2/Panda-api-auth/)  
 
-[Panda-api字段说明](https://www.debugmyself.com/p/2020/1/29/Panda-api字段说明/)  
+[Panda-api字段说明](https://www.debugmyself.com/p/2020/1/29/panda-api-field/)  
 
-[Panda-api test_data匹配说明](https://www.debugmyself.com/p/2020/1/27/Panda-api-test_data匹配说明/)  
+[Panda-api test_data匹配说明](https://www.debugmyself.com/p/2020/1/27/panda-api-test_data/)  
 
 [Rust 开发的一款接口设计工具 Panda Api](https://www.debugmyself.com/p/2020/1/24/panda_api_read_me/)  
 
@@ -30,9 +30,9 @@
 
 [Mac 或 Linux 下安装Panda api](https://www.debugmyself.com/p/2020/1/17/Mac下安装Panda-Api/)  
 
-[Panda api 高级使用说明](https://www.debugmyself.com/p/2020/1/15/Panda-api高级使用说明/)  
+[Panda api 高级使用说明](https://www.debugmyself.com/p/2020/1/15/Panda-api-how-to-use2/)  
 
-[Panda api 接口文档工具使用说明](https://www.debugmyself.com/p/2020/1/15/Panda-api使用说明/)  
+[Panda api 接口文档工具使用说明](https://www.debugmyself.com/p/2020/1/15/Panda-api-how-to-use/)  
 
 [设计一个方便前后端分离项目开发的接口管理工具](https://www.debugmyself.com/p/2020/1/4/设计一个接口管理工具/)  
 
