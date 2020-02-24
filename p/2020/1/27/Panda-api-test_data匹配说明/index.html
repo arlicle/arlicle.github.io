@@ -24,8 +24,8 @@
     query: {}, // query/GET 参数匹配
     body: {}, // post中body参数匹配
     form&#95;data: {}, // post中请求数据在form&#95;data中的参数匹配
-
     response:{} // 匹配成功后返回的结果
+    delay:0 // 请求后需要延迟多少时间返回数据，用于模拟网络慢或者超时
 }
 </code></pre><p><code>method</code>, <code>url</code>、<code>query</code>、<code>body</code> 或 <code>form&#95;data</code> 是请求时的相关数据，这四者是可以同时存在或者只有其中一个存在，或者都不存在， 匹配成功后返回<code>response</code>中的结果</p><h3>定义test_data某个字段的mock</h3><p>在写用户登录的<code>test&#95;data</code>数据匹配的时候，我们是这么写的：</p><pre><code class=".language-json5">...
 body:{
@@ -287,7 +287,7 @@ query:{id:&quot;1&quot;, username:&quot;root&quot;}, // 会匹配
   &quot;msg&quot;: &quot;this api address /logout/aaa/ not defined method POST&quot;
 }
 </code></pre></p><h3>其它</h3><p>虽然不推荐，但是其实你可以这么做，就是不定义<code>response</code>，直接写<code>test&#95;data</code>里面的数据就开始前端访问。</p><p>这么做可以快速的提供接口服务，不好的是，没有了<code>response</code>文档，同时也不会自动生成<code>mock</code>数据。</p>
-            <p class="text-left text-muted">2020-02-16 07:33</p>
+            <p class="text-left text-muted">2020-02-24 05:16</p>
         </div>
         <div class="container">
             <div class="row mt-4">

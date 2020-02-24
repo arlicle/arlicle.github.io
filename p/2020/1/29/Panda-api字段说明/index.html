@@ -73,7 +73,7 @@
 // 随机返回一个尺寸、颜色的图像地址：https://dummyimage.com/720x300/ffc107/fff/?text=
 </code></pre></p><p>使用指定的尺寸和颜色生成图像<pre><code class=".language-json5">{name: &quot;头像&quot;, type: &quot;image&quot;, size:&quot;300x300&quot;, foreground:&quot;#fff&quot;, background:&quot;#ff3e00&quot;, format:&quot;png&quot;, text:&quot;Panda Api&quot;},
 // 返回 https://dummyimage.com/300x300/ff3e00/fff/?text=Panda Api
-</code></pre></p><h2>object 对象字段</h2><p>对象字段表示这个字段存储的是一个对象，里面还有属性字段，例如：</p><pre><code class=".language-json5">category: {
+</code></pre></p><h2>object 对象</h2><p>对象字段表示这个字段存储的是一个对象，里面还有属性字段，例如：</p><pre><code class=".language-json5">category: {
     id: {name:&quot;分类id&quot;, type:&quot;PosInt&quot;},
     name: {name:&quot;分类名称&quot;, type:&quot;cword&quot;, min&#95;length:4, max&#95;length:10}
 }
@@ -93,7 +93,7 @@
     &quot;id&quot;: 5528385245714244033,
     &quot;name&quot;: &quot;价农自江响规领&quot;
 }
-</code></pre></p><h2>array 数组字段</h2><p>数组字段标书数据是一个列表，列表里面的元素可以是单独一个元素如，整数、字符串，也可以是一个对象。数组字段可以通过属性限定数组的长度：<code>-length</code> 固定长度的数组；<code>-min&#95;length</code> 最小数组长度， <code>-max&#95;length</code> 最大数组长度。设定了<code>-min&#95;length</code>和<code>-max&#95;length</code>后，数组会在这个范围内随机返回一个长度；默认返回3到10范围长度的数组。写法如下：<pre><code class=".language-json5">// 分类列表, 列表里面的元素是一个分类对象
+</code></pre></p><h2>array 数组</h2><p>数组字段标书数据是一个列表，列表里面的元素可以是单独一个元素如，整数、字符串，也可以是一个对象。数组字段可以通过属性限定数组的长度：<code>-length</code> 固定长度的数组；<code>-min&#95;length</code> 最小数组长度， <code>-max&#95;length</code> 最大数组长度。设定了<code>-min&#95;length</code>和<code>-max&#95;length</code>后，数组会在这个范围内随机返回一个长度；默认返回3到10范围长度的数组。写法如下：<pre><code class=".language-json5">// 分类列表, 列表里面的元素是一个分类对象
 items: &#91;{
     id: {name:&quot;分类id&quot;, type:&quot;PosInt&quot;},
     name: {name:&quot;分类名称&quot;, type:&quot;cword&quot;, min&#95;length:4, max&#95;length:10}
@@ -177,15 +177,15 @@ items: &#91;{
     &quot;苏娜&quot;,
     &quot;谭娟&quot;
 &#93;
-</code></pre><p>这里要注意数组是单个元素和数组中是对象的不同写法。</p><h2>map字段</h2><p><code>map</code>字段表示这是一个<code>map</code>，有对应的<code>key</code>和<code>value</code>，<pre><code class=".language-json5">menu:{
+</code></pre><p>这里要注意数组是单个元素和数组中是对象的不同写法。</p><h2>map</h2><p><code>map</code>字段表示这是一个<code>map</code>，有对应的<code>key</code>和<code>value</code>，<pre><code class=".language-json5">menu:{
     $type:&quot;map&quot;,
-    $key:{name:&quot;菜单访问地址&quot;},
-    $value:{
+    key:{name:&quot;菜单访问地址&quot;},
+    value:{
         name:{name:&quot;菜单名称&quot;, type:&quot;csentence&quot;},
         order:{name:&quot;菜单排序&quot;, type:&quot;int&quot;},
-        min&#95;length:0,
-        max&#95;length:10
     },
+    min&#95;length:0, // 选填
+    max&#95;length:10 // 选填
 }
 // 将会输出mock数据，如下
 menu:{
@@ -198,8 +198,8 @@ menu:{
         order:2
     },
 }
-</code></pre></p><h2>递归字段</h2>
-            <p class="text-left text-muted">2020-02-23 10:03</p>
+</code></pre></p><p><code>map</code> 类型有以下属性：</p><ul><li><code>$type</code>: <code>map</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;map&quot;</code></li><li><code>key</code> 的字段类型可以为 <code>string</code>, <code>bool</code>, <code>number</code> 以及他们的子类型。不可以为<code>object</code>和<code>array</code></li><li><code>value</code> 字段可以为任意的类型</li><li><code>length</code> 指定输出<code>map</code>的长度，<code>length</code>默认为0（选填）</li><li><code>min&#95;length</code> 指定输出<code>map</code>的最小长度，<code>min&#95;length</code>默认为0（选填）</li><li><code>max&#95;length</code> 指定输出<code>map</code>的最大长度，<code>max&#95;length</code>默认为7（选填）</li></ul><p><code>map</code>类型必须有<code>key</code>和<code>value</code>这两个字段，否则<code>mock</code>数据的时候回返回空，默认情况下<code>map</code>随机返回<code>min&#95;length</code>到<code>max&#95;length</code>个随机值（map的长度）。如果指定了<code>length</code>，那么就会返回固定<code>length</code>个随机值（map的长度）。</p><h2>递归字段</h2>
+            <p class="text-left text-muted">2020-02-24 08:06</p>
         </div>
         <div class="container">
             <div class="row mt-4">

@@ -14,8 +14,8 @@ test_data中，有这么几个字段可以进行数据匹配
     query: {}, // query/GET 参数匹配
     body: {}, // post中body参数匹配
     form_data: {}, // post中请求数据在form_data中的参数匹配
-
     response:{} // 匹配成功后返回的结果
+    delay:0 // 请求后需要延迟多少时间返回数据，用于模拟网络慢或者超时
 }
 ```
 
