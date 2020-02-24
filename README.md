@@ -28,7 +28,7 @@
 
 [Windows下安装Panda Api](https://www.debugmyself.com/p/2020/1/18/Windows下安装Panda-Api/)  
 
-[Mac下安装Panda Api](https://www.debugmyself.com/p/2020/1/17/Mac下安装Panda-Api/)  
+[Mac 或 Linux 下安装Panda api](https://www.debugmyself.com/p/2020/1/17/Mac下安装Panda-Api/)  
 
 [Panda api 高级使用说明](https://www.debugmyself.com/p/2020/1/15/Panda-api高级使用说明/)  
 

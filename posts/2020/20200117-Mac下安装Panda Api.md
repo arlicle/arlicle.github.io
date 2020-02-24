@@ -1,5 +1,6 @@
 {
     :post-date "2020-01-17 19:15"
+    :title "Mac 或 Linux 下安装Panda api"
 }
 
 到这个地址[https://github.com/arlicle/panda-api/releases/latest](https://github.com/arlicle/panda-api/releases/latest) 下载mac版的panda-api安装包，解压搜到自己需要的目录
