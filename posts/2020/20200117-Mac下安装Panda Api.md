@@ -11,4 +11,4 @@
 ```.language-shell
 panda -V
 ```
-如果显示了panda aip的版本好，那么就是安装成功了。
+如果显示了panda aip的版本号，那么就是安装成功了。
