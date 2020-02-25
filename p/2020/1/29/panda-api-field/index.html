@@ -198,23 +198,26 @@ menu:{
         order:2
     },
 }
-</code></pre></p><p><code>map</code> 类型有以下属性：</p><ul><li><code>$type</code>: <code>map</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;map&quot;</code></li><li><code>key</code> 的字段类型可以为 <code>string</code>, <code>bool</code>, <code>number</code> 以及他们的子类型。不可以为<code>object</code>和<code>array</code></li><li><code>value</code> 字段可以为任意的类型</li><li><code>length</code> 指定输出<code>map</code>的长度，<code>length</code>默认为0（选填）</li><li><code>min&#95;length</code> 指定输出<code>map</code>的最小长度，<code>min&#95;length</code>默认为0（选填）</li><li><code>max&#95;length</code> 指定输出<code>map</code>的最大长度，<code>max&#95;length</code>默认为7（选填）</li></ul><p><code>map</code>类型必须有<code>key</code>和<code>value</code>这两个字段，否则<code>mock</code>数据的时候回返回空，默认情况下<code>map</code>随机返回<code>min&#95;length</code>到<code>max&#95;length</code>个随机值（map的长度）。如果指定了<code>length</code>，那么就会返回固定<code>length</code>个随机值（map的长度）。</p><h2>rec 递归</h2><p>在做接口设计的时候，会遇到像分类树、菜单树、节点树等树形结构，这种结构是一层套一层的递归结构，而且又多超层是未知的，是动态的。我们没有办法直接写出整个结构再来生成mock数据。所以我们引入了<code>rec</code>递归结构</p><h3>数组类型的递归</h3><p>这是一个返回菜单树的递归的设计例子：<pre><code class=".language-json5">response:{
+</code></pre></p><p><code>map</code> 类型有以下属性：</p><ul><li><code>$type</code>: <code>map</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;map&quot;</code></li><li><code>key</code> 的字段类型可以为 <code>string</code>, <code>bool</code>, <code>number</code> 以及他们的子类型。不可以为<code>object</code>和<code>array</code></li><li><code>value</code> 字段可以为任意的类型</li><li><code>length</code> 输出<code>map</code>的长度，<code>length</code>默认为0（选填）</li><li><code>min&#95;length</code> 输出<code>map</code>的最小长度，<code>min&#95;length</code>默认为0（选填）</li><li><code>max&#95;length</code> 输出<code>map</code>的最大长度，<code>max&#95;length</code>默认为7（选填）</li></ul><p><code>map</code>类型必须有<code>key</code>和<code>value</code>这两个字段，否则<code>mock</code>数据的时候回返回空，默认情况下<code>map</code>随机返回<code>min&#95;length</code>到<code>max&#95;length</code>个随机值（map的长度）。如果指定了<code>length</code>，那么就会返回固定<code>length</code>个随机值（map的长度）。</p><h2><code>rec</code> 递归类型</h2><p>在做接口设计的时候，会遇到像分类树、菜单树、节点树等树形结构，这种结构是一层套一层的递归结构，而且又多超层是未知的，是动态的。我们没有办法直接写出整个结构再来生成mock数据。所以我们引入了<code>rec</code>递归结构</p><h3><code>array</code>数组递归</h3><p>这是一个返回菜单树的递归的设计例子：<pre><code class=".language-json5">response:{
     menus:&#91;
         {
             id:{name:&quot;菜单id&quot;, type:&quot;PosInt&quot;},
             name:{name:&quot;菜单名称&quot;, type:&quot;Cword&quot;, min&#95;length:4, max&#95;length:6},
             children:{
-                $name:&quot;菜单的下一级&quot;，
+                $type:&quot;rec&quot;,
                 $ref:&quot;$response/menus&quot;，
-                $min&#95;length:0, // 数组的最小长度
-                $max&#95;length:10, // 数组的最大长度
-                // 还可以指定固定长度的$length
-
+                name:&quot;菜单的下一级&quot;，
+                min&#95;length:0, // 数组的最小长度
+                max&#95;length:10, // 数组的最大长度
+                // 还可以指定固定长度的length
+                min&#95;layer:0, // 递归生成的最小层数
+                max&#95;layer:3, // 递归生成的最大层数
+                // 还可以指定固定长度的layer
             }
         }
     &#93;
 }
-</code></pre></p><p>默认情况下，数组类型的递归，同一层的数组默认返回随机的0到10个，递归的层数是随机的0到3层。</p><p><code>menus</code>从<code>children</code>开始又是一个菜单列表，每一个菜单里面又有<code>children</code>，如此循环下去，Panda Api会生成类似这样的<code>mock</code>数据:</p><pre><code class=".language-json5">response:{
+</code></pre></p><p><code>menus</code>从<code>children</code>开始又是一个菜单列表，每一个菜单里面又有<code>children</code>，如此循环下去，Panda Api会生成类似这样的<code>mock</code>数据: (这里<code>children</code>只是我个人惯用，你可以设定你想要的字段名称)<pre><code class=".language-json5">response:{
     menus:&#91;
         {
             id: 3241,
@@ -251,8 +254,96 @@ menu:{
     &#93;
 }
 
-</code></pre><p>默认情况下，同一层的数组默认返回随机的3到10个，递归的层数是随机的0到3层。</p>
-            <p class="text-left text-muted">2020-02-25 00:01</p>
+</code></pre></p><p>默认情况下，数组类型的递归，同一层的数组默认返回随机的0到10个，递归的层数是随机的0到3层。</p><p><code>rec</code>类型有以下属性：</p><ul><li><code>$type</code>: <code>rec</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;rec&quot;</code></li><li><code>$ref</code>: <code>$ref</code>的值表示从哪一个节点开始递归,使用<code>$response</code>表示<code>response</code>模型的根节点，然后往下，属性之间用<code>/</code>分隔</li><li><code>name</code>: <code>rec</code> 的名称</li><li><code>desc</code>: <code>rec</code> 的说明</li><li><code>length</code> 输出数组的长度，<code>length</code>默认为0（选填）</li><li><code>min&#95;length</code> 输出数组的最小长度，<code>min&#95;length</code>默认为0（选填）</li><li><code>max&#95;length</code> 输出数组的最大长度，<code>max&#95;length</code>默认为7（选填）</li><li><code>layer&#95;count</code> 递归多少层，默认为0（选填）</li><li><code>min&#95;layer&#95;count</code> 递归最小层，默认为0（选填）</li><li><code>mac&#95;layer&#95;count</code> 递归最大层，默认为3（选填）</li></ul><p>这是一个<code>array</code>递归的另一个例子，一个节点树，最开始只有一个根节点:<pre><code class=".language-json5">response:{
+    node:{
+        $name:&quot;一个棵节点树&quot;,
+        name:{name:&quot;名称&quot;},
+        score:{name:&quot;节点权重&quot;, type:&quot;int&quot;},
+        children:&#91;
+            {
+                $type:&quot;rec&quot;,
+                $ref:&quot;$response/node&quot;
+            }
+        &#93;
+
+    }
+}
+</code></pre></p><p>从<code>children</code>里面的子节点，调用<code>node</code>节点，形成递归结构</p><h3><code>map</code>递归：</h3><p>这是一个使用<code>map</code>递归的例子:<pre><code class=".language-json5">response:{
+    menus:{
+        $type:&quot;map&quot;,
+        name:&quot;map类型的菜单树&quot;,
+        key:{name:&quot;菜单访问地址&quot;},
+        value:{
+            name:{name:&quot;菜单名称&quot;},
+            order:{name:&quot;显示顺序&quot;, type:&quot;int&quot;},
+            children:{
+                $type:&quot;rec&quot;,
+                $ref:&quot;$response/menus&quot;
+            }
+        }
+    }
+}
+</code></pre></p><h3><code>object</code>对象递归</h3><p>这是一个使用<code>object</code>递归的例子，一个棵单向链表树，每层只有一个节点:<pre><code class=".language-json5">response:{
+    node:{
+        $name:&quot;一个棵分类树&quot;,
+        name:{name:&quot;分类名称&quot;},
+        score:{name:&quot;分类权重&quot;, type:&quot;int&quot;},
+        next&#95;node:{
+            $type:&quot;rec&quot;,
+            $ref:&quot;$response/node&quot;
+        }
+    }
+}
+</code></pre></p><p>所有这些例子，为了让大家容易看清楚和明白，所以把递归字段都设置为<code>response</code>中的字段，你也可以直接从<code>response</code>开始，就开始递归。上面的例子经过改写为直接从<code>response</code>开始递归，会变成这样：</p><p>数组递归1<pre><code class=".language-json5">response:{
+    id:{name:&quot;菜单id&quot;, type:&quot;PosInt&quot;},
+    name:{name:&quot;菜单名称&quot;, type:&quot;Cword&quot;, min&#95;length:4, max&#95;length:6},
+    children:{
+        $type:&quot;rec&quot;,
+        $ref:&quot;$response&quot;，
+        name:&quot;菜单的下一级&quot;，
+        min&#95;length:0, // 数组的最小长度
+        max&#95;length:10, // 数组的最大长度
+        // 还可以指定固定长度的length
+        min&#95;layer:0, // 递归生成的最小层数
+        max&#95;layer:3, // 递归生成的最大层数
+        // 还可以指定固定长度的layer
+    }
+}
+</code></pre></p><p>数组递归2<pre><code class=".language-json5">response:{
+    $name:&quot;一个棵节点树&quot;,
+    name:{name:&quot;名称&quot;},
+    score:{name:&quot;节点权重&quot;, type:&quot;int&quot;},
+    children:&#91;
+        {
+            $type:&quot;rec&quot;,
+            $ref:&quot;$response&quot;
+        }
+    &#93;
+}
+</code></pre></p><p>map递归<pre><code class=".language-json5">response:{
+    $type:&quot;map&quot;,
+    name:&quot;map类型的菜单树&quot;,
+    key:{name:&quot;菜单访问地址&quot;},
+    value:{
+        name:{name:&quot;菜单名称&quot;},
+        order:{name:&quot;显示顺序&quot;, type:&quot;int&quot;},
+        children:{
+            $type:&quot;rec&quot;,
+            $ref:&quot;$response&quot;
+        }
+    }
+}
+</code></pre></p><p>object递归<pre><code class=".language-json5">response:{
+    $name:&quot;一个棵分类树&quot;,
+    name:{name:&quot;分类名称&quot;},
+    score:{name:&quot;分类权重&quot;, type:&quot;int&quot;},
+    next&#95;node:{
+        $type:&quot;rec&quot;,
+        $ref:&quot;$response&quot;
+    }
+}
+</code></pre></p>
+            <p class="text-left text-muted">2020-02-25 01:03</p>
         </div>
         <div class="container">
             <div class="row mt-4">
