@@ -205,7 +205,7 @@ menu:{
             name:{name:&quot;菜单名称&quot;, type:&quot;Cword&quot;, min&#95;length:4, max&#95;length:6},
             children:{
                 $type:&quot;rec&quot;,
-                $ref:&quot;$response/menus&quot;，
+                $ref:&quot;/menus&quot;，
                 name:&quot;菜单的下一级&quot;，
                 min&#95;length:0, // 数组的最小长度
                 max&#95;length:10, // 数组的最大长度
@@ -217,7 +217,7 @@ menu:{
         }
     &#93;
 }
-</code></pre></p><p><code>menus</code>从<code>children</code>开始又是一个菜单列表，每一个菜单里面又有<code>children</code>，如此循环下去，Panda Api会生成类似这样的<code>mock</code>数据: (这里<code>children</code>只是我个人惯用，你可以设定你想要的字段名称)<pre><code class=".language-json5">response:{
+</code></pre></p><p><code>$ref&quot;/menus&quot;</code>中<code>$ref</code>的值表示要从<code>response</code>的什么部分开始形成递归。<code>$ref</code>只允许在<code>response</code>自身形成递归，字段路径必须以<code>/</code>开头，表示<code>response</code>根节点,没进入一个属性就要用<code>/</code>分隔。</p><p><code>menus</code>从<code>children</code>开始又是一个菜单列表，每一个菜单里面又有<code>children</code>，如此循环下去，Panda Api会生成类似这样的<code>mock</code>数据: (这里<code>children</code>只是我个人惯用，你可以设定你想要的字段名称)</p><pre><code class=".language-json5">response:{
     menus:&#91;
         {
             id: 3241,
@@ -254,7 +254,7 @@ menu:{
     &#93;
 }
 
-</code></pre></p><p>默认情况下，数组类型的递归，同一层的数组默认返回随机的0到10个，递归的层数是随机的0到3层。</p><p><code>rec</code>类型有以下属性：</p><ul><li><code>$type</code>: <code>rec</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;rec&quot;</code></li><li><code>$ref</code>: <code>$ref</code>的值表示从哪一个节点开始递归,使用<code>$response</code>表示<code>response</code>模型的根节点，然后往下，属性之间用<code>/</code>分隔</li><li><code>name</code>: <code>rec</code> 的名称</li><li><code>desc</code>: <code>rec</code> 的说明</li><li><code>length</code> 输出数组的长度，<code>length</code>默认为0（选填）</li><li><code>min&#95;length</code> 输出数组的最小长度，<code>min&#95;length</code>默认为0（选填）</li><li><code>max&#95;length</code> 输出数组的最大长度，<code>max&#95;length</code>默认为7（选填）</li><li><code>layer&#95;count</code> 递归多少层，默认为0（选填）</li><li><code>min&#95;layer&#95;count</code> 递归最小层，默认为0（选填）</li><li><code>mac&#95;layer&#95;count</code> 递归最大层，默认为3（选填）</li></ul><p>这是一个<code>array</code>递归的另一个例子，一个节点树，最开始只有一个根节点:<pre><code class=".language-json5">response:{
+</code></pre><p>默认情况下，数组类型的递归，同一层的数组默认返回随机的0到10个，递归的层数是随机的0到3层。</p><p><code>rec</code>类型有以下属性：</p><ul><li><code>$type</code>: <code>rec</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;rec&quot;</code></li><li><code>$ref</code>: <code>$ref</code>的值表示从哪一个节点开始递归,使用<code>/</code>表示<code>response</code>模型的根节点，然后往下，属性之间用<code>/</code>分隔</li><li><code>name</code>: <code>rec</code> 的名称</li><li><code>desc</code>: <code>rec</code> 的说明</li><li><code>length</code> 输出数组的长度，<code>length</code>默认为0（选填）</li><li><code>min&#95;length</code> 输出数组的最小长度，<code>min&#95;length</code>默认为0（选填）</li><li><code>max&#95;length</code> 输出数组的最大长度，<code>max&#95;length</code>默认为7（选填）</li><li><code>layer&#95;count</code> 递归多少层，默认为0（选填）</li><li><code>min&#95;layer&#95;count</code> 递归最小层，默认为0（选填）</li><li><code>mac&#95;layer&#95;count</code> 递归最大层，默认为3（选填）</li></ul><p>这是一个<code>array</code>递归的另一个例子，一个节点树，最开始只有一个根节点:<pre><code class=".language-json5">response:{
     node:{
         $name:&quot;一个棵节点树&quot;,
         name:{name:&quot;名称&quot;},
@@ -262,7 +262,7 @@ menu:{
         children:&#91;
             {
                 $type:&quot;rec&quot;,
-                $ref:&quot;$response/node&quot;
+                $ref:&quot;/node&quot;
             }
         &#93;
 
@@ -278,7 +278,7 @@ menu:{
             order:{name:&quot;显示顺序&quot;, type:&quot;int&quot;},
             children:{
                 $type:&quot;rec&quot;,
-                $ref:&quot;$response/menus&quot;
+                $ref:&quot;/menus&quot;
             }
         }
     }
@@ -290,16 +290,29 @@ menu:{
         score:{name:&quot;分类权重&quot;, type:&quot;int&quot;},
         next&#95;node:{
             $type:&quot;rec&quot;,
-            $ref:&quot;$response/node&quot;
+            $ref:&quot;/node&quot;
         }
     }
 }
-</code></pre></p><p>所有这些例子，为了让大家容易看清楚和明白，所以把递归字段都设置为<code>response</code>中的字段，你也可以直接从<code>response</code>开始，就开始递归。上面的例子经过改写为直接从<code>response</code>开始递归，会变成这样：</p><p>数组递归1<pre><code class=".language-json5">response:{
+</code></pre></p><h3>路径中遇到数组</h3><p>如果路径中遇到数组结构，那么就使用使用数组的索引作为属性：</p><pre><code class=".language-json5">response:{
+    nodes:&#91;
+        node:{
+            $name:&quot;一个棵分类树&quot;,
+            name:{name:&quot;分类名称&quot;},
+            score:{name:&quot;分类权重&quot;, type:&quot;int&quot;},
+            next&#95;node:{
+                $type:&quot;rec&quot;,
+                $ref:&quot;/nodes/0/node&quot;
+            }
+        }
+    &#93;
+}
+</code></pre><p>所有这些例子，为了让大家容易看清楚和明白，所以把递归字段都设置为<code>response</code>中的字段，你也可以直接从<code>response</code>开始，就开始递归。上面的例子经过改写为直接从<code>response</code>开始递归，会变成这样：</p><p>数组递归1<pre><code class=".language-json5">response:{
     id:{name:&quot;菜单id&quot;, type:&quot;PosInt&quot;},
     name:{name:&quot;菜单名称&quot;, type:&quot;Cword&quot;, min&#95;length:4, max&#95;length:6},
     children:{
         $type:&quot;rec&quot;,
-        $ref:&quot;$response&quot;，
+        $ref:&quot;/&quot;，
         name:&quot;菜单的下一级&quot;，
         min&#95;length:0, // 数组的最小长度
         max&#95;length:10, // 数组的最大长度
@@ -316,7 +329,7 @@ menu:{
     children:&#91;
         {
             $type:&quot;rec&quot;,
-            $ref:&quot;$response&quot;
+            $ref:&quot;/&quot;
         }
     &#93;
 }
@@ -329,7 +342,7 @@ menu:{
         order:{name:&quot;显示顺序&quot;, type:&quot;int&quot;},
         children:{
             $type:&quot;rec&quot;,
-            $ref:&quot;$response&quot;
+            $ref:&quot;/&quot;
         }
     }
 }
@@ -339,11 +352,11 @@ menu:{
     score:{name:&quot;分类权重&quot;, type:&quot;int&quot;},
     next&#95;node:{
         $type:&quot;rec&quot;,
-        $ref:&quot;$response&quot;
+        $ref:&quot;/&quot;
     }
 }
 </code></pre></p>
-            <p class="text-left text-muted">2020-02-25 01:07</p>
+            <p class="text-left text-muted">2020-02-25 01:29</p>
         </div>
         <div class="container">
             <div class="row mt-4">
