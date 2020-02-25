@@ -198,8 +198,61 @@ menu:{
         order:2
     },
 }
-</code></pre></p><p><code>map</code> 类型有以下属性：</p><ul><li><code>$type</code>: <code>map</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;map&quot;</code></li><li><code>key</code> 的字段类型可以为 <code>string</code>, <code>bool</code>, <code>number</code> 以及他们的子类型。不可以为<code>object</code>和<code>array</code></li><li><code>value</code> 字段可以为任意的类型</li><li><code>length</code> 指定输出<code>map</code>的长度，<code>length</code>默认为0（选填）</li><li><code>min&#95;length</code> 指定输出<code>map</code>的最小长度，<code>min&#95;length</code>默认为0（选填）</li><li><code>max&#95;length</code> 指定输出<code>map</code>的最大长度，<code>max&#95;length</code>默认为7（选填）</li></ul><p><code>map</code>类型必须有<code>key</code>和<code>value</code>这两个字段，否则<code>mock</code>数据的时候回返回空，默认情况下<code>map</code>随机返回<code>min&#95;length</code>到<code>max&#95;length</code>个随机值（map的长度）。如果指定了<code>length</code>，那么就会返回固定<code>length</code>个随机值（map的长度）。</p><h2>递归字段</h2>
-            <p class="text-left text-muted">2020-02-24 09:01</p>
+</code></pre></p><p><code>map</code> 类型有以下属性：</p><ul><li><code>$type</code>: <code>map</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;map&quot;</code></li><li><code>key</code> 的字段类型可以为 <code>string</code>, <code>bool</code>, <code>number</code> 以及他们的子类型。不可以为<code>object</code>和<code>array</code></li><li><code>value</code> 字段可以为任意的类型</li><li><code>length</code> 指定输出<code>map</code>的长度，<code>length</code>默认为0（选填）</li><li><code>min&#95;length</code> 指定输出<code>map</code>的最小长度，<code>min&#95;length</code>默认为0（选填）</li><li><code>max&#95;length</code> 指定输出<code>map</code>的最大长度，<code>max&#95;length</code>默认为7（选填）</li></ul><p><code>map</code>类型必须有<code>key</code>和<code>value</code>这两个字段，否则<code>mock</code>数据的时候回返回空，默认情况下<code>map</code>随机返回<code>min&#95;length</code>到<code>max&#95;length</code>个随机值（map的长度）。如果指定了<code>length</code>，那么就会返回固定<code>length</code>个随机值（map的长度）。</p><h2>rec 递归</h2><p>在做接口设计的时候，会遇到像分类树、菜单树、节点树等树形结构，这种结构是一层套一层的递归结构，而且又多超层是未知的，是动态的。我们没有办法直接写出整个结构再来生成mock数据。所以我们引入了<code>rec</code>递归结构</p><h3>数组类型的递归</h3><p>这是一个返回菜单树的递归的设计例子：<pre><code class=".language-json5">response:{
+    menus:&#91;
+        {
+            id:{name:&quot;菜单id&quot;, type:&quot;PosInt&quot;},
+            name:{name:&quot;菜单名称&quot;, type:&quot;Cword&quot;, min&#95;length:4, max&#95;length:6},
+            children:{
+                $name:&quot;菜单的下一级&quot;，
+                $ref:&quot;$response/menus&quot;，
+                $min&#95;length:0, // 数组的最小长度
+                $max&#95;length:10, // 数组的最大长度
+                // 还可以指定固定长度的$length
+
+            }
+        }
+    &#93;
+}
+</code></pre></p><p>默认情况下，数组类型的递归，同一层的数组默认返回随机的0到10个，递归的层数是随机的0到3层。</p><p><code>menus</code>从<code>children</code>开始又是一个菜单列表，每一个菜单里面又有<code>children</code>，如此循环下去，Panda Api会生成类似这样的<code>mock</code>数据:</p><pre><code class=".language-json5">response:{
+    menus:&#91;
+        {
+            id: 3241,
+            name:&quot;路家乐福的&quot;,
+            children:&#91;
+            &#93;
+        },
+        {
+            id:789321,
+            name:&quot;防静电撒冷风&quot;,
+            children:&#91;
+                {
+                    id: 74971,
+                    name:&quot;放假都解&quot;,
+                    children:&#91;
+                        ...
+                    &#93;
+                }
+            &#93;
+        },
+        {
+            id:21354,
+            name:&quot;附件龙卷风&quot;,
+            children:&#91;
+                {
+                    id: 43242,
+                    name:&quot;路家乐福的&quot;,
+                    children:&#91;
+                        ...
+                    &#93;
+                }
+            &#93;
+        }
+    &#93;
+}
+
+</code></pre><p>默认情况下，同一层的数组默认返回随机的3到10个，递归的层数是随机的0到3层。</p>
+            <p class="text-left text-muted">2020-02-25 00:01</p>
         </div>
         <div class="container">
             <div class="row mt-4">
