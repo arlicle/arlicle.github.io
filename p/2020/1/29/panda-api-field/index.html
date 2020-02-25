@@ -306,9 +306,9 @@ menu:{
 </code></pre></p><p>从<code>children</code>里面的子节点，调用<code>node</code>节点，形成递归结构</p><h3><code>map</code>递归：</h3><p>这是一个使用<code>map</code>递归的例子:<pre><code class=".language-json5">response:{
     menus:{
         $type:&quot;map&quot;,
-        name:&quot;map类型的菜单树&quot;,
-        key:{name:&quot;菜单访问地址&quot;},
-        value:{
+        $name:&quot;map类型的菜单树&quot;,
+        $key:{name:&quot;菜单访问地址&quot;},
+        $value:{
             name:{name:&quot;菜单名称&quot;},
             order:{name:&quot;显示顺序&quot;, type:&quot;int&quot;},
             children:{
@@ -371,6 +371,22 @@ menu:{
         // 还可以指定固定长度的$count
     }
 }
+</code></pre></p><p>输出<code>mock</code>数据<pre><code class=".language-json5">{
+    &quot;children&quot;: {
+        &quot;children&quot;: {
+            &quot;children&quot;: {
+                &quot;id&quot;: 1871930241063333556,
+                &quot;name&quot;: &quot;红强近八活&quot;
+            },
+            &quot;id&quot;: 5879124066670883770,
+            &quot;name&quot;: &quot;查器气算外&quot;
+        },
+        &quot;id&quot;: 4800547273192686311,
+        &quot;name&quot;: &quot;油总及员多&quot;
+    },
+    &quot;id&quot;: 7529127207311356580,
+    &quot;name&quot;: &quot;想正第中该&quot;
+}
 </code></pre></p><p>数组递归2<pre><code class=".language-json5">response:{
     $name:&quot;一个棵节点树&quot;,
     name:{name:&quot;名称&quot;},
@@ -382,11 +398,43 @@ menu:{
         }
     &#93;
 }
+</code></pre></p><p>生成<code>mock</code>数据<pre><code class=".language-json5">{
+    &quot;children&quot;: &#91;
+        {
+            &quot;children&quot;: &#91;&#93;,
+            &quot;name&quot;: &quot;3GvF4y%jzLTKJ#B&#40;&quot;,
+            &quot;score&quot;: -2658177777725672468
+        },
+        {
+            &quot;children&quot;: &#91;&#93;,
+            &quot;name&quot;: &quot;EV&#94;&amp;whgz#LRVCwLHFF%pRH&quot;,
+            &quot;score&quot;: -2505644547855075013
+        },
+        {
+            &quot;children&quot;: &#91;
+                {
+                    &quot;children&quot;: &#91;&#93;,
+                    &quot;name&quot;: &quot;@yuKB8S%04HZFfyT8&quot;,
+                    &quot;score&quot;: -8018263853608409579
+                },
+                {
+                    &quot;children&quot;: &#91;&#93;,
+                    &quot;name&quot;: &quot;q!Wa2FXIZ%uT&#126;N&quot;,
+                    &quot;score&quot;: -1398830444893409480
+                },
+            &#93;,
+            &quot;name&quot;: &quot;YY#8@V&quot;,
+            &quot;score&quot;: 2433269522325167205
+        }
+    &#93;,
+    &quot;name&quot;: &quot;LFMIaMQVeX9N&#94;L@jhi&#41;Rq&quot;,
+    &quot;score&quot;: 773048924729775541
+}
 </code></pre></p><p>map递归<pre><code class=".language-json5">response:{
     $type:&quot;map&quot;,
-    name:&quot;map类型的菜单树&quot;,
-    key:{name:&quot;菜单访问地址&quot;},
-    value:{
+    $name:&quot;map类型的菜单树&quot;,
+    $key:{name:&quot;菜单访问地址&quot;},
+    $value:{
         name:{name:&quot;菜单名称&quot;},
         order:{name:&quot;显示顺序&quot;, type:&quot;int&quot;},
         children:{
@@ -405,7 +453,7 @@ menu:{
     }
 }
 </code></pre></p>
-            <p class="text-left text-muted">2020-02-25 11:14</p>
+            <p class="text-left text-muted">2020-02-25 11:25</p>
         </div>
         <div class="container">
             <div class="row mt-4">
