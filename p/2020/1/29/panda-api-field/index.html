@@ -20,7 +20,7 @@
 
             <p>为了更人方便、更人性化的进行body、query或者response中的字段设计，我又拓展了字段类型，一方面可以更快速的进行字段设计，另外一方面，可以生成更符合实际情况的mock数据。系统会在test_data匹配不到数据的时候，默认返回response设定好的字段里面的mock数据。</p><h2>字段的公共属性</h2><p>所有字段都共有的属性</p><ul><li><code>name</code> : 字段名称</li><li><code>desc</code> : 字段描述</li><li><code>required</code> : 字段是否必填，(可选) 不填写的时候默认是必填</li><li><code>type</code> : 字段类型</li><li><code>default</code> :  字段的默认值，(可选) 不填写时默认是空</li><li><code>value</code> : 一旦设置了<code>value</code>, 那么mock就一直只会返回<code>value</code>的值，其它所有值范围属性都会忽略<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, value:10},
 </code></pre>设定后mock只会一直返回值 10</li><li><code>enum</code> : <code>enum</code>是一个数组，mock会随机返回<code>enum</code>数组中的值，例如<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, enum:&#91;10,20,30&#93;},
-</code></pre>mock会随机返回<code>enum</code>列表[10,20,30]中的其中一个</li></ul><p><code>enum</code>有两种写法:</p><ul><li>一种直接就是值: <code>enum:&#91;-1, 1&#93;</code>，</li><li>第二种是 值加值的描述 <code>$enum:&#91;&#91;-1,&quot;失败&quot;&#93;, &#91;1, &quot;成功&quot;&#93;&#93;</code>，注意<code>$enum</code>是以<code>$</code>美元符号开头的，表示后面的元素是以数组形式表现，元素的第一个是值，第二个是值的描述，这是简写的语法优化，它完整写法是这样的：<code>enum:&#91;{&quot;$value&quot;:-1, &quot;$desc&quot;:&quot;失败&quot;}, {&quot;$value&quot;:1, &quot;$desc&quot;:&quot;成功&quot;}&#93;</code>。第二种写法和第一种写法获得的结果都是一样的，值只能是：-1 和 1中的一个。</li></ul><p>增加说明的目的是为了方便以后值的阅读和维护，我们经常时间长了会忘记每一个枚举值的作用。</p><p>如果你这么写：<pre><code class=".language-json5">enum:&#91;&#91;-1, &quot;s&quot;&#93;, &#91;1, &quot;d&quot;&#93;&#93;
+</code></pre>mock会随机返回<code>enum</code>列表[10,20,30]中的其中一个</li></ul><p><code>enum</code>有两种写法:</p><ul><li>一种直接就是值: <code>enum:&#91;-1, 1&#93;</code>，</li><li>第二种是 值加值的描述 <code>$enum:&#91;&#91;-1,&quot;失败&quot;&#93;, &#91;1, &quot;成功&quot;&#93;&#93;</code>，注意<code>$enum</code>是以<code>$</code>美元符号开头的，表示后面的元素是以数组形式表现，元素的第一个是值，第二个是值的描述。第二种写法和第一种写法获得的结果都是一样的，值只能是：-1 和 1中的一个。</li></ul><p>增加说明的目的是为了方便以后值的阅读和维护，我们经常时间长了会忘记每一个枚举值的作用。</p><p>如果你这么写：<pre><code class=".language-json5">enum:&#91;&#91;-1, &quot;s&quot;&#93;, &#91;1, &quot;d&quot;&#93;&#93;
 </code></pre></p><p>表示值只能是<code>&#91;-1, &quot;s&quot;&#93;</code> 和<code>&#91;1, &quot;d&quot;&#93;</code> 中其中一个数组</p><h2>int</h2><p><code>int</code> 就是整数类型，是<code>number</code>的一个子集，他有这么几个范围的参数，他们分别是（按有效优先级别展示）：</p><ul><li><code>min&#95;value</code> 最小值，设定后，所有mock的值会大于这个值，例如：<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, min&#95;value:1},
 </code></pre></li><li><code>max&#95;value</code> 最大值，设定后，所有mock的值会小于这个值，例如：<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, max&#95;value:1000},
 </code></pre></li></ul><p>通常<code>min&#95;value</code>和<code>max&#95;value</code>会同时使用，例如<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, min&#95;value:1, max&#95;value:1000},
@@ -69,7 +69,7 @@
 // 随机返回ip地址：192.168.5.12
 </code></pre></p><h2>email 邮箱</h2><p>是<code>string</code>的子集，随机返回一个邮箱地址<pre><code class=".language-json5">{name: &quot;邮箱地址&quot;, type: &quot;email&quot;},
 // 随机返回邮箱地址：fdsalf2@qq.com
-</code></pre></p><h2>image 图像</h2><p>是<code>string</code>的子集，image字段随机返回一个可访问的图像的地址，image拥有额外属性参数：</p><ul><li><code>size</code> 图像尺寸，例如"200x100", "300x250", 如果没有设置，默认就随机返回一个尺寸。注意数字中间的符号是小写的x</li><li><code>foreground</code> 图像上的文字颜色，例如:"#868e96"，"#000000", 默认随机一个颜色</li><li><code>background</code> 图像上的背景色，例如:"#ffffff"，"#007bff", 默认随机一个颜色</li><li><code>format</code> 图像格式，可选格式有："png"、"gif"、"jpg", 默认从三个随机返回</li><li><code>text</code> 需要显示在图像上的文字,默认为空</li></ul><p>例如：使用默认随机，生成一个图像<pre><code class=".language-json5">{name: &quot;头像&quot;, type: &quot;image&quot;},
+</code></pre></p><h2>image 图像</h2><p>是<code>string</code>的子集，image字段随机返回一个可访问的图像的地址，image拥有额外属性参数：</p><ul><li><code>size</code> 图像尺寸，例如"200x100", "300x250", 如果没有设置，默认就随机返回一个尺寸。注意数字中间的符号是小写的x</li><li><code>foreground</code> 图像上的文字颜色，例如:"#868e96"，"#000000", 默认随机一个颜色</li><li><code>background</code> 图像上的背景色，例如:"#ffffff"，"#007bff", 默认随机一个颜色</li><li><code>accept</code> 限制允许的图片类型，默认支持所有图片格式。或自己定义accept:".png, .jpg, .jpeg"；accept="*" — 接受任何文件类型。</li><li><code>text</code> 需要显示在图像上的文字,默认为空</li></ul><p>例如：使用默认随机，生成一个图像<pre><code class=".language-json5">{name: &quot;头像&quot;, type: &quot;image&quot;},
 // 随机返回一个尺寸、颜色的图像地址：https://dummyimage.com/720x300/ffc107/fff/?text=
 </code></pre></p><p>使用指定的尺寸和颜色生成图像<pre><code class=".language-json5">{name: &quot;头像&quot;, type: &quot;image&quot;, size:&quot;300x300&quot;, foreground:&quot;#fff&quot;, background:&quot;#ff3e00&quot;, format:&quot;png&quot;, text:&quot;Panda Api&quot;},
 // 返回 https://dummyimage.com/300x300/ff3e00/fff/?text=Panda Api
@@ -179,6 +179,7 @@ items: &#91;{
 &#93;
 </code></pre><p>这里要注意数组是单个元素和数组中是对象的不同写法。</p><h2>map</h2><p><code>map</code>字段表示这是一个<code>map</code>，有对应的<code>key</code>和<code>value</code>，<pre><code class=".language-json5">menu:{
     $type:&quot;map&quot;,
+    $name:&quot;菜单&quot;,
     $key:{name:&quot;菜单访问地址&quot;},
     $value:{
         name:{name:&quot;菜单名称&quot;, type:&quot;csentence&quot;},
@@ -198,7 +199,7 @@ menu:{
         order:2
     },
 }
-</code></pre></p><p><code>map</code> 类型有以下属性：</p><ul><li><code>$type</code>: <code>map</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;map&quot;</code></li><li><code>$key</code> 的字段类型可以为 <code>string</code>, <code>bool</code>, <code>number</code> 以及他们的子类型。不可以为<code>object</code>和<code>array</code></li><li><code>$value</code> 字段可以为任意的类型</li><li><code>$length</code> 输出<code>map</code>的长度，<code>$length</code>默认为0（选填）</li><li><code>$min&#95;length</code> 输出<code>map</code>的最小长度，<code>$min&#95;length</code>默认为0（选填）</li><li><code>$max&#95;length</code> 输出<code>map</code>的最大长度，<code>$max&#95;length</code>默认为6（选填）</li></ul><p><code>map</code>类型必须有<code>$key</code>和<code>$value</code>这两个字段，否则<code>mock</code>数据的时候回返回空，默认情况下<code>map</code>随机返回<code>$min&#95;length</code>到<code>$max&#95;length</code>个随机值（map的长度）。如果指定了<code>$length</code>，那么就会返回固定<code>$length</code>个随机值（map的长度）。</p><h2><code>rec</code> 递归类型</h2><p>在做接口设计的时候，会遇到像分类树、菜单树、节点树等树形结构，这种结构是一层套一层的递归结构，而且又多超层是未知的，是动态的。我们没有办法直接写出整个结构再来生成mock数据。所以我们引入了<code>rec</code>递归结构</p><h3><code>array</code>数组递归</h3><p>这是一个返回菜单树的递归的设计例子：<pre><code class=".language-json5">response:{
+</code></pre></p><p><code>map</code> 类型有以下属性：</p><ul><li><code>$type</code>: <code>map</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;map&quot;</code></li><li><code>$name</code>: 字段的名称或说明</li><li><code>$key</code> 的字段类型可以为 <code>string</code>, <code>bool</code>, <code>number</code> 以及他们的子类型。不可以为<code>object</code>和<code>array</code></li><li><code>$value</code> 字段可以为任意的类型</li><li><code>$length</code> 输出<code>map</code>的长度，<code>$length</code>默认为0（选填）</li><li><code>$min&#95;length</code> 输出<code>map</code>的最小长度，<code>$min&#95;length</code>默认为0（选填）</li><li><code>$max&#95;length</code> 输出<code>map</code>的最大长度，<code>$max&#95;length</code>默认为6（选填）</li></ul><p><code>map</code>类型必须有<code>$key</code>和<code>$value</code>这两个字段，否则<code>mock</code>数据的时候回返回空，默认情况下<code>map</code>随机返回<code>$min&#95;length</code>到<code>$max&#95;length</code>个随机值（map的长度）。如果指定了<code>$length</code>，那么就会返回固定<code>$length</code>个随机值（map的长度）。</p><h2><code>rec</code> 递归类型</h2><p>在做接口设计的时候，会遇到像分类树、菜单树、节点树等树形结构，这种结构是一层套一层的递归结构，而且又多超层是未知的，是动态的。我们没有办法直接写出整个结构再来生成mock数据。所以我们引入了<code>rec</code>递归结构</p><h3><code>array</code>数组递归</h3><p>这是一个返回菜单树的递归的设计例子：<pre><code class=".language-json5">response:{
     menus:&#91;
         {
             $min&#95;length:0,
@@ -290,7 +291,7 @@ menu:{
     &#93;
 }
 
-</code></pre><p>默认情况下，数组类型的递归，同一层的数组默认返回随机的0到10个，递归的层数是随机的0到3层。</p><p><code>rec</code>类型有以下属性：</p><ul><li><code>$type</code>: <code>rec</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;rec&quot;</code></li><li><code>$ref</code>: <code>$ref</code>的值表示从哪一个节点开始递归,使用<code>/</code>表示<code>response</code>模型的根节点，然后往下，属性之间用<code>/</code>分隔</li><li><code>$name</code>: <code>rec</code> 的名称</li><li><code>$desc</code>: <code>rec</code> 的说明</li><li><code>$length</code> 输出数组的长度，<code>$length</code>默认为0（选填）</li><li><code>$min&#95;length</code> 输出数组的最小长度，<code>$min&#95;length</code>默认为0（选填）</li><li><code>$max&#95;length</code> 输出数组的最大长度，<code>$max&#95;length</code>默认为6（选填）</li><li><code>$count</code> 递归多少次，默认为0（选填）</li><li><code>$min&#95;count</code> 递归最少次数，默认为0（选填）</li><li><code>$mac&#95;count</code> 递归最大次数，默认为3（选填）</li></ul><p>这是一个<code>array</code>递归的另一个例子，一个节点树，最开始只有一个根节点:<pre><code class=".language-json5">response:{
+</code></pre><p>默认情况下，数组类型的递归，同一层的数组默认返回随机的0到10个，递归的层数是随机的0到3层。</p><p><code>rec</code>类型有以下属性：</p><ul><li><code>$type</code>: <code>rec</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;rec&quot;</code></li><li><code>$ref</code>: <code>$ref</code>的值表示从哪一个节点开始递归,使用<code>/</code>表示<code>response</code>模型的根节点，然后往下，属性之间用<code>/</code>分隔</li><li><code>$name</code>: <code>rec</code> 的名称</li><li><code>$desc</code>: <code>rec</code> 的说明</li><li><code>$length</code> 输出数组的长度，<code>$length</code>默认为0（选填）</li><li><code>$min&#95;length</code> 输出数组的最小长度，<code>$min&#95;length</code>默认为0（选填）</li><li><code>$max&#95;length</code> 输出数组的最大长度，<code>$max&#95;length</code>默认为6（选填）</li><li><code>$count</code> 递归多少次，默认为0（选填）</li><li><code>$min&#95;count</code> 递归最少次数，默认为0（选填）</li><li><code>$mac&#95;count</code> 递归最大次数，默认为3（选填）</li><li><code>$empty&#95;value</code> 自定义尾节点的空值，默认按类型：array的空值是:[]，object默认空值是:null，map默认空值是{}，其它类型默认空值会连整个字段删除。（选填）</li></ul><p>这是一个<code>array</code>递归的另一个例子，一个节点树，最开始只有一个根节点:<pre><code class=".language-json5">response:{
     node:{
         $name:&quot;一个棵节点树&quot;,
         name:{name:&quot;名称&quot;},
@@ -356,7 +357,7 @@ menu:{
         }
     }&#93;
 }
-</code></pre><p>所有这些例子，为了让大家容易看清楚和明白，所以把递归字段都设置为<code>response</code>中的字段，你也可以直接从<code>response</code>开始，就开始递归。上面的例子经过改写为直接从<code>response</code>开始递归，会变成这样：</p><p>数组递归1<pre><code class=".language-json5">response:{
+</code></pre><p>所有这些例子，为了让大家容易看清楚和明白，所以把递归字段都设置为<code>response</code>中的字段，你也可以直接从<code>response</code>开始，就开始递归。上面的例子经过改写为直接从<code>response</code>开始递归，会变成这样：</p><p>数组递归1<pre><code class=".language-json5">response:&#91;{
     id:{name:&quot;菜单id&quot;, type:&quot;PosInt&quot;},
     name:{name:&quot;菜单名称&quot;, type:&quot;Cword&quot;, min&#95;length:4, max&#95;length:6},
     children:{
@@ -370,7 +371,7 @@ menu:{
         $max&#95;count:3, // 递归生成的最大层数
         // 还可以指定固定长度的$count
     }
-}
+}&#93;
 </code></pre></p><p>输出<code>mock</code>数据<pre><code class=".language-json5">{
     &quot;children&quot;: {
         &quot;children&quot;: {
@@ -453,7 +454,7 @@ menu:{
     }
 }
 </code></pre></p>
-            <p class="text-left text-muted">2020-02-25 11:25</p>
+            <p class="text-left text-muted">2020-03-01 03:22</p>
         </div>
         <div class="container">
             <div class="row mt-4">

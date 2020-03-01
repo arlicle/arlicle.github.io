@@ -214,7 +214,7 @@ tag:{name:&quot;文章标签&quot;}
         }
     &#93;
 }
-</code></pre><h3>设置只继承哪些字段,不继承哪些字段:<code>$include</code>和<code>$exclude</code>语法</h3><p>在文件添加接口中，我们使用<code>$ref</code>引用了文章模型，语法是:<code>./&#95;data/models.json5:Article</code> 就是文件路径，后面是冒号<code>:</code>，后是具体的模型引用路径，如果只引用一个title字段，也可以这么写:<code>$ref:&quot;./&#95;data/models.json5:Article.title&quot;</code>，</p><p>接着有的字段我们是不要的，我们就可以使用<code>$exclude</code>语法，排除一些字段，<code>$exclude:&#91;&quot;category&#95;name&quot;, &quot;read&#95;count&quot;, &quot;created&quot;, &quot;create&#95;username&quot;&#93;,</code>，放入<code>$exclude</code>中的字段就不会被加载进来。</p><p><strong><code>可以排除对象或数组的嵌套属性</code></strong>, 可以用<code>/</code>标识字段路径来删除,例如, 假设<code>$ref</code>的文章模型里面还有嵌套的对象和数组<pre><code class=".language-json5">Article:{
+</code></pre><h3>设置只继承哪些字段,不继承哪些字段:<code>$include</code>和<code>$exclude</code>语法</h3><p>在文件添加接口中，我们使用<code>$ref</code>引用了文章模型，语法是:<code>./&#95;data/models.json5:Article</code> 就是文件路径，后面是冒号<code>:</code>，后是具体的模型引用路径，如果只引用一个title字段，也可以这么写:<code>$ref:&quot;./&#95;data/models.json5:Article/title&quot;</code>，</p><p>接着有的字段我们是不要的，我们就可以使用<code>$exclude</code>语法，排除一些字段，<code>$exclude:&#91;&quot;category&#95;name&quot;, &quot;read&#95;count&quot;, &quot;created&quot;, &quot;create&#95;username&quot;&#93;,</code>，放入<code>$exclude</code>中的字段就不会被加载进来。</p><p><strong><code>可以排除对象或数组的嵌套属性</code></strong>, 可以用<code>/</code>标识字段路径来删除,例如, 假设<code>$ref</code>的文章模型里面还有嵌套的对象和数组<pre><code class=".language-json5">Article:{
     id: {name:&quot;用户id&quot;, type:&quot;number&quot;},
     title: {name:&quot;文章标题&quot;},
     category: {
@@ -321,8 +321,8 @@ tag:{name:&quot;文章标签&quot;}
         current&#95;page: {name:&quot;当前页码&quot;, type:&quot;number&quot;},
         result:
             &#91;{
-                id:{$ref: &quot;./&#95;data/models.json5:Article.id&quot;},
-                title:{$ref: &quot;./&#95;data/models.json5:Article.title&quot;}
+                id:{$ref: &quot;./&#95;data/models.json5:Article/id&quot;},
+                title:{$ref: &quot;./&#95;data/models.json5:Article/title&quot;}
             }&#93;
     }
 }
@@ -396,8 +396,8 @@ tag:{name:&quot;文章标签&quot;}
                 current&#95;page: {name:&quot;当前页码&quot;, type:&quot;number&quot;},
                 result:
                     &#91;{
-                        id:{$ref: &quot;$article.id&quot;},
-                        title:{$ref: &quot;$article.title&quot;}
+                        id:{$ref: &quot;$article/id&quot;},
+                        title:{$ref: &quot;$article/title&quot;}
                     }&#93;
             }
         }
@@ -416,14 +416,14 @@ tag:{name:&quot;文章标签&quot;}
         method:&quot;POST&quot;,
         body&#95;mode:&quot;form-data&quot;,
         body: {
-            file: {name:&quot;要上传的文件&quot;, desc:&quot;如果是扫描件要转变为扫描好的本地文件&quot;},
+            file: {name:&quot;要上传的文件&quot;, desc:&quot;如果是扫描件要转变为扫描好的本地文件&quot;, type:&quot;image&quot;},
             file&#95;type:{name:&quot;文件类型&quot;, desc:&quot;分为处方单，身份证&quot;, $enum:&#91;&#91;&quot;id&#95;no&quot;,&quot;身份证&quot;&#93;, &#91;&quot;chufangdan&quot;, &quot;处方单&quot;&#93;, &#91;&quot;other&quot;, &quot;其它普通照片&quot;&#93;&#93;}
         },
         response:{
             $ref:&quot;./&#95;data/models.json5:Response&quot;,
             result:{
                 upload&#95;id:{name:&quot;上传文件id&quot;, desc:&quot;上传文件保存后的返回id&quot;, type:&quot;number&quot;},
-                upload&#95;url:{name:&quot;上传文件后访问的url地址&quot;},
+                upload&#95;url:{name:&quot;上传文件后访问的url地址&quot;, $value:&quot;$body/file:url&quot;},
                 ocr:{name:&quot;OCR识别数据&quot;, desc:&quot;上传文件系统自动识别OCR返回的结果,目前只有部分处方单和身份证有这个数据&quot;, required:false}
             }
         },
@@ -470,8 +470,21 @@ tag:{name:&quot;文章标签&quot;}
     &#93;
 }
 
-</code></pre><p>同样的，继承过来以后还是可以自定义里面的字段属性，比如这里<code>name</code>字段就进行了自定义，这里主要还有就是写上<code>name</code>方便维护的时候看</p><h3>文件上传接口</h3><p>在照片上传的接口中，有两个特殊的地方，首先：我们的<code>body&#95;mode</code>是<code>form-data</code>，也必须是<code>form-data</code>才会进行文件的接收。</p><p>在<code>test&#95;data</code>中，<code>body</code>中的上传文件的匹配用的是文件名进行匹配，</p><p><code>test&#95;data</code>的返回值<code>response</code>中，我们还可以获取文件的访问<code>url</code>地址，<code>url</code>访问地址为：<code>&#95;upload/</code> + 文件名。即如果我们的文件名是：<code>aaa.jpg</code>, 那么我们访问的文件url地址是：<code>/&#95;upload/aaa.jpg</code>。当你访问这个地址: <code>http://localhost:9000/&#95;upload/aaa.jpg</code>时，就可以访问到文件。</p><h3>引入cvs外部数据</h3><p>正在搞...</p>
-            <p class="text-left text-muted">2020-02-24 09:07</p>
+</code></pre><p>同样的，继承过来以后还是可以自定义里面的字段属性，比如这里<code>name</code>字段就进行了自定义，这里主要还有就是写上<code>name</code>方便维护的时候看</p><h3>文件上传接口</h3><p>在照片上传的接口中，有两个特殊的地方，首先：我们的<code>body&#95;mode</code>是<code>form-data</code>，也必须是<code>form-data</code>才会进行文件的接收。</p><p>在<code>test&#95;data</code>中，<code>body</code>中的上传文件的匹配用的是文件名进行匹配，</p><p><code>test&#95;data</code>的返回值<code>response</code>中，我们还可以获取文件的访问<code>url</code>地址，<code>url</code>访问地址为：<code>&#95;upload/</code> + 文件名。即如果我们的文件名是：<code>aaa.jpg</code>, 那么我们访问的文件url地址是：<code>/&#95;upload/aaa.jpg</code>。当你访问这个地址: <code>http://localhost:9000/&#95;upload/aaa.jpg</code>时，就可以访问到文件。</p><p>我们也可以在<code>response</code>的定义中，根据<code>body</code>直接获取上传文件的url。例如:<pre><code class=".language-json5">...
+body: {
+    file: {name:&quot;要上传的文件&quot;, desc:&quot;如果是扫描件要转变为扫描好的本地文件&quot;, type:&quot;image&quot;},
+    file&#95;type:{name:&quot;文件类型&quot;, desc:&quot;分为处方单，身份证&quot;, $enum:&#91;&#91;&quot;id&#95;no&quot;,&quot;身份证&quot;&#93;, &#91;&quot;chufangdan&quot;, &quot;处方单&quot;&#93;, &#91;&quot;other&quot;, &quot;其它普通照片&quot;&#93;&#93;}
+},
+response:{
+    result:{
+        upload&#95;id:{name:&quot;上传文件id&quot;, desc:&quot;上传文件保存后的返回id&quot;, type:&quot;number&quot;},
+        upload&#95;url:{name:&quot;上传文件后访问的url地址&quot;, $value:&quot;$body/file:url&quot;},
+        ocr:{name:&quot;OCR识别数据&quot;, desc:&quot;上传文件系统自动识别OCR返回的结果,目前只有部分处方单和身份证有这个数据&quot;, required:false}
+    }
+},
+...
+</code></pre></p><p><code>$value:&quot;$body/file:url&quot;</code>的意思就是 <code>upload&#95;url</code>这个字段的值是通过<code>$body</code>中的<code>file</code>字段的可访问的<code>url</code>来进行输出。</p><h3>引入cvs外部数据</h3><p>正在搞...</p>
+            <p class="text-left text-muted">2020-03-01 05:41</p>
         </div>
         <div class="container">
             <div class="row mt-4">
