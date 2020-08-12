@@ -8,6 +8,8 @@
 ### 最新     
 
 
+[使用webhooks完成自动部署](https://www.debugmyself.com/p/2020/8/11/webhooks/)  
+
 [文档即服务：一款与众不同的接口设计工具](https://www.debugmyself.com/p/2020/2/20/panda_api_intro_article1/)  
 
 [Panda Api纯文档编写和多级菜单目录文档](https://www.debugmyself.com/p/2020/2/17/panda_api_markdown_docs/)  
