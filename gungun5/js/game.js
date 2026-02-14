@@ -1,7 +1,7 @@
 // 游戏配置
 const CONFIG = {
     gridSize: 8,
-    emojis: ['🏍️', '🐶', '⛷️', '🏄', '🤿', '🍲', '🚗'],
+    emojis: ['🏍️', '🐶', '🏂', '🏄', '🤿', '🍲', '🚗'],
     rainbowEmoji: '🌈',
     // 特殊元素标记
     powerups: {
