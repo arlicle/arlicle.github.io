@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>圆滚滚的消消乐 - 情人节快乐</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 加载界面 -->
+    <div id="loading-screen" class="screen">
+        <div class="loading-content">
+            <h1 class="loading-title">❤️ 圆滚滚 ❤️</h1>
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+            <p class="loading-message">努力的女孩最可爱...</p>
+        </div>
+    </div>
+
+    <!-- 开始界面 -->
+    <div id="start-screen" class="screen hidden">
+        <div class="start-content">
+            <h1 class="game-title">🎮 消消乐 🎮</h1>
+            <h2 class="player-name">圆滚滚</h2>
+            <p class="valentine-text">情人节快乐 ❤️</p>
+            <button id="start-btn" class="btn">开始游戏</button>
+        </div>
+    </div>
+
+    <!-- 游戏界面 -->
+    <div id="game-screen" class="screen hidden">
+        <div class="game-header">
+            <div class="game-info">
+                <span class="level">关卡: <span id="level-num">1</span></span>
+                <div id="target-container" class="targets-container">
+                    <!-- 目标元素将通过JS动态生成 -->
+                </div>
+            </div>
+            <div class="game-stats">
+                <span class="score">分数: <span id="score">0</span></span>
+                <span class="moves">步数: <span id="moves">20</span></span>
+            </div>
+        </div>
+        <div class="game-container">
+            <div id="game-board" class="game-board"></div>
+        </div>
+        <div class="game-footer">
+            <button id="hint-btn" class="btn-small">提示</button>
+            <button id="restart-btn" class="btn-small">重置</button>
+        </div>
+    </div>
+
+    <!-- 过关界面 -->
+    <div id="level-complete-screen" class="screen hidden">
+        <div class="level-complete-content">
+            <h2 class="level-complete-title">🎉 关卡通过！🎉</h2>
+            <p class="level-complete-message" id="level-message"></p>
+            <div class="stars">
+                <span class="star">⭐</span>
+                <span class="star">⭐</span>
+                <span class="star">⭐</span>
+            </div>
+            <button id="next-level-btn" class="btn">下一关</button>
+        </div>
+    </div>
+
+    <!-- 游戏结束/结局界面 -->
+    <div id="ending-screen" class="screen hidden">
+        <div class="ending-content">
+            <div class="hearts-container">
+                <span class="heart">❤️</span>
+                <span class="heart">💕</span>
+                <span class="heart">💗</span>
+                <span class="heart">💖</span>
+                <span class="heart">💝</span>
+            </div>
+            <h2 class="ending-title">🎊 恭喜通关！🎊</h2>
+            <div class="love-letter">
+                <h3>给圆滚滚的情书</h3>
+                <p>圆滚滚，情人节快乐！</p>
+                <p>你知道吗？你努力拼搏的样子真的很迷人。</p>
+                <p>无论是骑机车时的酷炫，</p>
+                <p>还是滑雪、冲浪时的勇敢，</p>
+                <p>甚至是曾经经营火锅店的热血，</p>
+                <p>都让我深深的着迷。</p>
+                <br>
+                <p>虽然过去三年很不容易，</p>
+                <p>但我相信你一定能重新站起来。</p>
+                <p>因为你是最棒的！</p>
+                <br>
+                <p>就像游戏里的消除一样，</p>
+                <p>所有的困难都会一点点被消除。</p>
+                <p>我会一直陪在你身边，</p>
+                <p>陪你度过每一个难关。</p>
+                <br>
+                <p class="signature">永远爱你的 ❤️</p>
+            </div>
+            <button id="replay-btn" class="btn">再玩一次</button>
+        </div>
+    </div>
+
+    <!-- 游戏失败界面 -->
+    <div id="game-over-screen" class="screen hidden">
+        <div class="game-over-content">
+            <h2 class="game-over-title">😅 步数用完了</h2>
+            <p class="game-over-message">别灰心，再试一次！</p>
+            <button id="retry-btn" class="btn">重新挑战</button>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>
