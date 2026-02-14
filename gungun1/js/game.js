@@ -1029,6 +1029,136 @@ function shuffleBoard() {
     gameState.hintUsed = true;
 }
 
+// 触摸事件处理 - 拖动交换
+let touchStartX = 0;
+let touchStartY = 0;
+let touchStartTile = null;
+let touchStartRow = null;
+let touchStartCol = null;
+
+// 初始化触摸事件
+function initTouchEvents() {
+    const boardElement = elements.gameBoard;
+    boardElement.addEventListener('touchstart', handleTouchStart, { passive: false });
+    boardElement.addEventListener('touchmove', handleTouchMove, { passive: false });
+    boardElement.addEventListener('touchend', handleTouchEnd, { passive: false });
+}
+
+// 处理触摸开始
+function handleTouchStart(e) {
+    if (gameState.isAnimating) return;
+
+    // 阻止默认行为
+    e.preventDefault();
+
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+
+    // 获取触摸位置的瓦片
+    const target = document.elementFromPoint(touchStartX, touchStartY);
+    if (target && target.classList.contains('tile')) {
+        touchStartTile = target;
+        touchStartRow = parseInt(target.dataset.row);
+        touchStartCol = parseInt(target.dataset.col);
+
+        // 选中该瓦片（模拟点击选中效果）
+        if (gameState.selectedTile) {
+            gameState.selectedTile.element.classList.remove('selected');
+        }
+        gameState.selectedTile = { row: touchStartRow, col: touchStartCol, element: target };
+        target.classList.add('selected');
+    }
+}
+
+// 处理触摸移动
+function handleTouchMove(e) {
+    if (!touchStartTile) return;
+
+    // 阻止默认滚动行为
+    e.preventDefault();
+}
+
+// 处理触摸结束
+function handleTouchEnd(e) {
+    if (!touchStartTile || touchStartRow === null || touchStartCol === null) {
+        clearTouchState();
+        return;
+    }
+
+    const touch = e.changedTouches[0];
+    const endX = touch.clientX;
+    const endY = touch.clientY;
+
+    // 计算拖动方向
+    const direction = getSwipeDirection(touchStartX, touchStartY, endX, endY);
+
+    if (direction) {
+        // 根据方向确定目标瓦片位置
+        let targetRow = touchStartRow;
+        let targetCol = touchStartCol;
+
+        switch (direction) {
+            case 'up':
+                targetRow = touchStartRow - 1;
+                break;
+            case 'down':
+                targetRow = touchStartRow + 1;
+                break;
+            case 'left':
+                targetCol = touchStartCol - 1;
+                break;
+            case 'right':
+                targetCol = touchStartCol + 1;
+                break;
+        }
+
+        // 检查是否在有效范围内
+        if (targetRow >= 0 && targetRow < CONFIG.gridSize &&
+            targetCol >= 0 && targetCol < CONFIG.gridSize) {
+            // 取消选中状态
+            if (gameState.selectedTile) {
+                gameState.selectedTile.element.classList.remove('selected');
+                gameState.selectedTile = null;
+            }
+
+            // 执行交换
+            swapTiles(touchStartRow, touchStartCol, targetRow, targetCol);
+        }
+    }
+
+    clearTouchState();
+}
+
+// 获取滑动方向
+function getSwipeDirection(startX, startY, endX, endY) {
+    const dx = endX - startX;
+    const dy = endY - startY;
+    const minSwipe = 30; // 最小拖动距离
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+        // 水平拖动
+        if (Math.abs(dx) > minSwipe) {
+            return dx > 0 ? 'right' : 'left';
+        }
+    } else {
+        // 垂直拖动
+        if (Math.abs(dy) > minSwipe) {
+            return dy > 0 ? 'down' : 'up';
+        }
+    }
+    return null;
+}
+
+// 清除触摸状态
+function clearTouchState() {
+    touchStartX = 0;
+    touchStartY = 0;
+    touchStartTile = null;
+    touchStartRow = null;
+    touchStartCol = null;
+}
+
 // 事件监听
 document.getElementById('start-btn').addEventListener('click', startGame);
 document.getElementById('next-level-btn').addEventListener('click', nextLevel);
@@ -1036,6 +1166,9 @@ document.getElementById('retry-btn').addEventListener('click', resetLevel);
 document.getElementById('replay-btn').addEventListener('click', restartGame);
 document.getElementById('restart-btn').addEventListener('click', resetLevel);
 document.getElementById('hint-btn').addEventListener('click', showHint);
+
+// 初始化触摸事件
+initTouchEvents();
 
 // 启动游戏
 init();

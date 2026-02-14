@@ -820,6 +820,13 @@ body::before {
     }
 }
 
+/* 拖动选中样式 */
+.tile.dragging {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    z-index: 10;
+}
+
 /* 打乱动画 */
 .tile.shuffling {
     animation: shuffle 0.3s ease;
