@@ -1036,12 +1036,29 @@ let touchStartTile = null;
 let touchStartRow = null;
 let touchStartCol = null;
 
+// 拖动状态变量
+let isDragging = false;
+let currentDragOffset = { x: 0, y: 0 };
+let draggedTile = null;      // 当前拖动的瓦片元素
+let adjacentTile = null;     // 相邻瓦片元素
+let dragDirection = null;     // 拖动方向
+let tileSize = 0;             // 瓦片大小
+let touchStartTime = 0;       // 触摸开始时间，用于区分点击和拖动
+
 // 初始化触摸事件
 function initTouchEvents() {
     const boardElement = elements.gameBoard;
     boardElement.addEventListener('touchstart', handleTouchStart, { passive: false });
     boardElement.addEventListener('touchmove', handleTouchMove, { passive: false });
     boardElement.addEventListener('touchend', handleTouchEnd, { passive: false });
+    boardElement.addEventListener('touchcancel', handleTouchCancel, { passive: false });
+}
+
+// 处理触摸取消
+function handleTouchCancel(e) {
+    // 重置瓦片位置并清除状态
+    resetTilePosition();
+    clearTouchState();
 }
 
 // 处理触摸开始
@@ -1054,6 +1071,7 @@ function handleTouchStart(e) {
     const touch = e.touches[0];
     touchStartX = touch.clientX;
     touchStartY = touch.clientY;
+    touchStartTime = Date.now();
 
     // 获取触摸位置的瓦片
     const target = document.elementFromPoint(touchStartX, touchStartY);
@@ -1061,6 +1079,17 @@ function handleTouchStart(e) {
         touchStartTile = target;
         touchStartRow = parseInt(target.dataset.row);
         touchStartCol = parseInt(target.dataset.col);
+
+        // 计算瓦片大小
+        const boardRect = elements.gameBoard.getBoundingClientRect();
+        tileSize = boardRect.width / CONFIG.gridSize;
+
+        // 初始化拖动状态
+        isDragging = false;
+        dragDirection = null;
+        draggedTile = target;
+        adjacentTile = null;
+        currentDragOffset = { x: 0, y: 0 };
 
         // 选中该瓦片（模拟点击选中效果）
         if (gameState.selectedTile) {
@@ -1073,10 +1102,82 @@ function handleTouchStart(e) {
 
 // 处理触摸移动
 function handleTouchMove(e) {
-    if (!touchStartTile) return;
+    if (!touchStartTile || !draggedTile) return;
 
     // 阻止默认滚动行为
     e.preventDefault();
+
+    const touch = e.touches[0];
+    const dx = touch.clientX - touchStartX;
+    const dy = touch.clientY - touchStartY;
+
+    // 最小拖动距离才认为是开始拖动
+    const minDragDistance = 10;
+    if (!isDragging && (Math.abs(dx) > minDragDistance || Math.abs(dy) > minDragDistance)) {
+        isDragging = true;
+        // 确定拖动方向
+        if (Math.abs(dx) > Math.abs(dy)) {
+            dragDirection = dx > 0 ? 'right' : 'left';
+        } else {
+            dragDirection = dy > 0 ? 'down' : 'up';
+        }
+
+        // 确定相邻瓦片
+        adjacentTile = findAdjacentTile(touchStartRow, touchStartCol, dragDirection);
+    }
+
+    if (!isDragging) return;
+
+    // 限制偏移量在合理范围内
+    const maxOffset = tileSize * 0.6; // 最大偏移 60%
+    const clampedX = Math.max(-maxOffset, Math.min(maxOffset, dx));
+    const clampedY = Math.max(-maxOffset, Math.min(maxOffset, dy));
+
+    // 记录当前偏移
+    currentDragOffset = { x: clampedX, y: clampedY };
+
+    // 根据主要方向，只允许一个方向偏移
+    if (Math.abs(dx) > Math.abs(dy)) {
+        draggedTile.style.transform = `translate(${clampedX}px, 0)`;
+        if (adjacentTile) {
+            adjacentTile.style.transform = `translate(${-clampedX}px, 0)`;
+        }
+    } else {
+        draggedTile.style.transform = `translate(0, ${clampedY}px)`;
+        if (adjacentTile) {
+            adjacentTile.style.transform = `translate(0, ${-clampedY}px)`;
+        }
+    }
+}
+
+// 查找相邻瓦片
+function findAdjacentTile(row, col, direction) {
+    let targetRow = row;
+    let targetCol = col;
+
+    switch (direction) {
+        case 'up':
+            targetRow = row - 1;
+            break;
+        case 'down':
+            targetRow = row + 1;
+            break;
+        case 'left':
+            targetCol = col - 1;
+            break;
+        case 'right':
+            targetCol = col + 1;
+            break;
+    }
+
+    // 检查边界
+    if (targetRow < 0 || targetRow >= CONFIG.gridSize ||
+        targetCol < 0 || targetCol >= CONFIG.gridSize) {
+        return null;
+    }
+
+    const tiles = document.querySelectorAll('.tile');
+    return tiles[targetRow * CONFIG.gridSize + targetCol];
 }
 
 // 处理触摸结束
@@ -1090,15 +1191,22 @@ function handleTouchEnd(e) {
     const endX = touch.clientX;
     const endY = touch.clientY;
 
-    // 计算拖动方向
-    const direction = getSwipeDirection(touchStartX, touchStartY, endX, endY);
+    // 计算拖动距离
+    const dx = endX - touchStartX;
+    const dy = endY - touchStartY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const swapThreshold = 30; // 交换阈值，超过这个距离才执行交换
 
-    if (direction) {
+    // 重置瓦片位置（清除 transform）
+    resetTilePosition();
+
+    // 如果有拖动且距离超过阈值
+    if (isDragging && dragDirection && distance >= swapThreshold) {
         // 根据方向确定目标瓦片位置
         let targetRow = touchStartRow;
         let targetCol = touchStartCol;
 
-        switch (direction) {
+        switch (dragDirection) {
             case 'up':
                 targetRow = touchStartRow - 1;
                 break;
@@ -1124,10 +1232,24 @@ function handleTouchEnd(e) {
 
             // 执行交换
             swapTiles(touchStartRow, touchStartCol, targetRow, targetCol);
+        } else {
+            // 边界情况：无法向边界方向拖动
+            clearTouchState();
         }
+    } else {
+        // 距离不足，视为点击操作，不做交换
+        clearTouchState();
     }
+}
 
-    clearTouchState();
+// 重置瓦片位置
+function resetTilePosition() {
+    if (draggedTile) {
+        draggedTile.style.transform = '';
+    }
+    if (adjacentTile) {
+        adjacentTile.style.transform = '';
+    }
 }
 
 // 获取滑动方向
@@ -1157,6 +1279,13 @@ function clearTouchState() {
     touchStartTile = null;
     touchStartRow = null;
     touchStartCol = null;
+    // 清除拖动状态
+    isDragging = false;
+    currentDragOffset = { x: 0, y: 0 };
+    draggedTile = null;
+    adjacentTile = null;
+    dragDirection = null;
+    touchStartTime = 0;
 }
 
 // 事件监听
