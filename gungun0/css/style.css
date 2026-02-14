@@ -440,8 +440,10 @@ body {
 /* 响应式设计 */
 @media (max-width: 400px) {
     .game-board {
-        width: 280px;
-        height: 280px;
+        width: 85vw;
+        height: 85vw;
+        max-width: 340px;
+        max-height: 340px;
     }
 
     .tile {
@@ -463,6 +465,14 @@ body {
     .love-letter p {
         font-size: 0.9rem;
     }
+
+    .game-header {
+        max-width: 85vw;
+    }
+
+    .game-footer {
+        max-width: 85vw;
+    }
 }
 
 /* 触摸优化：小屏幕游戏板自适应 */
@@ -470,12 +480,12 @@ body {
     .game-board {
         width: 90vw;
         height: 90vw;
-        max-width: 300px;
-        max-height: 300px;
+        max-width: 320px;
+        max-height: 320px;
     }
 
     .tile {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
     }
 
     .btn {
@@ -497,6 +507,28 @@ body {
     }
 
     .valentine-text {
+        font-size: 1.2rem;
+    }
+
+    .game-header {
+        max-width: 90vw;
+    }
+
+    .game-footer {
+        max-width: 90vw;
+    }
+}
+
+/* 更小屏幕进一步调整 */
+@media (max-width: 320px) {
+    .game-board {
+        width: 92vw;
+        height: 92vw;
+        max-width: 300px;
+        max-height: 300px;
+    }
+
+    .tile {
         font-size: 1.2rem;
     }
 }
