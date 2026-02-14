@@ -3,6 +3,13 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    /* 触摸优化：禁用点击高亮背景色 */
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    /* 触摸优化：禁用页面双击缩放 */
+    touch-action: manipulation;
 }
 
 body {
@@ -13,6 +20,9 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    /* 触摸优化：禁用文本选择 */
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 /* 屏幕通用样式 */
@@ -151,6 +161,11 @@ body {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* 触摸反馈：按钮按下时缩小效果 */
+.btn:active {
+    transform: scale(0.95);
+}
+
 .btn-small {
     padding: 10px 25px;
     font-size: 1rem;
@@ -165,6 +180,11 @@ body {
 .btn-small:hover {
     background: #fff;
     transform: scale(1.05);
+}
+
+/* 触摸反馈：小按钮按下时缩小效果 */
+.btn-small:active {
+    transform: scale(0.95);
 }
 
 /* 游戏界面 */
@@ -222,6 +242,7 @@ body {
     cursor: pointer;
     transition: all 0.15s ease;
     user-select: none;
+    -webkit-user-select: none;
 }
 
 .tile:hover {
@@ -229,10 +250,16 @@ body {
     z-index: 10;
 }
 
+/* 触摸反馈：瓦片触摸时放大效果 */
+.tile:active {
+    transform: scale(1.1);
+}
+
 .tile.selected {
     background: #ffd700;
     box-shadow: 0 0 15px #ffd700;
     transform: scale(1.1);
+    transition: all 0.2s ease;
 }
 
 .tile.matched {
@@ -435,6 +462,42 @@ body {
 
     .love-letter p {
         font-size: 0.9rem;
+    }
+}
+
+/* 触摸优化：小屏幕游戏板自适应 */
+@media (max-width: 360px) {
+    .game-board {
+        width: 90vw;
+        height: 90vw;
+        max-width: 300px;
+        max-height: 300px;
+    }
+
+    .tile {
+        font-size: 1.3rem;
+    }
+
+    .btn {
+        padding: 12px 35px;
+        font-size: 1.1rem;
+    }
+
+    .btn-small {
+        padding: 8px 20px;
+        font-size: 0.9rem;
+    }
+
+    .game-title {
+        font-size: 2rem;
+    }
+
+    .player-name {
+        font-size: 2rem;
+    }
+
+    .valentine-text {
+        font-size: 1.2rem;
     }
 }
 
