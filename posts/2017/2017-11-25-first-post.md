@@ -1,7 +1,8 @@
-{:title "Hello World"
- :layout :post
-; :tags  ["cryogen"]
- :toc true}
+---
+title: "Hello World"
+layout: post
+toc: true
+---
 
 # Hello World
 

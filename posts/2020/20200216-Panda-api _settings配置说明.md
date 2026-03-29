@@ -1,8 +1,8 @@
-{
-    :title "Panda Api _settings配置说明"
-    :post-date "2020-02-16 14:21"
-    :slug "panda_api_settings"
-}
+---
+title: "Panda Api _settings配置说明"
+post-date: "2020-02-16 14:21"
+slug: "panda_api_settings"
+---
 
 Panda Api `_settings.json5` 文件包含了所有的基础设置.
 

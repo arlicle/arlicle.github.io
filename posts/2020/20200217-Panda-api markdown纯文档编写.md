@@ -1,8 +1,8 @@
-{
-    :post-date "2020-02-17 23:31"
-    :slug "panda_api_markdown_docs"
-    :title "Panda Api纯文档编写和多级菜单目录文档"
-}
+---
+post-date: "2020-02-17 23:31"
+slug: "panda_api_markdown_docs"
+title: "Panda Api纯文档编写和多级菜单目录文档"
+---
 
 除了用json5编写接口文档，Panda Api还支持像微信公众号接口文档一样的纯文档编写, 例如 [https://developers.weixin.qq.com/doc/offiaccount/Getting_Started/Overview.html](https://developers.weixin.qq.com/doc/offiaccount/Getting_Started/Overview.html) 中的 `开发前必读` 的子菜单： 首页、更新日志、开发着规范、接口权限说明、全局返回码说明、入门指引 都是纯文档的，`开始开发`的子菜单：接入指南、接口域名说明、接口测试账号申请、报警排查指引也都是纯文档的。
 

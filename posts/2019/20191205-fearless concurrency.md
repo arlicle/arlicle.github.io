@@ -1,7 +1,7 @@
-{
-    :title "无畏并发"
-    :post-date "2019-12-15 12:49"
-}
+---
+title: "无畏并发"
+post-date: "2019-12-15 12:49"
+---
 
 并发编程（Concurrent programming），代表程序的不同部分相互独立的执行
 

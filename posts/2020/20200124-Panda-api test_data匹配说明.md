@@ -1,7 +1,7 @@
-{
-    :post-date "2020-01-27 10:18"
-    :slug "panda-api-test_data"
-}
+---
+post-date: "2020-01-27 10:18"
+slug: "panda-api-test_data"
+---
 
 
 Panda api中， test_data是一个非常非常重要的设计，可以方便前端进行各种情况的测试。

@@ -1,7 +1,9 @@
-{:title "吴老师的创业课笔记"
- :layout :post
- :tags  ["debugmyself", "吴老师"]
- :toc false}
+---
+title: "吴老师的创业课笔记"
+layout: post
+tags: ["debugmyself", "吴老师"]
+toc: false
+---
 
 别人讲话的时候要听完，不要打断，即便是错了，也要让他讲完，这样才能有一个更有针对性的回应
 

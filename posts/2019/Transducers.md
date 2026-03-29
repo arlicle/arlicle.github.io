@@ -1,6 +1,6 @@
-{
-    :post-date "2019-1-12 09:37"
-}
+---
+post-date: "2019-1-12 09:37"
+---
 
 Transducers是一些组合起来的算法转换，它是把数据的输入输出转换从数据结构解耦的一种方法。解耦之后这些数据就可以自由的重用和组合。可以用于不同的数据流处理：collections, streams,  channels, observables.
 

@@ -1,7 +1,9 @@
-{:title "禅者的初心 读书笔记一"
-:layout :post
-:tags ["Meditation"]
-:toc false}
+---
+title: "禅者的初心 读书笔记一"
+layout: post
+tags: ["Meditation"]
+toc: false
+---
 
 # 禅者的初心
 

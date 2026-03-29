@@ -1,6 +1,6 @@
-{
-    :post-date "2020-01-18 10:42"
-}
+---
+post-date: "2020-01-18 10:42"
+---
 
 到这个地址[https://github.com/arlicle/panda-api/releases/latest](https://github.com/arlicle/panda-api/releases/latest) 下载Windows版的panda-api安装包，解压搜到自己需要的目录
 ，然后点击`install.bat`进行安装。

@@ -1,7 +1,7 @@
-{
-    :title "学习使用IntelliJ IDEA开发clojure"
-    :slug "IntelliJ IDEA with clojure"
-}
+---
+title: "学习使用IntelliJ IDEA开发clojure"
+slug: "IntelliJ IDEA with clojure"
+---
 
 IDEA 全称 IntelliJ IDEA，是java语言开发的集成环境，传说IntelliJ在业界被公认为最好的java开发工具之一。
 

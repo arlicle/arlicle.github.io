@@ -1,6 +1,8 @@
-{:title "The second test"
- :layout :post
- :toc false}
+---
+title: "The second test"
+layout: post
+toc: false
+---
 
 # 哈哈
 

@@ -1,7 +1,9 @@
-{:title "感知机"
- :layout :post
- :tags ["MachineLearning"]
- :toc false}
+---
+title: "感知机"
+layout: post
+tags: ["MachineLearning"]
+toc: false
+---
 
  ## 感知机
 

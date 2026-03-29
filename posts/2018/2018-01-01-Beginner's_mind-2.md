@@ -1,7 +1,9 @@
-{:title "禅者的初心 读书笔记二"
- :layout :post
- :tags ["Meditation"]
- :toc false}
+---
+title: "禅者的初心 读书笔记二"
+layout: post
+tags: ["Meditation"]
+toc: false
+---
 
 ## 在修行的道路上
 

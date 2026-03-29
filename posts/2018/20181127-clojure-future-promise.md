@@ -1,6 +1,6 @@
-{
-  :title "future and promise in clojure"
-}
+---
+title: "future and promise in clojure"
+---
 
 ## future
 

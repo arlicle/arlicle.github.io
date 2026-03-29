@@ -1,7 +1,9 @@
-{:title "sigmoid神经元"
- :layout :post
- :tags ["MachineLearning"]
- :toc false}
+---
+title: "sigmoid神经元"
+layout: post
+tags: ["MachineLearning"]
+toc: false
+---
 
  ## sigmoid神经元
 

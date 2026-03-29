@@ -1,6 +1,6 @@
-{
-    :title "数据库连接的left join, right join, inner join"
-}
+---
+title: "数据库连接的left join, right join, inner join"
+---
 
 说来很惭愧，一直在用数据库，用各种数据库，但是一直用的是 orm，却几乎从不了解具体的 sql 语句 😂。
 

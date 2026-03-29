@@ -1,7 +1,9 @@
-{:title "新的英文单词"
- :layout :post
- :tags ["english learn"]
- :toc false}
+---
+title: "新的英文单词"
+layout: post
+tags: ["english learn"]
+toc: false
+---
 
 forged 伪造; 锻造( forge的过去式和过去分词 ); 艰苦干成; 努力加强;
 

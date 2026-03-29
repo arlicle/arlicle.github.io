@@ -1,7 +1,7 @@
-{
-    :title "Mysql学习一"
-    :post-date "2019-1-19 14:32"
-}
+---
+title: "Mysql学习一"
+post-date: "2019-1-19 14:32"
+---
 
 MySQL分为Server层和存储引擎层两部分
 

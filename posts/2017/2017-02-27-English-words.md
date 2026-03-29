@@ -1,6 +1,8 @@
-{:title "新学习的英文单词"
- :layout :post
- :toc false}
+---
+title: "新学习的英文单词"
+layout: post
+toc: false
+---
 
 fancy 幻想
 

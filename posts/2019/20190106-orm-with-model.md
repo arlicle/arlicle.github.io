@@ -1,6 +1,6 @@
-{
-    :title "一个更好用的Clojure ORM库"
-}
+---
+title: "一个更好用的Clojure ORM库"
+---
 
 如果你使用过 Django，你会享受在Django model ORM中。
 

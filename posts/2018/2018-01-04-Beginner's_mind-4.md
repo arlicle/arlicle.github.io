@@ -1,7 +1,9 @@
-{:title "禅者的初心 读书笔记四"
- :layout :post
- :tags ["Meditation"]
- :toc false}
+---
+title: "禅者的初心 读书笔记四"
+layout: post
+tags: ["Meditation"]
+toc: false
+---
 
 # 坐禅不是为了开悟
 

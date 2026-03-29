@@ -1,7 +1,9 @@
-{:title "新的英文单词"
- :layout :post
- :tags ["english learn"]
- :toc false}
+---
+title: "新的英文单词"
+layout: post
+tags: ["english learn"]
+toc: false
+---
 
 assertion ： 断言
 

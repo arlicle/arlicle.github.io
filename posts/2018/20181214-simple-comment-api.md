@@ -1,7 +1,7 @@
-{
-    :title "评论系统接口文档"
-    :draft false
-}
+---
+title: "评论系统接口文档"
+draft: false
+---
 
 ## 接口地址
 https://comment.debugmyself.com
@@ -29,7 +29,6 @@ window.wx_errcode=`408`;window.wx_code=`wx_code`;
 `408` 这里表示返回扫码结果的状态嘛，`wx_code`表示获取到的权限code
 
 返回结果格式为
-
 
 
 
@@ -68,11 +67,11 @@ window.wx_errcode=`408`;window.wx_code=`wx_code`;
 
 GET /user/data/wechat  `无需登录`
 
-参数           
+参数
 ```.language-javascript
 {
     "code" : wx_code // wx_code为从微信获得的code
-} 
+}
 ```
 返回结果
 {:nickname "xx" :avatar "xxx" :token "xxx}
