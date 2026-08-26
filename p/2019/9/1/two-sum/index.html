@@ -3,151 +3,182 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>1. 两数之和 - leetcode刷题 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">1. 两数之和 - leetcode刷题</h1>
-
-
-
-
-            <h3>题目</h3><p>给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。 </p><p>你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素。</p><h3>示例</h3><p>给定 nums = [2, 7, 11, 15], target = 9<br /></p><p>因为 nums[0] + nums[1] = 2 + 7 = 9<br /> 所以返回 [0, 1]<br /></p><p><code>题型归类: vec, 循环, HashMap</code></p><h3>思路一</h3><p>使用循环，拿第一个数，然后开始分别与第二个数，第三个数相加...第n个相加，如果和等于target，那么就返回结果。如果不等，那么开始第二次循环，第二个数，分别与第三，第四个数...第n个相加，依次类推。</p><pre><code class=".lang-rust">// 代码实现
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">1. 两数之和 - leetcode刷题</h1>
+  <p>###题目</p>
+<p>给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。</p>
+<p>你可以假设每种输入只会对应一个答案。但是，你不能重复利用这个数组中同样的元素。</p>
+<p>###示例</p>
+<p>给定 nums = [2, 7, 11, 15], target = 9</p>
+<p>因为 nums[0] + nums[1] = 2 + 7 = 9<br />
+所以返回 [0, 1]</p>
+<p><code>题型归类: vec, 循环, HashMap</code></p>
+<p>###思路一</p>
+<p>使用循环，拿第一个数，然后开始分别与第二个数，第三个数相加...第n个相加，如果和等于target，那么就返回结果。如果不等，那么开始第二次循环，第二个数，分别与第三，第四个数...第n个相加，依次类推。</p>
+<pre><code class="language-.lang-rust">// 代码实现
 impl Solution {
-    pub fn two&#95;sum3&#40;mut nums: Vec&lt;i32&gt;, target: i32&#41; -&gt; Vec&lt;i32&gt; {
+    pub fn two_sum3(mut nums: Vec&lt;i32&gt;, target: i32) -&gt; Vec&lt;i32&gt; {
         let mut index = 0; // 记录最外层循环的index
-        let length = nums.len&#40;&#41; as i32;
-        // 使用nums.pop&#40;&#41;，这样nums就缩短了，查找的时候就少了一次循环
-        while let Some&#40;i&#41; = nums.pop&#40;&#41; {
-            for &#40;index2, i2&#41; in nums.iter&#40;&#41;.enumerate&#40;&#41; {
-                if &#40;i+&#42;i2&#41; == target {
+        let length = nums.len() as i32;
+        // 使用nums.pop()，这样nums就缩短了，查找的时候就少了一次循环
+        while let Some(i) = nums.pop() {
+            for (index2, i2) in nums.iter().enumerate() {
+                if (i+*i2) == target {
                     // length - index -1 获得第二个循环中渠道的数字 在原始nums中的index
-                    return vec!&#91;index2 as i32, length-index-1&#93;;
+                    return vec![index2 as i32, length-index-1];
                 }
             }
             index += 1;
         }
-        vec!&#91;0&#93;
+        vec![0]
     }
 }
 
 
 
-#&#91;cfg&#40;test&#41;&#93;
+#[cfg(test)]
 mod tests {
     use crate::Solution;
 
-    #&#91;test&#93;
-    pub fn add&#95;two&#95;numbers&#95;test&#40;&#41; {
-        assert&#95;eq!&#40;vec!&#91;1, 2&#93;, Solution::two&#95;sum&#40;vec!&#91;5, 7, 2&#93;, 9&#41;&#41;;
-        assert&#95;eq!&#40;vec!&#91;0, 2&#93;, Solution::two&#95;sum&#40;vec!&#91;5, 7, 5, 2&#93;, 10&#41;&#41;;
-        assert&#95;eq!&#40;vec!&#91;2, 3&#93;, Solution::two&#95;sum&#40;vec!&#91;1, 2, 3, 4&#93;, 7&#41;&#41;;
+    #[test]
+    pub fn add_two_numbers_test() {
+        assert_eq!(vec![1, 2], Solution::two_sum(vec![5, 7, 2], 9));
+        assert_eq!(vec![0, 2], Solution::two_sum(vec![5, 7, 5, 2], 10));
+        assert_eq!(vec![2, 3], Solution::two_sum(vec![1, 2, 3, 4], 7));
     }
 }
 
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 28 ms , 在所有 Rust 提交中击败了 44.75% 的用户 <br /> 内存消耗 : 2 MB , 在所有 Rust 提交中击败了 100.00% 的用户 </p></blockquote><p>这么做思路简单清晰，内存消耗低，但是不好就是会进行很多次循环，如果数组很长，那么就会随着数组长度变长，时间消耗就会成倍增加，效率不是那么高。这个算法中，需要进行的循环次数为n的阶乘次，即 $ n!=n * (n-1) ,  n! = n^2 - n $ 即，算法复杂度为$O(n^2)$， 因此需要想一个新的思路，只用一次循环，把算法复杂度变为$O(n)$。</p><h3>优化后的思路二</h3><p>只用一次循环，用target与每次的数字相减得到结果A，然后查找剩余数字里面有没有A这个数字, 引入HashMap来查找有没有相减结果A，没有找到的时候，就把数字放入HashMap然后继续找，如果找到了就返回结果。</p><pre><code class=".lang-rust">// 代码实现
+</code></pre>
+<h4>leetcode执行结果</h4>
+<blockquote>
+<p>执行用时 : 28 ms , 在所有 Rust 提交中击败了 44.75% 的用户<br />
+内存消耗 : 2 MB , 在所有 Rust 提交中击败了 100.00% 的用户</p>
+</blockquote>
+<p>这么做思路简单清晰，内存消耗低，但是不好就是会进行很多次循环，如果数组很长，那么就会随着数组长度变长，时间消耗就会成倍增加，效率不是那么高。这个算法中，需要进行的循环次数为n的阶乘次，即
+$ n!=n * (n-1) ,
+n! = n^2 - n $
+即，算法复杂度为$O(n^2)$，
+因此需要想一个新的思路，只用一次循环，把算法复杂度变为$O(n)$。</p>
+<h3>优化后的思路二</h3>
+<p>只用一次循环，用target与每次的数字相减得到结果A，然后查找剩余数字里面有没有A这个数字, 引入HashMap来查找有没有相减结果A，没有找到的时候，就把数字放入HashMap然后继续找，如果找到了就返回结果。</p>
+<pre><code class="language-.lang-rust">// 代码实现
 use std::collections::HashMap;
 impl Solution {
-    pub fn two&#95;sum&#40;nums: Vec&lt;i32&gt;, target: i32&#41; -&gt; Vec&lt;i32&gt; {
-        let mut data = HashMap::new&#40;&#41;;
-        for &#40;index, n&#41; in nums.iter&#40;&#41;.enumerate&#40;&#41; {
-            match data.get&#40;&amp;&#40;target - &#42;n&#41;&#41; {
-                None =&gt; data.insert&#40;n, index&#41;,
-                Some&#40;index2&#41; =&gt; return vec!&#91;&#42;index2 as i32, index as i32&#93;
+    pub fn two_sum(nums: Vec&lt;i32&gt;, target: i32) -&gt; Vec&lt;i32&gt; {
+        let mut data = HashMap::new();
+        for (index, n) in nums.iter().enumerate() {
+            match data.get(&amp;(target - *n)) {
+                None =&gt; data.insert(n, index),
+                Some(index2) =&gt; return vec![*index2 as i32, index as i32]
             };
         }
-        vec!&#91;&#93;
+        vec![]
     }
 }
 
 
 
-#&#91;cfg&#40;test&#41;&#93;
+#[cfg(test)]
 mod tests {
     use crate::Solution;
 
-    #&#91;test&#93;
-    pub fn add&#95;two&#95;numbers&#95;test&#40;&#41; {
-        assert&#95;eq!&#40;vec!&#91;1, 2&#93;, Solution::two&#95;sum&#40;vec!&#91;5, 7, 2&#93;, 9&#41;&#41;;
-        assert&#95;eq!&#40;vec!&#91;0, 2&#93;, Solution::two&#95;sum&#40;vec!&#91;5, 7, 5, 2&#93;, 10&#41;&#41;;
-        assert&#95;eq!&#40;vec!&#91;2, 3&#93;, Solution::two&#95;sum&#40;vec!&#91;1, 2, 3, 4&#93;, 7&#41;&#41;;
+    #[test]
+    pub fn add_two_numbers_test() {
+        assert_eq!(vec![1, 2], Solution::two_sum(vec![5, 7, 2], 9));
+        assert_eq!(vec![0, 2], Solution::two_sum(vec![5, 7, 5, 2], 10));
+        assert_eq!(vec![2, 3], Solution::two_sum(vec![1, 2, 3, 4], 7));
     }
 }
 
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户 <br /> 内存消耗 : 2.7 MB , 在所有 Rust 提交中击败了 61.14% 的用户 <br /></p></blockquote><p>这个思路，只使用一次循环，执行用时缩短为约等于0ms，循环次数为n, 算法复杂度为$O(n)$, 由于引入了HashMap，内存稍微增加了一点。这是划算的，越短的执行时间，就可以支撑越多的用户并发。</p><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/'>两数之和 II - 输入有序数组</a></p><p><a href='https://leetcode-cn.com/problems/two-sum-iii-data-structure-design/'>两数之和 III - 数据结构设计</a></p><p><a href='https://leetcode-cn.com/problems/two-sum-iv-input-is-a-bst/'>两数之和 IV - 输入 BST</a></p>
-            <p class="text-left text-muted">2019-09-02 06:02</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2019/9/1/add-two-numbers/">上一篇: 2. 两数相加</a></div>
-                <div class="col-6 text-right"><a href="/p/2019/8/8/rust/">下一篇:国内Rustcc 源 专属crates.io镜像</a></div>
-            </div>
-        </div>
+</code></pre>
+<h4>leetcode执行结果</h4>
+<blockquote>
+<p>执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户<br />
+内存消耗 : 2.7 MB , 在所有 Rust 提交中击败了 61.14% 的用户</p>
+</blockquote>
+<p>这个思路，只使用一次循环，执行用时缩短为约等于0ms，循环次数为n, 算法复杂度为$O(n)$, 由于引入了HashMap，内存稍微增加了一点。这是划算的，越短的执行时间，就可以支撑越多的用户并发。</p>
+<h3>leetcode相似题型</h3>
+<p><a href="https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/">两数之和 II - 输入有序数组</a></p>
+<p><a href="https://leetcode-cn.com/problems/two-sum-iii-data-structure-design/">两数之和 III - 数据结构设计</a></p>
+<p><a href="https://leetcode-cn.com/problems/two-sum-iv-input-is-a-bst/">两数之和 IV - 输入 BST</a></p>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2019-09-01</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2019/9/2/monotone-increasing-digits/">上一篇: 738. 单调递增的数字</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2019/9/1/add-two-numbers/">下一篇: 2. 两数相加</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2019/9/1/two-sum/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

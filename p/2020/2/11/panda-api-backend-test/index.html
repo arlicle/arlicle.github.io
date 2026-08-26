@@ -3,74 +3,98 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>Panda-api后端接口测试 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">Panda-api后端接口测试</h1>
-
-
-
-
-            <p><code>这个功能还在开发中，欢迎参与讨论和设计</code></p><h3>什么是接口测试？</h3><p>API接口测试是一种作为集成测试的一部分，通过直接控制被测应用的接口（API）来确定是否在功能、业务逻辑、可靠性、性能和安全方面达到预期的软件测试活动。由于 API 都没有 GUI 界面，API 测试都是在通讯层进行的。现在 API 测试在自动化测试中有着很重要的地位，因为 API 一般是应用逻辑的主要接口，同时 GUI 测试在敏捷开发和 DevOps 的快速迭代和频繁变更中很难维护。</p><p>API接口的正确性测试很重要，单独只从前端验证，远远不够，绕过前端太容易了，还需要从接口层面进行验证接口是否正确运行。</p><h3>什么样的接口是正确的接口？</h3><blockquote><p> 我们的程序运行正确 意思的就是：代码按我们期望的那样运行 </p></blockquote><p>所以首先要明确我们的期望是什么？ 明确期望并定义在接口设计文档中。Panda Api本身就是接口文档设计工具，定义好前后端的接口约定，也就是我们期望后端接口按这样的方式返回结果。</p><p>程序运行正确是一个很难证明的事情，后端程序的开发、运行，对于前端来说是一个黑箱。虽然我们的后端程序员经验丰富、能力高强，但并不能保证考虑到所有情况，完全按照约定返回值，不放任何一点错误。为此，Panda Aai天然包含了对后端接口测试的功能。</p><p>例如，我们之前的例子中用户登录接口的部分，这里我们为了例子，稍微完善一些这个接口的设计：<pre><code class=".language-json5">...
-method: &quot;POST&quot;,
-url:&quot;/login/&quot;,
-body&#95;mode:&quot;json&quot;,
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">Panda-api后端接口测试</h1>
+  <p><code>这个功能还在开发中，欢迎参与讨论和设计</code></p>
+<h3>什么是接口测试？</h3>
+<p>API接口测试是一种作为集成测试的一部分，通过直接控制被测应用的接口（API）来确定是否在功能、业务逻辑、可靠性、性能和安全方面达到预期的软件测试活动。由于 API 都没有 GUI 界面，API 测试都是在通讯层进行的。现在 API 测试在自动化测试中有着很重要的地位，因为 API 一般是应用逻辑的主要接口，同时 GUI 测试在敏捷开发和 DevOps 的快速迭代和频繁变更中很难维护。</p>
+<p>API接口的正确性测试很重要，单独只从前端验证，远远不够，绕过前端太容易了，还需要从接口层面进行验证接口是否正确运行。</p>
+<h3>什么样的接口是正确的接口？</h3>
+<blockquote>
+<p>我们的程序运行正确 意思的就是：代码按我们期望的那样运行</p>
+</blockquote>
+<p>所以首先要明确我们的期望是什么？ 明确期望并定义在接口设计文档中。Panda Api本身就是接口文档设计工具，定义好前后端的接口约定，也就是我们期望后端接口按这样的方式返回结果。</p>
+<p>程序运行正确是一个很难证明的事情，后端程序的开发、运行，对于前端来说是一个黑箱。虽然我们的后端程序员经验丰富、能力高强，但并不能保证考虑到所有情况，完全按照约定返回值，不放任何一点错误。为此，Panda Aai天然包含了对后端接口测试的功能。</p>
+<p>例如，我们之前的例子中用户登录接口的部分，这里我们为了例子，稍微完善一些这个接口的设计：</p>
+<pre><code class="language-.language-json5">...
+method: "POST",
+url:"/login/",
+body_mode:"json",
 body:{
-    username:{name:&quot;用户名&quot;, type:&quot;string&quot;, min&#95;length:3, max&#95;length:30},
-    password:{name:&quot;用户登录密码&quot;, min&#95;length:6, max&#95;length:30}
+    username:{name:"用户名", type:"string", min_length:3, max_length:30},
+    password:{name:"用户登录密码", min_length:6, max_length:30}
 },
 response:{
-    code:{name:&quot;返回结果的代码&quot;, type:&quot;int&quot;, desc:&quot;登录成功只返回1&quot;, $enum:&#91;&#91;-1, &quot;失败&quot;&#93;, &#91;1, &quot;成功&quot;&#93;&#93;},
-    msg:{name:&quot;登录成功返回消息&quot;, type:&quot;csentence&quot;, desc:&quot;通常返回都是空&quot;},
-    token:{name:&quot;登录成功返回的用户token&quot;, type:&quot;string&quot;, required:false, length:60}
+    code:{name:"返回结果的代码", type:"int", desc:"登录成功只返回1", $enum:[[-1, "失败"], [1, "成功"]]},
+    msg:{name:"登录成功返回消息", type:"csentence", desc:"通常返回都是空"},
+    token:{name:"登录成功返回的用户token", type:"string", required:false, length:60}
 },
-test&#95;data:&#91;
+test_data:[
     {
-        body:{username:&quot;edison&quot;, password:&quot;123&quot;},
-        response:{code:-1, msg:&quot;密码输入不正确&quot;}
+        body:{username:"edison", password:"123"},
+        response:{code:-1, msg:"密码输入不正确"}
     },
     {
-        body:{username:&quot;lily&quot;, password:&quot;123&quot;},
-        response:{code:-2, msg:&quot;用户名不存在&quot;}
+        body:{username:"lily", password:"123"},
+        response:{code:-2, msg:"用户名不存在"}
     },
     {
-        body:{username:&quot;root&quot;, password:&quot;123&quot;},
-        response:{code:1, msg:&quot;登录成功&quot;, token:{$mock:true, required:true}}
+        body:{username:"root", password:"123"},
+        response:{code:1, msg:"登录成功", token:{$mock:true, required:true}}
     },
     {
-        body:{username:&quot;lily&quot;},
-        response:{code:-1, msg:&quot;密码是必填的&quot;}
+        body:{username:"lily"},
+        response:{code:-1, msg:"密码是必填的"}
     },
     {
-        body:{password:&quot;123&quot;},
-        response:{code:-1, msg:&quot;用户名是必填的&quot;}
+        body:{password:"123"},
+        response:{code:-1, msg:"用户名是必填的"}
     }
-&#93;
+]
 ...
-</code></pre></p><p>我们可以立即执行一次对Panda Api提供的接口测试：(这里假设panda运行在默认的9000端口，如果不是要自己进行修改)<pre><code class=".language-shell">// 对接口 /login/进行测试
+</code></pre>
+<p>我们可以立即执行一次对Panda Api提供的接口测试：(这里假设panda运行在默认的9000端口，如果不是要自己进行修改)</p>
+<pre><code class="language-.language-shell">// 对接口 /login/进行测试
 panda test --server-url http://localhost:9000 -u /login/
 
-request body: Object&#40;{&quot;password&quot;: String&#40;&quot;123&quot;&#41;, &quot;username&quot;: String&#40;&quot;edison&quot;&#41;}&#41;
-response Object&#40;{&quot;code&quot;: Number&#40;-1&#41;, &quot;msg&quot;: String&#40;&quot;密码输入不正确&quot;&#41;}&#41;
-request body: Object&#40;{&quot;password&quot;: String&#40;&quot;123&quot;&#41;, &quot;username&quot;: String&#40;&quot;lily&quot;&#41;}&#41;
-response Object&#40;{&quot;code&quot;: Number&#40;-2&#41;, &quot;msg&quot;: String&#40;&quot;用户名不存在&quot;&#41;}&#41;
-request body: Object&#40;{&quot;password&quot;: String&#40;&quot;123&quot;&#41;, &quot;username&quot;: String&#40;&quot;root&quot;&#41;}&#41;
-response Object&#40;{&quot;code&quot;: Number&#40;1&#41;, &quot;msg&quot;: String&#40;&quot;登录成功&quot;&#41;, &quot;token&quot;: String&#40;&quot;NQtS&#41;ngBz6p49pHBR#rGyklw5KlRWihCCUVYce!IgIyBXHA5Q$KMzV!A&#42;6ql&quot;&#41;}&#41;
-request body: Object&#40;{&quot;username&quot;: String&#40;&quot;lily&quot;&#41;}&#41;
-response Object&#40;{&quot;code&quot;: Number&#40;-1&#41;, &quot;msg&quot;: String&#40;&quot;密码是必填的&quot;&#41;}&#41;
-request body: Object&#40;{&quot;password&quot;: String&#40;&quot;123&quot;&#41;}&#41;
-response Object&#40;{&quot;code&quot;: Number&#40;-1&#41;, &quot;msg&quot;: String&#40;&quot;用户名是必填的&quot;&#41;}&#41;
-</code></pre></p><p>从输出日志可以看到，Panda Api的测试工具自动把<code>test&#95;data</code>里面的数据一条一条的对接口进行了请求，获取返回数据，并打印了出来，如果我们指定的是开发服务器，或者测试服务器，这样一条命令就完成了传统我们需要手工一条一条的操作。</p><p>我们已经在设计了用户登录的接口文档，文档中约定了请求地址<code>/login/</code>、请求方法<code>POST</code>以及数据提交的格式，约定了我们<code>body</code>提交的数据为<code>username</code>和<code>password</code>两个字符串，<code>response</code>中有<code>code</code>、<code>msg</code>和<code>token</code>， Panda Api首先会用<code>test&#95;data</code>里面的数据去请求我们指定开发环境的服务器，把<code>test&#95;data</code>里面的数据<code>body</code>请求，看返回是不是我们期望的<code>response</code>，如果不是，会有响应的错误信息提示出来。然后Panda Api会按照<code>body</code>字段的约定，自动mock数据进行各种数据对接口进行合法数据和不合法数据的检查。例如，请求<code>body</code>数据<code>{username:&quot;edison&quot;, password:&quot;123&quot;}</code>，返回的是不是：<code>{code:-1, msg:&quot;密码输入不正确&quot;}</code>，请求<code>username</code>长度大于30或者小于3，返回数据是不是<code>response</code>中的约定。</p><p>由此可见，如果我们的请求参数的<code>body</code>相关文档信息写的越详细，越清晰，我们浏览文档会获得更准确的信息，让开发更明确，也会让测试的质量变更好。</p><h2>指定数据进行测试</h2><p><code>test&#95;data</code>主要是给前端做模拟后端数据返回的，有的时候我们后端数据和前端会不一样，我们可以写到后端专属的测试数据<code>test&#95;case</code>。</p><p>只要运行期后端接口测试服务，Panda Api就会持续去请求各个接口，监听接口是否按约定返回。无论何时后端对代码进行修改，都可以运行测试来确保接口是否正确。</p><p>Panda Api可以通过命令行或者在线文档的方式完成单个接口 、一个接口文档或者整个系统的接口的测试。</p><h2>mock模糊测试任务</h2><p>根据请求的<code>body</code>、<code>query</code>、<code>form&#95;data</code>等模拟各种请求数据，以及<code>header</code>，完成随机模糊测试任务。 </p><p>mock测试中包含了 数据的边界内测试和边界外测试</p><p>进行mock模糊测试的是时候，Panda Api是根据 <code>response</code>定义的规则，去校验请求返回值是否满足这个规则，来验证返回结果是否正确。</p><h2>编写业务逻辑测试</h2><h3>配置服务器</h3><p>首先，我们需要配置需要测试服务的相关信息，编辑<code>&#95;settings.json5</code>，增加<code>servers</code>信息<pre><code class=".language-json5">// &#95;settings.json5
+request body: Object({"password": String("123"), "username": String("edison")})
+response Object({"code": Number(-1), "msg": String("密码输入不正确")})
+request body: Object({"password": String("123"), "username": String("lily")})
+response Object({"code": Number(-2), "msg": String("用户名不存在")})
+request body: Object({"password": String("123"), "username": String("root")})
+response Object({"code": Number(1), "msg": String("登录成功"), "token": String("NQtS)ngBz6p49pHBR#rGyklw5KlRWihCCUVYce!IgIyBXHA5Q$KMzV!A*6ql")})
+request body: Object({"username": String("lily")})
+response Object({"code": Number(-1), "msg": String("密码是必填的")})
+request body: Object({"password": String("123")})
+response Object({"code": Number(-1), "msg": String("用户名是必填的")})
+</code></pre>
+<p>从输出日志可以看到，Panda Api的测试工具自动把<code>test_data</code>里面的数据一条一条的对接口进行了请求，获取返回数据，并打印了出来，如果我们指定的是开发服务器，或者测试服务器，这样一条命令就完成了传统我们需要手工一条一条的操作。</p>
+<p>我们已经在设计了用户登录的接口文档，文档中约定了请求地址<code>/login/</code>、请求方法<code>POST</code>以及数据提交的格式，约定了我们<code>body</code>提交的数据为<code>username</code>和<code>password</code>两个字符串，<code>response</code>中有<code>code</code>、<code>msg</code>和<code>token</code>，
+Panda Api首先会用<code>test_data</code>里面的数据去请求我们指定开发环境的服务器，把<code>test_data</code>里面的数据<code>body</code>请求，看返回是不是我们期望的<code>response</code>，如果不是，会有响应的错误信息提示出来。然后Panda Api会按照<code>body</code>字段的约定，自动mock数据进行各种数据对接口进行合法数据和不合法数据的检查。例如，请求<code>body</code>数据<code>{username:"edison", password:"123"}</code>，返回的是不是：<code>{code:-1, msg:"密码输入不正确"}</code>，请求<code>username</code>长度大于30或者小于3，返回数据是不是<code>response</code>中的约定。</p>
+<p>由此可见，如果我们的请求参数的<code>body</code>相关文档信息写的越详细，越清晰，我们浏览文档会获得更准确的信息，让开发更明确，也会让测试的质量变更好。</p>
+<h2>指定数据进行测试</h2>
+<p><code>test_data</code>主要是给前端做模拟后端数据返回的，有的时候我们后端数据和前端会不一样，我们可以写到后端专属的测试数据<code>test_case</code>。</p>
+<p>只要运行期后端接口测试服务，Panda Api就会持续去请求各个接口，监听接口是否按约定返回。无论何时后端对代码进行修改，都可以运行测试来确保接口是否正确。</p>
+<p>Panda Api可以通过命令行或者在线文档的方式完成单个接口 、一个接口文档或者整个系统的接口的测试。</p>
+<h2>mock模糊测试任务</h2>
+<p>根据请求的<code>body</code>、<code>query</code>、<code>form_data</code>等模拟各种请求数据，以及<code>header</code>，完成随机模糊测试任务。</p>
+<p>mock测试中包含了 数据的边界内测试和边界外测试</p>
+<p>进行mock模糊测试的是时候，Panda Api是根据 <code>response</code>定义的规则，去校验请求返回值是否满足这个规则，来验证返回结果是否正确。</p>
+<h2>编写业务逻辑测试</h2>
+<h3>配置服务器</h3>
+<p>首先，我们需要配置需要测试服务的相关信息，编辑<code>_settings.json5</code>，增加<code>servers</code>信息</p>
+<pre><code class="language-.language-json5">// _settings.json5
 {
-  project&#95;name: &quot;Panda Api&quot;,
-  project&#95;desc: &quot;Panda Api is a simple api manage tool&quot;,
+  project_name: "Panda Api",
+  project_desc: "Panda Api is a simple api manage tool",
   global: {
     apis: {
       auth:true
@@ -78,17 +102,27 @@ response Object&#40;{&quot;code&quot;: Number&#40;-1&#41;, &quot;msg&quot;: Stri
   },
   servers:{
       dev:{
-          name:&quot;开发服务器&quot;,
-          desc:&quot;&quot;,
-          url:&quot;http://127.0.0.1:9000&quot;,
+          name:"开发服务器",
+          desc:"",
+          url:"http://127.0.0.1:9000",
       },
       pro:{
-          name:&quot;正式服务器&quot;,
-          url:&quot;http://www.b.com&quot;,
+          name:"正式服务器",
+          url:"http://www.b.com",
       }
   }
 }
-</code></pre></p><p>配置<code>servers</code>中，<code>dev</code>和<code>pro</code>表示这个服务器调用的<code>key</code>，可以让我们很方便的在线或者命令行下切换要测试服务器。<code>dev</code>和<code>pro</code>里面的值就是具体的服务器的信息。</p><ul><li><code>name</code> 表示服务器环境名称；</li><li><code>desc</code> 表示备注，可以不要，默认为空；</li><li><code>url</code> 表示服务器的请求地址，如果有端口，也要写到里面  </li></ul><h3>运行测试</h3><p>你可以访问<code>http://localhost:9000</code>访问在线文档，然后在对应接口文档的地方进行测试，也可以在命令行下进行测试。命令行下你可以对整个系统进行测试以及自动化测试。</p><p>以下是Panda Api 在命令行下执行测试的相关用例，更多执行<code>panda test &ndash;help</code>查看：<pre><code class=".language-shell"># 测试dev服务器 单个接口
+</code></pre>
+<p>配置<code>servers</code>中，<code>dev</code>和<code>pro</code>表示这个服务器调用的<code>key</code>，可以让我们很方便的在线或者命令行下切换要测试服务器。<code>dev</code>和<code>pro</code>里面的值就是具体的服务器的信息。</p>
+<ul>
+<li><code>name</code> 表示服务器环境名称；</li>
+<li><code>desc</code> 表示备注，可以不要，默认为空；</li>
+<li><code>url</code> 表示服务器的请求地址，如果有端口，也要写到里面</li>
+</ul>
+<h3>运行测试</h3>
+<p>你可以访问<code>http://localhost:9000</code>访问在线文档，然后在对应接口文档的地方进行测试，也可以在命令行下进行测试。命令行下你可以对整个系统进行测试以及自动化测试。</p>
+<p>以下是Panda Api 在命令行下执行测试的相关用例，更多执行<code>panda test --help</code>查看：</p>
+<pre><code class="language-.language-shell"># 测试dev服务器 单个接口
 panda test -s dev -u /login/
 
 # 测试dev服务器 单个文档接口
@@ -114,92 +148,121 @@ panda test -s dev -d auth.json5 article.json5 -c
 
 # 测试dev服务器 所有接口
 panda test -s dev -A -c
-</code></pre></p><p>如果进行所有接口的一次测试，需要进行<code>auth</code>的<code>token</code>接口获取配置，以及配置好接口测试的顺序；</p><h3>auth 的配置</h3><h3>测试顺序的配置</h3><h3>相关函数</h3><h4>使用Panda Api自身的函数</h4><p>在和后端接口交互的时候，通常会用到一些函数，比如需要把请求参数按照规则 进行签名加密等第三方函数。这些功能函数在很多接口交互厘米，非常关键。<pre><code class=".language-json5">body: {
-    time:{name:&quot;订单时间戳&quot;, type:timestamp},
-    no: {name:&quot;订单号&quot;},
-    product: {name: &quot;商品名称&quot;},
-    sign:{name: &quot;签名&quot;, value:&quot;$sha256&#40;no={$no}&amp;product={$product}&amp;time={$time}&#41;&quot;}
+</code></pre>
+<p>如果进行所有接口的一次测试，需要进行<code>auth</code>的<code>token</code>接口获取配置，以及配置好接口测试的顺序；</p>
+<h3>auth 的配置</h3>
+<h3>测试顺序的配置</h3>
+<h3>相关函数</h3>
+<h4>使用Panda Api自身的函数</h4>
+<p>在和后端接口交互的时候，通常会用到一些函数，比如需要把请求参数按照规则 进行签名加密等第三方函数。这些功能函数在很多接口交互厘米，非常关键。</p>
+<pre><code class="language-.language-json5">body: {
+    time:{name:"订单时间戳", type:timestamp},
+    no: {name:"订单号"},
+    product: {name: "商品名称"},
+    sign:{name: "签名", value:"$sha256(no={$no}&amp;product={$product}&amp;time={$time})"}
 }
-</code></pre></p><h4>调用操作系统本身 或自己写的 功能</h4><p>支持调用系统本身的命令行，形成功能函数，因为有的时候需要本都证书，usb key之类的，Panda Api函数搞不定，就可以使用命令函数，调用本地程序，取回结果。`</p><p>用这个方式，你就可以用<code>python</code>、<code>ruby</code>、<code>js</code>、<code>php</code>等脚本语言，编写自己的功能函数</p><pre><code class=".language-json5">body: {
-    time:{name:&quot;订单时间戳&quot;, type:timestamp},
-    no: {name:&quot;订单号&quot;},
-    product: {name: &quot;商品名称&quot;},
-    sign:{name: &quot;签名&quot;, value:&quot;$command&#40;./sha256.py no={$no}&amp;product={$product}&amp;time={$time}&#41;&quot;}
+</code></pre>
+<h4>调用操作系统本身 或自己写的 功能</h4>
+<p>支持调用系统本身的命令行，形成功能函数，因为有的时候需要本都证书，usb key之类的，Panda Api函数搞不定，就可以使用命令函数，调用本地程序，取回结果。`</p>
+<p>用这个方式，你就可以用<code>python</code>、<code>ruby</code>、<code>js</code>、<code>php</code>等脚本语言，编写自己的功能函数</p>
+<pre><code class="language-.language-json5">body: {
+    time:{name:"订单时间戳", type:timestamp},
+    no: {name:"订单号"},
+    product: {name: "商品名称"},
+    sign:{name: "签名", value:"$command(./sha256.py no={$no}&amp;product={$product}&amp;time={$time})"}
 }
-</code></pre><h4>调用网络接口功能</h4><p>支持调用网络接口，形成功能函数<pre><code class=".language-json5">body: {
-    time:{name:&quot;订单时间戳&quot;, type:timestamp},
-    no: {name:&quot;订单号&quot;},
-    product: {name: &quot;商品名称&quot;},
-    sign:{name: &quot;签名&quot;, value:&quot;$request&#40;&quot;https://www.debugmyself.com/sha256/&quot;, no={$no}&amp;product={$product}&amp;time={$time}&#41;&quot;}
+</code></pre>
+<h4>调用网络接口功能</h4>
+<p>支持调用网络接口，形成功能函数</p>
+<pre><code class="language-.language-json5">body: {
+    time:{name:"订单时间戳", type:timestamp},
+    no: {name:"订单号"},
+    product: {name: "商品名称"},
+    sign:{name: "签名", value:"$request("https://www.debugmyself.com/sha256/", no={$no}&amp;product={$product}&amp;time={$time})"}
 }
-</code></pre></p><h3>测试完成后有测试报告</h3><h3>正在思考</h3><p>如何根据业务逻辑来设计用例？比如： 1、登录失败5次，就需要等待15分钟之后再登录 2、新注册的用户需要过了实习期才能发帖 3、删除帖子扣除积分 4、充值金额后，需要审核，余额才会增加 ...</p><h3>未来可能会做的功能</h3><ul><li>性能测试</li></ul>
-            <p class="text-left text-muted">2020-02-16 06:57</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2020/2/16/panda_api_settings/">上一篇: Panda Api _settings配置说明</a></div>
-                <div class="col-6 text-right"><a href="/p/2020/2/5/json5/">下一篇:Json5 语法说明</a></div>
-            </div>
-        </div>
+</code></pre>
+<h3>测试完成后有测试报告</h3>
+<h3>正在思考</h3>
+<p>如何根据业务逻辑来设计用例？比如：
+1、登录失败5次，就需要等待15分钟之后再登录
+2、新注册的用户需要过了实习期才能发帖
+3、删除帖子扣除积分
+4、充值金额后，需要审核，余额才会增加
+...</p>
+<h3>未来可能会做的功能</h3>
+<ul>
+<li>性能测试</li>
+</ul>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2020-02-11</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2020/2/16/panda_api_settings/">上一篇: Panda Api _settings配置说明</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2020/2/5/json5/">下一篇: Json5 语法说明</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2020/2/11/panda-api-backend-test/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

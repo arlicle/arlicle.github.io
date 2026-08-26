@@ -3,89 +3,98 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>sigmoid神经元 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">sigmoid神经元</h1>
+  <h2>sigmoid神经元</h2>
+<p>机器学习算法如此有意思，但我们该如何为神经网络量身设计一种学习算法呢？</p>
+<p>现在假设有一个由感知机构成的网络，我们想让这个网络学习如何取解决一些问题。举例来说，对于一个以手写数字的扫描图像的原始像素数据作为输入的网络，我们想要这个网络取学习权值（weight）和偏移(biase)，以便最终正确地分类这些数字。我们期望的结果是，这些在权值上的小改变，将会成为网络的输出结果带来相应的改变，且这种改变也必须是轻微的。满足这样的性质才能使学习变得可能。</p>
+<p>如果满足在权值（或偏移）上的小改变只会引起输出上的小幅变化这一性质，那么以此性质为基础，我们就可以改变权值和偏移来使得网络的表现越来越接近我们的预期。例如，假设原始的网络会将一张写着9的手写数字图片错误分类为8，我们可以尝试找到一个正确轻微改变权值和偏移的方法，来使得我们网络的输出更接近于正确答案，将该图片分类为9.重复这个过程，不断地修改权值和偏移并且产生越来越好的结果。这样我们的网路就开始学习起来了。</p>
+<p>但问题在于，事实上，轻微改变网络中任何一个感知机的权值或偏移，有时甚至会导致感知机的输出完全翻转--比如说从0变为1.这个翻转行为可能以某种非常复杂的方式彻底改变网络中其余部分的行为。所以即使现在9被正确分类了，但网络在处理所有其他图片时的行为可能因为一些难以控制的方式被彻底改变了。这导致我们逐步改变权值和偏移来使网络行为更加接近预期的学习方法变得很难实施。</p>
+<p>由此我们引入一种被称为S型(simoid）神经元的新型人工神经元来解决这个问题。sigmoid神经元与感知机有些相似，但做了一些修改使得我们在轻微改变其权值和偏移时只会引起小幅度的输出变化。</p>
+<p>和感知机一样, sigmoid神经元同样有输入x1,x2...,但不同的是，这些输入值不是只能取0或者1，而是可以取0到1间的任意浮点值。所以举例来说0.638对于sigmod神经元就是一个合法输入。同样，sigmod神经元对每个输入也有相应的权值，w1,w2...,以及一个整体的偏移 b。不过sigmod神经元输出不再是0或1，而是$\sigma(w*x+b)$，其中的$\sigma$被称为sigmoid函数(sigmoid function)，该函数定义如下：</p>
+<p>$\sigma(z)=\frac1{1+e^{-z}}$</p>
+<p>所以，sigmoid神经元的输出是关于输入x1,x2...，权值w1,w2...和偏移b的函数：</p>
+<p>$\frac1{1+exp(-\sum_j{w_j}{x_j}-b)}$</p>
+<p>我们假设$z=w<em>x+b$是一个很大的正数，这时$e^{-z}\approx0$且$\sigma(z)\approx1$。也就是说，当$z=w</em>x+b$是一个很大的正数时，sigmoid神经元的输出接近于1，与感知机类似。另一方面，当$z=w<em>x+b$是一个绝对值很大的负数时，$e^{-z}\rightarrow\infty$，且$\sigma(z)\approx0$。所以当z=w</em>x+b是一个绝对值很大的负数时，sigmoid神经元的行为与感知机同样很接近。只有w*x+b是一个不太大的数时，其结果与感知机模型有较大的偏差。</p>
+<p>$\sigma$有时也被称为logistic function，对应这个新型神经元被称为logistic neurons</p>
 
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">sigmoid神经元</h1>
+  <p class="text-left text-muted">2018-01-02</p>
+</div>
 
-
-
-
-            <h2>sigmoid神经元</h2><p>机器学习算法如此有意思，但我们该如何为神经网络量身设计一种学习算法呢？</p><p>现在假设有一个由感知机构成的网络，我们想让这个网络学习如何取解决一些问题。举例来说，对于一个以手写数字的扫描图像的原始像素数据作为输入的网络，我们想要这个网络取学习权值（weight）和偏移(biase)，以便最终正确地分类这些数字。我们期望的结果是，这些在权值上的小改变，将会成为网络的输出结果带来相应的改变，且这种改变也必须是轻微的。满足这样的性质才能使学习变得可能。</p><p>如果满足在权值（或偏移）上的小改变只会引起输出上的小幅变化这一性质，那么以此性质为基础，我们就可以改变权值和偏移来使得网络的表现越来越接近我们的预期。例如，假设原始的网络会将一张写着9的手写数字图片错误分类为8，我们可以尝试找到一个正确轻微改变权值和偏移的方法，来使得我们网络的输出更接近于正确答案，将该图片分类为9.重复这个过程，不断地修改权值和偏移并且产生越来越好的结果。这样我们的网路就开始学习起来了。</p><p>但问题在于，事实上，轻微改变网络中任何一个感知机的权值或偏移，有时甚至会导致感知机的输出完全翻转&ndash;比如说从0变为1.这个翻转行为可能以某种非常复杂的方式彻底改变网络中其余部分的行为。所以即使现在9被正确分类了，但网络在处理所有其他图片时的行为可能因为一些难以控制的方式被彻底改变了。这导致我们逐步改变权值和偏移来使网络行为更加接近预期的学习方法变得很难实施。</p><p>由此我们引入一种被称为S型(simoid）神经元的新型人工神经元来解决这个问题。sigmoid神经元与感知机有些相似，但做了一些修改使得我们在轻微改变其权值和偏移时只会引起小幅度的输出变化。</p><p> 和感知机一样, sigmoid神经元同样有输入x1,x2...,但不同的是，这些输入值不是只能取0或者1，而是可以取0到1间的任意浮点值。所以举例来说0.638对于sigmod神经元就是一个合法输入。同样，sigmod神经元对每个输入也有相应的权值，w1,w2...,以及一个整体的偏移 b。不过sigmod神经元输出不再是0或1，而是$\sigma(w*x+b)$，其中的$\sigma$被称为sigmoid函数(sigmoid function)，该函数定义如下：</p><p> $\sigma(z)=\frac1{1+e^{-z}}$</p><p> 所以，sigmoid神经元的输出是关于输入x1,x2...，权值w1,w2...和偏移b的函数：</p><p> $\frac1{1+exp(-\sum_j{w_j}{x_j}-b)}$</p><p> 我们假设$z=w<em>x+b$是一个很大的正数，这时$e^{-z}\approx0$且$\sigma(z)\approx1$。也就是说，当$z=w</em>x+b$是一个很大的正数时，sigmoid神经元的输出接近于1，与感知机类似。另一方面，当$z=w<em>x+b$是一个绝对值很大的负数时，$e^{-z}\rightarrow\infty$，且$\sigma(z)\approx0$。所以当z=w</em>x+b是一个绝对值很大的负数时，sigmoid神经元的行为与感知机同样很接近。只有w*x+b是一个不太大的数时，其结果与感知机模型有较大的偏差。</p><p> $\sigma$有时也被称为logistic function，对应这个新型神经元被称为logistic neurons</p>
-            <p class="text-left text-muted">2018-04-15 04:56</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2018/1/3/Beginner&#39;s_mind-3/">上一篇: 禅者的初心 读书笔记三</a></div>
-                <div class="col-6 text-right"><a href="/p/2018/1/2/perceptrons/">下一篇:感知机</a></div>
-            </div>
-        </div>
-
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
-
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2018/1/3/Beginner&#x27;s_mind-3/">上一篇: 禅者的初心 读书笔记三</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2018/1/2/perceptrons/">下一篇: 感知机</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2018/1/2/sigmoid-neuron/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

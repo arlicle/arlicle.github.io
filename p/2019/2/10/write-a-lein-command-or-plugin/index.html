@@ -3,27 +3,28 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>写一个Lein的command/plugin/task - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">写一个Lein的command/plugin/task</h1>
-
-
-
-
-            <p><a href='https://github.com/arlicle/laniu'>Laniu</a>需要用到一个lein下的命令，用来执行<code>makemigrations</code>和<code>migrate</code>命令，没有找到相关的中文教程，那么就自己学会了写一个，可以帮助到更多人。</p><p>我希望执行的命令是：<pre><code class=".language-bash">➜ lein makemigrations
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">写一个Lein的command/plugin/task</h1>
+  <p><a href="https://github.com/arlicle/laniu">Laniu</a>需要用到一个lein下的命令，用来执行<code>makemigrations</code>和<code>migrate</code>命令，没有找到相关的中文教程，那么就自己学会了写一个，可以帮助到更多人。</p>
+<p>我希望执行的命令是：</p>
+<pre><code class="language-.language-bash">➜ lein makemigrations
 Hello makemigrations!
 ➜ lein migrate
 Hello migrate
-</code></pre></p><p>新建一个project命名为lein-laniu-task</p><pre><code class=".language-bash">lein new plugin lein-laniu-task
-</code></pre><p>项目结构为：<pre><code class=".language-bash">lein-laniu-task
+</code></pre>
+<p>新建一个project命名为lein-laniu-task</p>
+<pre><code class="language-.language-bash">lein new plugin lein-laniu-task
+</code></pre>
+<p>项目结构为：</p>
+<pre><code class="language-.language-bash">lein-laniu-task
 ├── CHANGELOG.md
 ├── LICENSE
 ├── README.md
@@ -31,116 +32,135 @@ Hello migrate
 ├── project.clj
 ├── src
 │   └── leiningen
-│       └── laniu&#95;task.clj
+│       └── laniu_task.clj
 └── target
     └── classes
-</code></pre></p><p>改写src/leiningen/laniu_task.clj的代码为<pre><code class=".language-clojure">&#40;ns leiningen.laniu-task&#41;
+</code></pre>
+<p>改写src/leiningen/laniu_task.clj的代码为</p>
+<pre><code class="language-.language-clojure">(ns leiningen.laniu-task)
 
-&#40;defn laniu-task
-  &quot;I don't do a lot.&quot;
-  &#91;project &amp; args&#93;
-  &#40;println &quot;Hi! laniu-task&quot;&#41;&#41;
-</code></pre></p><p>创建文件 src/leiningen/makemigrations.clj，代码为：<pre><code class=".language-clojure">&#40;ns leiningen.laniu-task&#41;
+(defn laniu-task
+  "I don't do a lot."
+  [project &amp; args]
+  (println "Hi! laniu-task"))
+</code></pre>
+<p>创建文件 src/leiningen/makemigrations.clj，代码为：</p>
+<pre><code class="language-.language-clojure">(ns leiningen.laniu-task)
 
-&#40;defn laniu-task
-  &quot;I don't do a lot.&quot;
-  &#91;project &amp; args&#93;
-  &#40;println &quot;Hi! laniu-task&quot;&#41;&#41;
-</code></pre></p><p>创建文件 src/leiningen/migrate.clj，代码为：<pre><code class=".language-clojure">&#40;ns leiningen.migrate&#41;
+(defn laniu-task
+  "I don't do a lot."
+  [project &amp; args]
+  (println "Hi! laniu-task"))
+</code></pre>
+<p>创建文件 src/leiningen/migrate.clj，代码为：</p>
+<pre><code class="language-.language-clojure">(ns leiningen.migrate)
 
-&#40;defn migrate
-  &quot;I don't do a lot.&quot;
-  &#91;project &amp; args&#93;
-  &#40;println &quot;Hello migrate!&quot;&#41;&#41;
-</code></pre></p><p>把项目版本从<code>0.1.0-SNAPSHOT</code> 改为 <code>0.1.0</code>, project.clj代码为:<pre><code class=".language-clojure">&#40;defproject lein-laniu-task &quot;0.1.0&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :license {:name &quot;Eclipse Public License&quot;
-            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
-  :eval-in-leiningen true&#41;
-</code></pre></p><p>把项目打包并部署到本地库</p><pre><code class=".language-bash">➜ lein install
+(defn migrate
+  "I don't do a lot."
+  [project &amp; args]
+  (println "Hello migrate!"))
+</code></pre>
+<p>把项目版本从<code>0.1.0-SNAPSHOT</code> 改为 <code>0.1.0</code>, project.clj代码为:</p>
+<pre><code class="language-.language-clojure">(defproject lein-laniu-task "0.1.0"
+  :description "FIXME: write description"
+  :url "http://example.com/FIXME"
+  :license {:name "Eclipse Public License"
+            :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :eval-in-leiningen true)
+</code></pre>
+<p>把项目打包并部署到本地库</p>
+<pre><code class="language-.language-bash">➜ lein install
 Created /&lt;path-to-dir&gt;/lein-laniu-task/target/lein-laniu-task-0.1.0.jar
 Wrote /&lt;path-to-dir&gt;/lein-laniu-task/pom.xml
 Installed jar and pom into local repo.
-</code></pre><p>把[lein-laniu-task "0.1.0"]加入plugins配置<pre><code class=".language-clojure">&#40;defproject lein-laniu-task &quot;0.1.0&quot;
-  :description &quot;FIXME: write description&quot;
-  :url &quot;http://example.com/FIXME&quot;
-  :license {:name &quot;Eclipse Public License&quot;
-            :url &quot;http://www.eclipse.org/legal/epl-v10.html&quot;}
+</code></pre>
+<p>把[lein-laniu-task "0.1.0"]加入plugins配置</p>
+<pre><code class="language-.language-clojure">(defproject lein-laniu-task "0.1.0"
+  :description "FIXME: write description"
+  :url "http://example.com/FIXME"
+  :license {:name "Eclipse Public License"
+            :url "http://www.eclipse.org/legal/epl-v10.html"}
   :eval-in-leiningen true
-  :plugins &#91;&#91;lein-laniu-task &quot;0.1.0&quot;&#93;&#93;&#41;
-</code></pre></p><p>好了，现在可以试一试相关命令了。</p><pre><code class=".language-bash">➜ lein makemigrations
+  :plugins [[lein-laniu-task "0.1.0"]])
+</code></pre>
+<p>好了，现在可以试一试相关命令了。</p>
+<pre><code class="language-.language-bash">➜ lein makemigrations
 Hello makemigrations!
 ➜ lein migrate
 Hello migrate!
-</code></pre><p>完美！接下来继续完成命令的细节任务就好啦。</p><p>如果插件要发布给所有人用的话，就和常规clojure项目一样，发布到clojars就可以了。</p>
-            <p class="text-left text-muted">2019-02-10 10:36</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2019/2/13/The-Clojure-Style-Guide/">上一篇: The Clojure Style Guide</a></div>
-                <div class="col-6 text-right"><a href="/p/2019/1/19/mysql-learn/">下一篇:Mysql学习一</a></div>
-            </div>
-        </div>
+</code></pre>
+<p>完美！接下来继续完成命令的细节任务就好啦。</p>
+<p>如果插件要发布给所有人用的话，就和常规clojure项目一样，发布到clojars就可以了。</p>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2019-02-10</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2019/2/13/The-Clojure-Style-Guide/">上一篇: The Clojure Style Guide</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2019/1/19/mysql-learn/">下一篇: Mysql学习一</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2019/2/10/write-a-lein-command-or-plugin/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

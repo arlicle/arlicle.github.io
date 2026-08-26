@@ -3,89 +3,104 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>232. 用栈实现队列 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">232. 用栈实现队列</h1>
+  <p>###题目</p>
+<p>使用栈实现队列的下列操作：</p>
+<p>. push(x) -- 将一个元素放入队列的尾部。<br />
+. pop() -- 从队列首部移除元素。<br />
+. peek() -- 返回队列首部的元素。<br />
+. empty() -- 返回队列是否为空。</p>
+<p>###示例</p>
+<pre><code class="language-.lang-rust">MyQueue queue = new MyQueue();
 
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">232. 用栈实现队列</h1>
+queue.push(1);
+queue.push(2);  
+queue.peek();  // 返回 1
+queue.pop();   // 返回 1
+queue.empty(); // 返回 false
 
 
-
-
-            <h3>题目</h3><p>使用栈实现队列的下列操作：</p><p>. push(x) &ndash; 将一个元素放入队列的尾部。  <br /> . pop() &ndash; 从队列首部移除元素。  <br /> . peek() &ndash; 返回队列首部的元素。  <br /> . empty() &ndash; 返回队列是否为空。  <br /></p><h3>示例</h3><pre><code class=".lang-rust">MyQueue queue = new MyQueue&#40;&#41;;
-
-queue.push&#40;1&#41;;
-queue.push&#40;2&#41;;  
-queue.peek&#40;&#41;;  // 返回 1
-queue.pop&#40;&#41;;   // 返回 1
-queue.empty&#40;&#41;; // 返回 false
-
-
-</code></pre><p><code>题型归类: Vec, Linked-list</code></p> <h3>思路一</h3><p>使用MyQueue这个struct, 构造一个序列的操作，可以直接使用vec来实现，push可以直接使用，pop有不一样，区别就是vec的pop是弹出末尾的元素，这里要求弹出头元素, 我们可以使用vec的remove方法来替代； peek方法没有，需要自己实现；empty方法直接有is_empty方法了。</p><pre><code class=".lang-rust">// 代码实现
+</code></pre>
+<p><code>题型归类: Vec, Linked-list</code></p>
+<h3>思路一</h3>
+<p>使用MyQueue这个struct, 构造一个序列的操作，可以直接使用vec来实现，push可以直接使用，pop有不一样，区别就是vec的pop是弹出末尾的元素，这里要求弹出头元素, 我们可以使用vec的remove方法来替代； peek方法没有，需要自己实现；empty方法直接有is_empty方法了。</p>
+<pre><code class="language-.lang-rust">// 代码实现
 struct MyQueue {
     stack:Vec&lt;i32&gt;
 }
 
 impl MyQueue {
-    fn new&#40;&#41; -&gt; Self {
+    fn new() -&gt; Self {
         MyQueue {
-            stack: Vec::new&#40;&#41;
+            stack: Vec::new()
         }
     }
 
-    fn push&#40;&amp;mut self, v:i32&#41; {
-        &amp;self.stack.push&#40;v&#41;;
+    fn push(&amp;mut self, v:i32) {
+        &amp;self.stack.push(v);
     }
 
-    fn pop&#40;&amp;mut self&#41; -&gt; i32 {
-        self.stack.remove&#40;0&#41;
+    fn pop(&amp;mut self) -&gt; i32 {
+        self.stack.remove(0)
     }
 
-    fn peek&#40;&amp;self&#41; -&gt; i32 {
-        self.stack&#91;0&#93;
+    fn peek(&amp;self) -&gt; i32 {
+        self.stack[0]
     }
 
-    fn empty&#40;&amp;self&#41; -&gt; bool {
-        self.stack.is&#95;empty&#40;&#41;
+    fn empty(&amp;self) -&gt; bool {
+        self.stack.is_empty()
     }
 }
 
-#&#91;cfg&#40;test&#41;&#93;
+#[cfg(test)]
 mod test {
     use crate::MyQueue;
 
-    pub fn my&#95;queue&#95;test&#40;&#41; {
-        let mut queue = MyQueue::new&#40;&#41;;
-        queue.push&#40;1&#41;;
-        queue.push&#40;2&#41;;
+    pub fn my_queue_test() {
+        let mut queue = MyQueue::new();
+        queue.push(1);
+        queue.push(2);
 
-        assert&#95;eq!&#40;vec!&#91;1,2&#93;, queue.stack&#41;;
-        assert&#95;eq!&#40;1, queue.peek&#40;&#41;&#41;;
-        assert&#95;eq!&#40;2, queue.pop&#40;&#41;&#41;;
-        assert&#95;eq!&#40;false, queue.empty&#40;&#41;&#41;;
-        assert&#95;eq!&#40;vec!&#91;2&#93;, queue.stack&#41;;
+        assert_eq!(vec![1,2], queue.stack);
+        assert_eq!(1, queue.peek());
+        assert_eq!(2, queue.pop());
+        assert_eq!(false, queue.empty());
+        assert_eq!(vec![2], queue.stack);
 
     }
 }
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户  <br /> 内存消耗 : 2.1 MB , 在所有 Rust 提交中击败了 100.00% 的用户 <br /></p></blockquote><p>这个题就是一个简单的队列实现，没有涉及什么算法，就是需要对vec熟悉。我们可以试一试自己用一个struct来实现一个队列，并实现这些方法。</p><h3>思路二</h3><p>使用struct 和Linked-list链表来实现。每次push相当于往末端节点增加，pop就弹出头部节点，更新链表为去掉头部的链表。为了性能，不使用循环去查找节点，我们需要记录链表的尾节点，有length属性，记录链表的长度。因为在链表中，我们每个节点会同时被next和tail持有，所有需要用Rc智能指针，然后用RefCell来修改。</p><pre><code class=".lang-rust">// 代码实现
+</code></pre>
+<h4>leetcode执行结果</h4>
+<blockquote>
+<p>执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户<br />
+内存消耗 : 2.1 MB , 在所有 Rust 提交中击败了 100.00% 的用户</p>
+</blockquote>
+<p>这个题就是一个简单的队列实现，没有涉及什么算法，就是需要对vec熟悉。我们可以试一试自己用一个struct来实现一个队列，并实现这些方法。</p>
+<h3>思路二</h3>
+<p>使用struct 和Linked-list链表来实现。每次push相当于往末端节点增加，pop就弹出头部节点，更新链表为去掉头部的链表。为了性能，不使用循环去查找节点，我们需要记录链表的尾节点，有length属性，记录链表的长度。因为在链表中，我们每个节点会同时被next和tail持有，所有需要用Rc智能指针，然后用RefCell来修改。</p>
+<pre><code class="language-.lang-rust">// 代码实现
 
 use std::rc::Rc;
 use std::cell::RefCell;
 
 
-#&#91;derive&#40;Debug&#41;&#93;
+#[derive(Debug)]
 struct Node {
     val: i32,
     next: Rc&lt;RefCell&lt;Option&lt;Node&gt;&gt;&gt;,
 }
 
-#&#91;derive&#40;Debug&#41;&#93;
+#[derive(Debug)]
 pub struct MyQueue {
     length: i32,
     list: Rc&lt;RefCell&lt;Option&lt;Node&gt;&gt;&gt;,
@@ -93,49 +108,49 @@ pub struct MyQueue {
 }
 
 impl MyQueue {
-    pub fn new&#40;&#41; -&gt; Self {
+    pub fn new() -&gt; Self {
         // 新建一个空列表
-        let node = Rc::new&#40;RefCell::new&#40;None&#41;&#41;;
+        let node = Rc::new(RefCell::new(None));
         MyQueue {
             length: 0,
-            list: node.clone&#40;&#41;,
-            tail: node.clone&#40;&#41;,
+            list: node.clone(),
+            tail: node.clone(),
         }
     }
 
-    pub fn push&#40;&amp;mut self, v: i32&#41; {
+    pub fn push(&amp;mut self, v: i32) {
         // 将一个元素放入队列的尾部
-        let tail = Rc::new&#40;RefCell::new&#40;None&#41;&#41;;
+        let tail = Rc::new(RefCell::new(None));
         let node = Node {
             val: v,
-            next: tail.clone&#40;&#41;,
+            next: tail.clone(),
         };
 
         // 更新最后一个节点的值
-        &#42;self.tail.borrow&#95;mut&#40;&#41; = Some&#40;node&#41;;
+        *self.tail.borrow_mut() = Some(node);
         // 更新tail指针，指向新的尾节点
         self.tail = tail;
         self.length += 1;
     }
 
-    pub fn peek&#40;&amp;self&#41; -&gt; i32 {
+    pub fn peek(&amp;self) -&gt; i32 {
         // 返回队列首部的元素
-        match &amp;&#42;self.list.borrow&#40;&#41; {
-            Some&#40;node&#41; =&gt; node.val,
-            None =&gt; panic!&#40;&quot;empty list&quot;&#41;
+        match &amp;*self.list.borrow() {
+            Some(node) =&gt; node.val,
+            None =&gt; panic!("empty list")
         }
     }
 
-    pub fn pop&#40;&amp;mut self&#41; -&gt; i32 {
+    pub fn pop(&amp;mut self) -&gt; i32 {
         // 从队列首部移除元素
         let mut next;
-        let v = match &amp;&#42;self.list.borrow&#40;&#41; {
-            Some&#40;node&#41; =&gt; {
+        let v = match &amp;*self.list.borrow() {
+            Some(node) =&gt; {
                 let v = node.val;
-                next = node.next.clone&#40;&#41;;
+                next = node.next.clone();
                 v
             }
-            None =&gt; panic!&#40;&quot;empty list&quot;&#41;
+            None =&gt; panic!("empty list")
         };
 
         self.list = next;
@@ -143,7 +158,7 @@ impl MyQueue {
         v
     }
 
-    pub fn empty&#40;&amp;self&#41; -&gt; bool {
+    pub fn empty(&amp;self) -&gt; bool {
         // 返回队列是否为空
         if self.length == 0 {
             true
@@ -153,66 +168,75 @@ impl MyQueue {
     }
 }
 
-#&#91;cfg&#40;test&#41;&#93;
+#[cfg(test)]
 mod test {
     use crate::MyQueue;
 
-    #&#91;test&#93;
-    pub fn queue&#95;test&#40;&#41; {
-        let mut queue = MyQueue::new&#40;&#41;;
-        queue.push&#40;1&#41;;
-        queue.push&#40;2&#41;;
-        assert&#95;eq!&#40;1, queue.peek&#40;&#41;&#41;;
-        assert&#95;eq!&#40;1, queue.pop&#40;&#41;&#41;;
-        assert&#95;eq!&#40;false, queue.empty&#40;&#41;&#41;;
-        assert&#95;eq!&#40;2, queue.pop&#40;&#41;&#41;;
-        assert&#95;eq!&#40;true, queue.empty&#40;&#41;&#41;;
+    #[test]
+    pub fn queue_test() {
+        let mut queue = MyQueue::new();
+        queue.push(1);
+        queue.push(2);
+        assert_eq!(1, queue.peek());
+        assert_eq!(1, queue.pop());
+        assert_eq!(false, queue.empty());
+        assert_eq!(2, queue.pop());
+        assert_eq!(true, queue.empty());
     }
 }
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户 <br /> 内存消耗 : 2.1 MB , 在所有 Rust 提交中击败了 100.00% 的用户 </p></blockquote><p>思路二的一开始的困惑点是，没有重新更新tail指针，所以tail指针一直指向原来的位置，所有每次borrow_mut更新值后，一直值原地更新，绕了好久才绕明白了，原来是我需要用新的tail值来更新原来的tail值，虽然两个都是<code>Rc::New&#40;RefCell::new&#40;None&#41;&#41;</code>, 但是内存地址，是不一样的。</p><h3>思路三</h3><p>思路一和思路二都对题目的意思理解错误了，用栈实现队列操作，栈操作就只有push和pop两个操作，我们要仅用栈的push和pop两个操作，实现题目要求的 push, pop, peek, empty 方法。</p><pre><code class=".lang-rust">// 代码实现
+</code></pre>
+<h4>leetcode执行结果</h4>
+<blockquote>
+<p>执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户<br />
+内存消耗 : 2.1 MB , 在所有 Rust 提交中击败了 100.00% 的用户</p>
+</blockquote>
+<p>思路二的一开始的困惑点是，没有重新更新tail指针，所以tail指针一直指向原来的位置，所有每次borrow_mut更新值后，一直值原地更新，绕了好久才绕明白了，原来是我需要用新的tail值来更新原来的tail值，虽然两个都是<code>Rc::New(RefCell::new(None))</code>, 但是内存地址，是不一样的。</p>
+<h3>思路三</h3>
+<p>思路一和思路二都对题目的意思理解错误了，用栈实现队列操作，栈操作就只有push和pop两个操作，我们要仅用栈的push和pop两个操作，实现题目要求的 push, pop, peek, empty 方法。</p>
+<pre><code class="language-.lang-rust">// 代码实现
 
-#&#91;derive&#40;Debug&#41;&#93;
+#[derive(Debug)]
 struct MyQueue {
     stack: Vec&lt;i32&gt;
 }
 
 impl MyQueue {
-    fn new&#40;&#41; -&gt; Self {
+    fn new() -&gt; Self {
         MyQueue {
-            stack: Vec::new&#40;&#41;
+            stack: Vec::new()
         }
     }
 
-    fn trans&#40;vec1: &amp;mut Vec&lt;i32&gt;, vec2: &amp;mut Vec&lt;i32&gt;&#41; {
+    fn trans(vec1: &amp;mut Vec&lt;i32&gt;, vec2: &amp;mut Vec&lt;i32&gt;) {
         // 把vec1中的数据 reverse 后， 放入vec2中
-        while let Some&#40;i&#41; = vec1.pop&#40;&#41; {
-            vec2.push&#40;i&#41;;
+        while let Some(i) = vec1.pop() {
+            vec2.push(i);
         }
     }
 
-    fn push&#40;&amp;mut self, v: i32&#41; {
-        let mut x = vec!&#91;&#93;;
-        MyQueue::trans&#40;&amp;mut self.stack, &amp;mut x&#41;;
+    fn push(&amp;mut self, v: i32) {
+        let mut x = vec![];
+        MyQueue::trans(&amp;mut self.stack, &amp;mut x);
         // 恢复为正常排序后，在末尾push入元素
-        x.push&#40;v&#41;;
+        x.push(v);
         // 把x 的数据倒序装入stack中
-        MyQueue::trans&#40;&amp;mut x, &amp;mut self.stack&#41;;
+        MyQueue::trans(&amp;mut x, &amp;mut self.stack);
     }
 
-    fn pop&#40;&amp;mut self&#41; -&gt; i32 {
-        self.stack.pop&#40;&#41;.expect&#40;&quot;empty stack now&quot;&#41;
+    fn pop(&amp;mut self) -&gt; i32 {
+        self.stack.pop().expect("empty stack now")
     }
 
-    fn peek&#40;&amp;mut self&#41; -&gt; i32 {
-        let i = self.stack.pop&#40;&#41;.expect&#40;&quot;empty stack now&quot;&#41;;
-        self.stack.push&#40;i&#41;;
+    fn peek(&amp;mut self) -&gt; i32 {
+        let i = self.stack.pop().expect("empty stack now");
+        self.stack.push(i);
         i
     }
 
-    fn empty&#40;&amp;mut self&#41; -&gt; bool {
-        match self.stack.pop&#40;&#41; {
-            Some&#40;v&#41; =&gt; {
-                self.stack.push&#40;v&#41;;
+    fn empty(&amp;mut self) -&gt; bool {
+        match self.stack.pop() {
+            Some(v) =&gt; {
+                self.stack.push(v);
                 false
             }
             None =&gt; true
@@ -220,89 +244,99 @@ impl MyQueue {
     }
 }
 
-#&#91;cfg&#40;test&#41;&#93;
+#[cfg(test)]
 mod test {
     use crate::MyQueue;
 
-    #&#91;test&#93;
-    fn myqueue&#95;test&#40;&#41; {
-        let mut v = MyQueue::new&#40;&#41;;
-        v.push&#40;1&#41;;
-        v.push&#40;2&#41;;
-        assert&#95;eq!&#40;1, v.peek&#40;&#41;&#41;;
-        assert&#95;eq!&#40;1, v.pop&#40;&#41;&#41;;
-        assert&#95;eq!&#40;false, v.empty&#40;&#41;&#41;;
-        assert&#95;eq!&#40;vec!&#91;2&#93;, v.stack&#41;;
+    #[test]
+    fn myqueue_test() {
+        let mut v = MyQueue::new();
+        v.push(1);
+        v.push(2);
+        assert_eq!(1, v.peek());
+        assert_eq!(1, v.pop());
+        assert_eq!(false, v.empty());
+        assert_eq!(vec![2], v.stack);
     }
 }
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户 <br /> 内存消耗 : 2 MB , 在所有 Rust 提交中击败了 100.00% 的用户 <br /></p></blockquote><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/implement-stack-using-queues/'>用队列实现栈</a></p>
-            <p class="text-left text-muted">2019-09-10 14:05</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2019/9/7/invert-binary-tree/">上一篇: 226. 翻转二叉树</a></div>
-                <div class="col-6 text-right"><a href="/p/2019/9/2/monotone-increasing-digits/">下一篇:738. 单调递增的数字</a></div>
-            </div>
-        </div>
+</code></pre>
+<h4>leetcode执行结果</h4>
+<blockquote>
+<p>执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户<br />
+内存消耗 : 2 MB , 在所有 Rust 提交中击败了 100.00% 的用户</p>
+</blockquote>
+<h3>leetcode相似题型</h3>
+<p><a href="https://leetcode-cn.com/problems/implement-stack-using-queues/">用队列实现栈</a></p>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2019-09-03</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2019/9/7/invert-binary-tree/">上一篇: 226. 翻转二叉树</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2019/9/2/monotone-increasing-digits/">下一篇: 738. 单调递增的数字</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2019/9/3/implement-queue-using-stacks/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

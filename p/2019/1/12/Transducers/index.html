@@ -3,272 +3,336 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>Transducers - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">Transducers</h1>
-
-
-
-
-            <p>Transducers是一些组合起来的算法转换，它是把数据的输入输出转换从数据结构解耦的一种方法。解耦之后这些数据就可以自由的重用和组合。可以用于不同的数据流处理：collections, streams,  channels, observables.</p><p>把数据从转换中解耦，将会更简单和更可重用代码。</p><p>Transducers就像一个筛子，输入一份数据，经过筛子组合，然后输出一份数据。</p><p>或者也可以把他比喻做食谱，食物只要经过这个食谱的烹饪，就可以变成一道菜。Transducers是如何处理数据序列的配方，而不知道数据是什么。</p><p>而且最重要的是，Transducers性能非常好，他在数据处理过程中，并不会创建中间变量。</p><p>Here’s a visualisation to show the difference between array built-ins and transducers.</p><p>1 chained built-in transformations create intermediate arrays <img src="/static/2019/1/transducers.gif" alt="" /></p><p>2 transduced transformations process items one by one into output array <img src="/static/2019/1/transducers2.gif" alt="" /></p><p>在代码层面：</p><h2>What's a Transducer?</h2><p>Transducers are functions that accept a reducing function and return a reducing function.</p><p>A reducing function is just the kind of function you'd pass to reduce - it takes a result so far and a new input and returns the next result-so-far. In the context of transducers it's best to think about this most generally:</p><pre><code class=".language-clojure">;;reducing function signature
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">Transducers</h1>
+  <p>Transducers是一些组合起来的算法转换，它是把数据的输入输出转换从数据结构解耦的一种方法。解耦之后这些数据就可以自由的重用和组合。可以用于不同的数据流处理：collections, streams,  channels, observables.</p>
+<p>把数据从转换中解耦，将会更简单和更可重用代码。</p>
+<p>Transducers就像一个筛子，输入一份数据，经过筛子组合，然后输出一份数据。</p>
+<p>或者也可以把他比喻做食谱，食物只要经过这个食谱的烹饪，就可以变成一道菜。Transducers是如何处理数据序列的配方，而不知道数据是什么。</p>
+<p>而且最重要的是，Transducers性能非常好，他在数据处理过程中，并不会创建中间变量。</p>
+<p>Here’s a visualisation to show the difference between array built-ins and transducers.</p>
+<p>1 chained built-in transformations create intermediate arrays
+<img src="/static/2019/1/transducers.gif" alt="" /></p>
+<p>2 transduced transformations process items one by one into output array
+<img src="/static/2019/1/transducers2.gif" alt="" /></p>
+<p>在代码层面：</p>
+<h2>What's a Transducer?</h2>
+<p>Transducers are functions that accept a reducing function and return a reducing function.</p>
+<p>A reducing function is just the kind of function you'd pass to reduce - it takes a result so far and a new input and returns the next result-so-far. In the context of transducers it's best to think about this most generally:</p>
+<pre><code class="language-.language-clojure">;;reducing function signature
 whatever, input -&gt; whatever
-</code></pre><p>and a transducer is a function that takes one reducing function and returns another:</p><pre><code class=".language-clojure">;;transducer signature
-&#40;whatever, input -&gt; whatever&#41; -&gt; &#40;whatever, input -&gt; whatever&#41;
-</code></pre><h2>使用transducers</h2><p>transducers使用起来非常简单</p><p><code>&#40;transduce xform f coll&#41;</code>   <code>&#40;transduce xform f init coll&#41;</code><blockquote><p> 如果没有init, 会直接调用(f) 来创建init.  f 必须是一个reducing函数，可以接收一个或者两个参数。如果f仅仅支持两个参数，那我们可以使用completing函数为f添加一个<code>arity-1</code>参数函数, completing默认添加的是([x] (identity x))的<code>arity-1</code>函数，  像 <code>reduce</code> 一样依次将<code>init</code>和coll里面的第一个元素，传入<code>xform</code>中进行处理，  处理结果会经过 f reducing函数进行连接。  如果coll是空的，就直接返回init值，(f函数不会被调用),<br /> </p></blockquote><pre><code class=".language-clojure">&#40;def xform
-  &#40;comp
-    &#40;map inc&#41;
-    &#40;filter even?&#41;
-    &#41;&#41;
+</code></pre>
+<p>and a transducer is a function that takes one reducing function and returns another:</p>
+<pre><code class="language-.language-clojure">;;transducer signature
+(whatever, input -&gt; whatever) -&gt; (whatever, input -&gt; whatever)
+</code></pre>
+<h2>使用transducers</h2>
+<p>transducers使用起来非常简单</p>
+<p><code>(transduce xform f coll)</code>   <code>(transduce xform f init coll)</code></p>
+<blockquote>
+<p>如果没有init, 会直接调用(f) 来创建init.
+f 必须是一个reducing函数，可以接收一个或者两个参数。如果f仅仅支持两个参数，那我们可以使用completing函数为f添加一个<code>arity-1</code>参数函数, completing默认添加的是([x] (identity x))的<code>arity-1</code>函数，
+像 <code>reduce</code> 一样依次将<code>init</code>和coll里面的第一个元素，传入<code>xform</code>中进行处理，
+处理结果会经过 f reducing函数进行连接。
+如果coll是空的，就直接返回init值，(f函数不会被调用),</p>
+</blockquote>
+<pre><code class="language-.language-clojure">(def xform
+  (comp
+    (map inc)
+    (filter even?)
+    ))
 
-&#40;transduce xform conj &#91;&#93; &#40;range 10&#41;&#41;
-</code></pre></p><p>在transduce中, xform的执行顺序是从左到右,(原生comp是从右到左)。</p><pre><code class=".language-clojure">&#40;def xf
-  &#40;comp
-    &#40;filter odd?&#41;
-    &#40;take 10&#41;&#41;&#41;
+(transduce xform conj [] (range 10))
+</code></pre>
+<p>在transduce中, xform的执行顺序是从左到右,(原生comp是从右到左)。</p>
+<pre><code class="language-.language-clojure">(def xf
+  (comp
+    (filter odd?)
+    (take 10)))
 
-&#40;transduce xf conj &#40;range&#41;&#41;
-=&gt; &#91;1 3 5 7 9 11 13 15 17 19&#93;
+(transduce xf conj (range))
+=&gt; [1 3 5 7 9 11 13 15 17 19]
 
-&#40;transduce xf + &#40;range&#41;&#41;
+(transduce xf + (range))
 =&gt; 100
 
 ; ... with an ini
-&#40;transduce xf + 17 &#40;range&#41;&#41;
+(transduce xf + 17 (range))
 =&gt; 117
 
-&#40;transduce xf str &#40;range&#41;&#41;
-=&gt; &quot;135791113151719&quot;
+(transduce xf str (range))
+=&gt; "135791113151719"
 
-&#40;transduce xf str &quot;...&quot; &#40;range&#41;&#41;
-=&gt; &quot;...135791113151719&quot;
+(transduce xf str "..." (range))
+=&gt; "...135791113151719"
 
-</code></pre><p>可以看到transducers的使用非常的简单，但是transducers的原理是什么呢？</p><pre><code class=".language-clojure">&#40;def xf
-  &#40;comp
-    &#40;map inc&#41;
-    &#40;filter even?&#41;&#41;&#41;
+</code></pre>
+<p>可以看到transducers的使用非常的简单，但是transducers的原理是什么呢？</p>
+<pre><code class="language-.language-clojure">(def xf
+  (comp
+    (map inc)
+    (filter even?)))
 
-&#40;transduce xf conj &#91;&#93; &#40;range 10&#41;&#41;
-=&gt; &#91;2 4 6 8 10&#93;
-</code></pre><p>如果传统方式实现这个功能，有三种方式：</p><p>1 函数嵌套<pre><code class=".language-clojure">&#40;filter even? &#40;map inc &#40;range 10&#41;&#41;&#41;
-=&gt; &#40;2 4 6 8 10&#41;
+(transduce xf conj [] (range 10))
+=&gt; [2 4 6 8 10]
+</code></pre>
+<p>如果传统方式实现这个功能，有三种方式：</p>
+<p>1 函数嵌套</p>
+<pre><code class="language-.language-clojure">(filter even? (map inc (range 10)))
+=&gt; (2 4 6 8 10)
 ; 会创建中间的collection, 并且有两次循环
-</code></pre></p><p>2 使用<code>-&gt;&gt;</code><pre><code class=".language-clojure">&#40;-&gt;&gt; &#40;range 10&#41;
-     &#40;map inc&#41;
-     &#40;filter even?&#41;&#41;
-=&gt; &#40;2 4 6 8 10&#41;
+</code></pre>
+<p>2 使用<code>-&gt;&gt;</code></p>
+<pre><code class="language-.language-clojure">(-&gt;&gt; (range 10)
+     (map inc)
+     (filter even?))
+=&gt; (2 4 6 8 10)
 ; 会创建中间的collection, 并且有两次循环
-</code></pre></p><p>3 使用<code>comp</code> (comp执行的顺序是从右向左)<pre><code class=".language-clojure">&#40;&#40;comp
-    &#40;partial filter even?&#41;
-    &#40;partial map inc&#41;&#41; 
-  &#40;range 10&#41;&#41;
-=&gt; &#40;2 4 6 8 10&#41;
+</code></pre>
+<p>3 使用<code>comp</code> (comp执行的顺序是从右向左)</p>
+<pre><code class="language-.language-clojure">((comp
+    (partial filter even?)
+    (partial map inc)) 
+  (range 10))
+=&gt; (2 4 6 8 10)
 ; 会创建中间的collection，并且有两次循环
-</code></pre></p><p>看上面<code>transduce</code>执行的例子，可以看到<code>transducers</code>很像<code>reduce</code>函数，我们试着来自己实现一个。</p><p>1 使用<code>reduce</code>实现一个<code>&#40;map inc&#41;</code></p><pre><code class=".language-clojure">&#40;map inc &#40;range 10&#41;&#41;
-=&gt; &#40;1 2 3 4 5 6 7 8 9 10&#41;
+</code></pre>
+<p>看上面<code>transduce</code>执行的例子，可以看到<code>transducers</code>很像<code>reduce</code>函数，我们试着来自己实现一个。</p>
+<p>1 使用<code>reduce</code>实现一个<code>(map inc)</code></p>
+<pre><code class="language-.language-clojure">(map inc (range 10))
+=&gt; (1 2 3 4 5 6 7 8 9 10)
 
-&#40;defn map-inc
-  &#91;result i&#93;
-  &#40;conj result &#40;inc i&#41;&#41;&#41;
+(defn map-inc
+  [result i]
+  (conj result (inc i)))
 
-&#40;reduce map-inc &#91;&#93; &#40;range 10&#41;&#41;
-=&gt; &#91;1 2 3 4 5 6 7 8 9 10&#93;
-</code></pre><p>2 使用<code>reduce</code>实现一个<code>&#40;filter even?&#41;</code><pre><code class=".language-clojure">&#40;filter even? &#40;range 10&#41;&#41;
-=&gt; &#40;0 2 4 6 8&#41;
+(reduce map-inc [] (range 10))
+=&gt; [1 2 3 4 5 6 7 8 9 10]
+</code></pre>
+<p>2 使用<code>reduce</code>实现一个<code>(filter even?)</code></p>
+<pre><code class="language-.language-clojure">(filter even? (range 10))
+=&gt; (0 2 4 6 8)
 
-&#40;defn filter-even?
-  &#91;result i&#93;
-  &#40;if &#40;even? i&#41;
-    &#40;conj result i&#41;
-    result&#41;&#41;
+(defn filter-even?
+  [result i]
+  (if (even? i)
+    (conj result i)
+    result))
 
-&#40;reduce filter-even? &#91;&#93; &#40;range 10&#41;&#41;
-=&gt; &#91;0 2 4 6 8&#93;
-</code></pre></p><p>我们像<code>&#40;map inc&#41;</code> <code>&#40;filter even?&#41;</code> 一样，单独实现<code>map</code>和<code>filter</code>，然后把<code>inc</code>和<code>even?</code>按需要传入进去。 我们可以这么写<pre><code class=".language-clojure">&#40;defn map-func
-  &#91;f result i&#93;
-  &#40;conj result &#40;f i&#41;&#41;&#41;
-</code></pre></p><p>但是这么写有个问题，就是不符合<code>reducing function</code>,无法配合<code>reduce</code>进行使用<code>reducing function</code>智能接收一个或者两个参数。 所以只能这么写<pre><code class=".language-clojure">&#40;defn map-func
-  &#91;f&#93;
-  &#40;fn &#91;result i&#93;
-    &#40;conj result &#40;f i&#41;&#41;&#41;&#41;
+(reduce filter-even? [] (range 10))
+=&gt; [0 2 4 6 8]
+</code></pre>
+<p>我们像<code>(map inc)</code> <code>(filter even?)</code> 一样，单独实现<code>map</code>和<code>filter</code>，然后把<code>inc</code>和<code>even?</code>按需要传入进去。
+我们可以这么写</p>
+<pre><code class="language-.language-clojure">(defn map-func
+  [f result i]
+  (conj result (f i)))
+</code></pre>
+<p>但是这么写有个问题，就是不符合<code>reducing function</code>,无法配合<code>reduce</code>进行使用<code>reducing function</code>智能接收一个或者两个参数。
+所以只能这么写</p>
+<pre><code class="language-.language-clojure">(defn map-func
+  [f]
+  (fn [result i]
+    (conj result (f i))))
 
-&#40;&#40;map-func inc&#41; &#91;&#93; 2&#41;
-=&gt; &#91;3&#93;
+((map-func inc) [] 2)
+=&gt; [3]
 
-&#40;reduce &#40;map-func inc&#41; &#91;&#93; &#40;range 10&#41;&#41;
-=&gt; &#91;1 2 3 4 5 6 7 8 9 10&#93;
+(reduce (map-func inc) [] (range 10))
+=&gt; [1 2 3 4 5 6 7 8 9 10]
 
 ; 切换自己想要的函数
-&#40;reduce &#40;map-func -&#41; &#91;&#93; &#40;range 10&#41;&#41;
-=&gt; &#91;0 -1 -2 -3 -4 -5 -6 -7 -8 -9&#93;
-</code></pre></p><p>同样的来实现<code>&#40;filter even?&#41;</code><pre><code class=".language-clojure">&#40;defn filter-func
-  &#91;pred&#93;
-  &#40;fn &#91;result i&#93;
-    &#40;if &#40;pred i&#41;
-      &#40;conj result i&#41;
-      result&#41;&#41;&#41;
+(reduce (map-func -) [] (range 10))
+=&gt; [0 -1 -2 -3 -4 -5 -6 -7 -8 -9]
+</code></pre>
+<p>同样的来实现<code>(filter even?)</code></p>
+<pre><code class="language-.language-clojure">(defn filter-func
+  [pred]
+  (fn [result i]
+    (if (pred i)
+      (conj result i)
+      result)))
 
-&#40;&#40;filter-func even?&#41; &#91;&#93; 2&#41;
+((filter-func even?) [] 2)
 =&gt; 2
 
-&#40;reduce &#40;filter-func even?&#41; &#91;&#93; &#40;range 10&#41;&#41;
-=&gt; &#91;0 2 4 6 8&#93;
+(reduce (filter-func even?) [] (range 10))
+=&gt; [0 2 4 6 8]
 
 ; 切换自己想要的pred函数
-&#40;reduce &#40;filter-func odd?&#41; &#91;&#93; &#40;range 10&#41;&#41;
-=&gt; &#91;1 3 5 7 9&#93;
-</code></pre></p><p>现在我们的<code>map-func</code>和<code>filter-func</code>都是用<code>conj</code>来做<code>reducing function</code>, 那么如果我们想变为可切换<code>reducing function</code>，可以把<code>conj</code>切换<code>+</code>或者别的<code>reducing function</code>，这样我们就需要把<code>conj</code>作为一个参数传入进去，变成：<code>&#40;&#40;map-func inc&#41; conj&#41;</code><pre><code class=".language-clojure">&#40;defn map-func
-  &#91;f&#93;
-  &#40;fn &#91;reducing&#93;
-    &#40;fn &#91;result i&#93;
-      &#40;reducing result &#40;f i&#41;&#41;
-      &#41;&#41;&#41;
+(reduce (filter-func odd?) [] (range 10))
+=&gt; [1 3 5 7 9]
+</code></pre>
+<p>现在我们的<code>map-func</code>和<code>filter-func</code>都是用<code>conj</code>来做<code>reducing function</code>, 那么如果我们想变为可切换<code>reducing function</code>，可以把<code>conj</code>切换<code>+</code>或者别的<code>reducing function</code>，这样我们就需要把<code>conj</code>作为一个参数传入进去，变成：<code>((map-func inc) conj)</code></p>
+<pre><code class="language-.language-clojure">(defn map-func
+  [f]
+  (fn [reducing]
+    (fn [result i]
+      (reducing result (f i))
+      )))
 
-&#40;&#40;&#40;map-func inc&#41; conj&#41; &#91;&#93; 1&#41;
-=&gt; &#91;2&#93;
+(((map-func inc) conj) [] 1)
+=&gt; [2]
 ; 换为不同的reducing function
-&#40;&#40;&#40;map-func inc&#41; +&#41; 0 1&#41;
+(((map-func inc) +) 0 1)
 =&gt; 2
-&#40;&#40;&#40;map-func inc&#41; +&#41; 1 1&#41;
+(((map-func inc) +) 1 1)
 =&gt; 3
-&#40;&#40;&#40;map-func inc&#41; str&#41; &quot;0&quot; 1&#41;
-=&gt; &quot;02&quot;
-</code></pre></p><p>把<code>filter-func</code>也改为<code>&#40;&#40;filter-func even?&#41; conj&#41;</code></p><pre><code class=".language-clojure">&#40;defn filter-func
-  &#91;pred&#93;
-  &#40;fn &#91;reducing&#93;
-    &#40;fn &#91;result i&#93;
-      &#40;if &#40;pred i&#41;
-        &#40;reducing result i&#41;
-        result&#41;&#41;&#41;&#41;
+(((map-func inc) str) "0" 1)
+=&gt; "02"
+</code></pre>
+<p>把<code>filter-func</code>也改为<code>((filter-func even?) conj)</code></p>
+<pre><code class="language-.language-clojure">(defn filter-func
+  [pred]
+  (fn [reducing]
+    (fn [result i]
+      (if (pred i)
+        (reducing result i)
+        result))))
 
-&#40;&#40;&#40;filter-func even?&#41; conj&#41; &#91;&#93; 1&#41;
-=&gt; &#91;&#93;
-&#40;&#40;&#40;filter-func even?&#41; conj&#41; &#91;&#93; 2&#41;
-=&gt; &#91;2&#93;
-&#40;&#40;&#40;filter-func even?&#41; +&#41; 10 2&#41;
+(((filter-func even?) conj) [] 1)
+=&gt; []
+(((filter-func even?) conj) [] 2)
+=&gt; [2]
+(((filter-func even?) +) 10 2)
 =&gt; 12
-&#40;&#40;&#40;filter-func even?&#41; str&#41; &quot;0&quot; 2&#41;
-=&gt; &quot;02&quot;
-</code></pre><p>现在我们可以使用<code>map-func</code>和<code>filter-func</code>，同时随心所欲指定自己想要的数据处理函数和自己的<code>reducing function</code>，而且通过上面对<code>&#40;&#40;map-func inc&#41; conj&#41;</code>函数和<code>&#40;&#40;filter-func even?&#41; conj&#41;</code>函数顶使用可以发现，他们两个也是<code>reducing function</code>，接收两个参数，然后返回一个结果。所以我们可以把它们都当做<code>reducing function</code>来使用。<pre><code class=".language-clojure">&#40;reduce &#40;&#40;map-func inc&#41; conj&#41; &#91;&#93; &#40;range 10&#41;&#41;
-=&gt; &#91;1 2 3 4 5 6 7 8 9 10&#93;
+(((filter-func even?) str) "0" 2)
+=&gt; "02"
+</code></pre>
+<p>现在我们可以使用<code>map-func</code>和<code>filter-func</code>，同时随心所欲指定自己想要的数据处理函数和自己的<code>reducing function</code>，而且通过上面对<code>((map-func inc) conj)</code>函数和<code>((filter-func even?) conj)</code>函数顶使用可以发现，他们两个也是<code>reducing function</code>，接收两个参数，然后返回一个结果。所以我们可以把它们都当做<code>reducing function</code>来使用。</p>
+<pre><code class="language-.language-clojure">(reduce ((map-func inc) conj) [] (range 10))
+=&gt; [1 2 3 4 5 6 7 8 9 10]
 
-&#40;reduce &#40;&#40;map-func inc&#41; str&#41; &quot;&quot; &#40;range 10&#41;&#41;
-=&gt; &quot;12345678910&quot;
+(reduce ((map-func inc) str) "" (range 10))
+=&gt; "12345678910"
 
-&#40;reduce &#40;&#40;filter-func even?&#41; conj&#41; &#91;&#93; &#40;range 10&#41;&#41;
-=&gt; &#91;0 2 4 6 8&#93;
+(reduce ((filter-func even?) conj) [] (range 10))
+=&gt; [0 2 4 6 8]
 
-&#40;reduce &#40;&#40;filter-func even?&#41; str&#41; &quot;&quot; &#40;range 10&#41;&#41;
-=&gt; &quot;02468&quot;
-</code></pre></p><p>而<code>&#40;map-func inc&#41;</code>和<code>&#40;filter-func even?&#41;</code> 就是 transducer 函数，它们接收一个<code>reducing</code>函数，然后返回一个<code>reducing</code>函数。</p><p>如果我们这么用会发生什么事情呢？<code>&#40;&#40;map-func inc&#41; &#40;&#40;filter-func even?&#41; conj&#41;&#41;</code>， 把<code>&#40;&#40;filter-func even?&#41; conj&#41;</code>当做<code>reducing function</code>来使用，并且用在<code>&#40;&#40;map-func inc&#41; conj&#41;</code>函数中，替换<code>conj</code>函数。</p><pre><code class=".language-clojure">&#40;&#40;&#40;map-func inc&#41; &#40;&#40;filter-func even?&#41; conj&#41;&#41; &#91;&#93; 0&#41;
-=&gt; &#91;&#93;
-&#40;&#40;&#40;map-func inc&#41; &#40;&#40;filter-func even?&#41; conj&#41;&#41; &#91;&#93; 1&#41;
-=&gt; &#91;2&#93;
-&#40;&#40;&#40;map-func inc&#41; &#40;&#40;filter-func even?&#41; conj&#41;&#41; &#91;2&#93; 2&#41;
-=&gt; &#91;2&#93;
-&#40;&#40;&#40;map-func inc&#41; &#40;&#40;filter-func even?&#41; conj&#41;&#41; &#91;2&#93; 3&#41;
-=&gt; &#91;2 4&#93;
-</code></pre><p><code>&#40;&#40;map-func inc&#41; &#40;&#40;filter-func even?&#41; conj&#41;&#41;</code>同样还是一个<code>reducing function</code>，所以我们可以这么用<pre><code class=".language-clojure">&#40;reduce &#40;&#40;map-func inc&#41; &#40;&#40;filter-func even?&#41; conj&#41;&#41; &#91;&#93; &#40;range 10&#41;&#41;
-=&gt; &#91;2 4 6 8 10&#93;
-&#40;reduce &#40;&#40;map-func inc&#41; &#40;&#40;filter-func even?&#41; str&#41;&#41; &quot;&quot; &#40;range 10&#41;&#41;
-=&gt; &quot;246810&quot;
-&#40;reduce &#40;&#40;map-func inc&#41; &#40;&#40;filter-func even?&#41; +&#41;&#41; 0 &#40;range 10&#41;&#41;
+(reduce ((filter-func even?) str) "" (range 10))
+=&gt; "02468"
+</code></pre>
+<p>而<code>(map-func inc)</code>和<code>(filter-func even?)</code> 就是 transducer 函数，它们接收一个<code>reducing</code>函数，然后返回一个<code>reducing</code>函数。</p>
+<p>如果我们这么用会发生什么事情呢？<code>((map-func inc) ((filter-func even?) conj))</code>， 把<code>((filter-func even?) conj)</code>当做<code>reducing function</code>来使用，并且用在<code>((map-func inc) conj)</code>函数中，替换<code>conj</code>函数。</p>
+<pre><code class="language-.language-clojure">(((map-func inc) ((filter-func even?) conj)) [] 0)
+=&gt; []
+(((map-func inc) ((filter-func even?) conj)) [] 1)
+=&gt; [2]
+(((map-func inc) ((filter-func even?) conj)) [2] 2)
+=&gt; [2]
+(((map-func inc) ((filter-func even?) conj)) [2] 3)
+=&gt; [2 4]
+</code></pre>
+<p><code>((map-func inc) ((filter-func even?) conj))</code>同样还是一个<code>reducing function</code>，所以我们可以这么用</p>
+<pre><code class="language-.language-clojure">(reduce ((map-func inc) ((filter-func even?) conj)) [] (range 10))
+=&gt; [2 4 6 8 10]
+(reduce ((map-func inc) ((filter-func even?) str)) "" (range 10))
+=&gt; "246810"
+(reduce ((map-func inc) ((filter-func even?) +)) 0 (range 10))
 =&gt; 30
-</code></pre></p><p>这么看着有点复杂，我们来改写一下写法。让它看起来更清晰和简单<pre><code class=".language-clojure">&#40;defn xform
-  &#40;comp
-    &#40;map-func inc&#41;
-    &#40;filter-func even?&#41;&#41;&#41;
+</code></pre>
+<p>这么看着有点复杂，我们来改写一下写法。让它看起来更清晰和简单</p>
+<pre><code class="language-.language-clojure">(defn xform
+  (comp
+    (map-func inc)
+    (filter-func even?)))
 
-&#40;&#40;xform conj&#41; &#91;&#93; 1&#41;
-=&gt; &#91;2&#93;
-&#40;&#40;xform conj&#41; &#91;2&#93; 2&#41;
-=&gt; &#91;2&#93;
-&#40;&#40;xform conj&#41; &#91;2&#93; 3&#41;
-=&gt; &#91;2 4&#93;
+((xform conj) [] 1)
+=&gt; [2]
+((xform conj) [2] 2)
+=&gt; [2]
+((xform conj) [2] 3)
+=&gt; [2 4]
 
-&#40;reduce &#40;xform conj&#41; &#91;&#93; &#40;range 10&#41;&#41;
-=&gt; &#91;2 4 6 8 10&#93;
+(reduce (xform conj) [] (range 10))
+=&gt; [2 4 6 8 10]
 
-&#40;reduce &#40;xform str&#41; &quot;&quot; &#40;range 10&#41;&#41;
-=&gt; &quot;246810&quot;
+(reduce (xform str) "" (range 10))
+=&gt; "246810"
 
-&#40;reduce &#40;xform +&#41; 0 &#40;range 10&#41;&#41;
+(reduce (xform +) 0 (range 10))
 =&gt; 30
-</code></pre></p><p>当<code>conj</code>传入<code>xform</code>中时，是从右向左执行的，<code>conj</code>先作为函数<code>&#40;filter-func even?&#41;</code>和参数执行，执行结果为<code>&#40;&#40;filter-func even?&#41; conj&#41;</code>，然后这个执行结果传入<code>&#40;map-func inc&#41;</code>函数作为参数，执行结果为<code>&#40;&#40;map-func inc&#41; &#40;&#40;filter-func even?&#41; conj&#41;&#41;</code>，因为<code>&#40;&#40;filter-func even?&#41; conj&#41;</code>是作为<code>reducing function</code>作为函数<code>&#40;map-func inc&#41;</code>的参数，内部为<code>&#40;conj result &#40;inc i&#41;&#41;</code>所以会先执行<code>&#40;inc i&#41;</code>，然后才执行<code>&#40;filter-func even?&#41;</code>，最后才执行最初指定的<code>reducing function</code>函数<code>conj</code>。所以最终数据处理的顺序变为从左到右的执行了，先进行了<code>map-func</code>的<code>inc</code>，然后进行了<code>filter-func</code>的<code>even?</code>，如果每一步都执行，那么就返回结果collection，如果<code>even?</code>这里判断不通过，就返回原collection。这个执行过程没有中间变量产生，并且只有<code>reduce</code>一次循环。</p><p>这就是<code>transducers</code>的整个过程。</p>
-            <p class="text-left text-muted">2019-01-14 06:35</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2019/1/19/mysql-learn/">上一篇: Mysql学习一</a></div>
-                <div class="col-6 text-right"><a href="/p/2019/1/10/bad-result/">下一篇:坏结果</a></div>
-            </div>
-        </div>
+</code></pre>
+<p>当<code>conj</code>传入<code>xform</code>中时，是从右向左执行的，<code>conj</code>先作为函数<code>(filter-func even?)</code>和参数执行，执行结果为<code>((filter-func even?) conj)</code>，然后这个执行结果传入<code>(map-func inc)</code>函数作为参数，执行结果为<code>((map-func inc) ((filter-func even?) conj))</code>，因为<code>((filter-func even?) conj)</code>是作为<code>reducing function</code>作为函数<code>(map-func inc)</code>的参数，内部为<code>(conj result (inc i))</code>所以会先执行<code>(inc i)</code>，然后才执行<code>(filter-func even?)</code>，最后才执行最初指定的<code>reducing function</code>函数<code>conj</code>。所以最终数据处理的顺序变为从左到右的执行了，先进行了<code>map-func</code>的<code>inc</code>，然后进行了<code>filter-func</code>的<code>even?</code>，如果每一步都执行，那么就返回结果collection，如果<code>even?</code>这里判断不通过，就返回原collection。这个执行过程没有中间变量产生，并且只有<code>reduce</code>一次循环。</p>
+<p>这就是<code>transducers</code>的整个过程。</p>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2019-01-12</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2019/1/19/mysql-learn/">上一篇: Mysql学习一</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2019/1/10/bad-result/">下一篇: 坏结果</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2019/1/12/Transducers/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

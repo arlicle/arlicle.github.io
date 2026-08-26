@@ -3,89 +3,110 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>大O记法 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">大O记法</h1>
+  <p>大O符号（Big O notation）是用于描述函数渐进行为的数学符号。更确切地说，它是用另一个（通常更简单的）函数来描述一个函数数量级的渐近上界。在数学中，它一般用来刻画被截断的无穷级数尤其是渐近级数的剩余项；在计算机科学中，它在分析算法复杂性的方面非常有用。</p>
+<p>对于算法进行特别具体的细致分析虽然很好，但在实践中的实际价值有限。对于算法的时间性质和空间性质，最重要的是其数量级和趋势，这些是分析算法效率的主要部分。而计量算法基本操作数量的规模函数中那些常量因子可以忽略不计。例如，可以认为3n^2和100n^2属于同一个量级，如果两个算法处理同样规模实例的代价分别为这两个函数，就认为它们的效率“差不多”，都为n^2级。</p>
+<h3>最坏时间复杂度</h3>
+<p>分析算法时，存在几种可能的考虑：</p>
+<p>算法完成工作最少需要多少基本操作，即最优时间复杂度
+算法完成工作最多需要多少基本操作，即最坏时间复杂度
+算法完成工作平均需要多少基本操作，即平均时间复杂度</p>
+<p>对于最优时间复杂度，其价值不大，因为它没有提供什么有用信息，其反映的只是最乐观最理想的情况，没有参考价值。</p>
+<p>对于最坏时间复杂度，提供了一种保证，表明算法在此种程度的基本操作中一定能完成工作。</p>
+<p>对于平均时间复杂度，是对算法的一个全面评价，因此它完整全面的反映了这个算法的性质。但另一方面，这种衡量并没有保证，不是每个计算都能在这个基本操作内完成。而且，对于平均情况的计算，也会因为应用算法的实例分布可能并不均匀而难以计算。</p>
+<p>因此，我们主要关注算法的最坏情况，亦即最坏时间复杂度。</p>
+<h3>时间复杂度的几条基本计算规则</h3>
+<p>1、基本操作，即只有常数项，认为其时间复杂度为O(1)</p>
+<p>2、顺序结构，时间复杂度按加法进行计算</p>
+<p>3、循环结构，时间复杂度按乘法进行计算</p>
+<p>4、分支结构，时间复杂度取最大值</p>
+<p>5、判断一个算法的效率时，往往只需要关注操作数量的最高次项，其它次要项和常数项可以忽略</p>
+<p>6、在没有特殊说明时，我们所分析的算法的时间复杂度都是指最坏时间复杂度</p>
+<h3>算法的目标编辑</h3>
+<p><strong>容易理解</strong></p>
+<p>编码和调试</p>
+<p>优秀的算法通常是简洁而清晰的，这样带来的直接好处就是易于编码和理解，同时这样算法也必定是健壮的，如果一个算法晦涩难懂，则很可能其中会隐藏较多的错误。</p>
+<p>最小的代价</p>
+<p>算法的代价的最小化是指其执行时间最短且占用的存储空间最少，它们之间 往往是相互矛盾的，然而一般而言，算法的执行时间是主要的评价标准。</p>
 
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">大O记法</h1>
+  <p class="text-left text-muted">2018-05-24</p>
+</div>
 
-
-
-
-            <p>大O符号（Big O notation）是用于描述函数渐进行为的数学符号。更确切地说，它是用另一个（通常更简单的）函数来描述一个函数数量级的渐近上界。在数学中，它一般用来刻画被截断的无穷级数尤其是渐近级数的剩余项；在计算机科学中，它在分析算法复杂性的方面非常有用。</p><p>对于算法进行特别具体的细致分析虽然很好，但在实践中的实际价值有限。对于算法的时间性质和空间性质，最重要的是其数量级和趋势，这些是分析算法效率的主要部分。而计量算法基本操作数量的规模函数中那些常量因子可以忽略不计。例如，可以认为3n^2和100n^2属于同一个量级，如果两个算法处理同样规模实例的代价分别为这两个函数，就认为它们的效率“差不多”，都为n^2级。</p><h3>最坏时间复杂度</h3><p>分析算法时，存在几种可能的考虑：</p><p>算法完成工作最少需要多少基本操作，即最优时间复杂度 算法完成工作最多需要多少基本操作，即最坏时间复杂度 算法完成工作平均需要多少基本操作，即平均时间复杂度</p><p>对于最优时间复杂度，其价值不大，因为它没有提供什么有用信息，其反映的只是最乐观最理想的情况，没有参考价值。</p><p>对于最坏时间复杂度，提供了一种保证，表明算法在此种程度的基本操作中一定能完成工作。</p><p>对于平均时间复杂度，是对算法的一个全面评价，因此它完整全面的反映了这个算法的性质。但另一方面，这种衡量并没有保证，不是每个计算都能在这个基本操作内完成。而且，对于平均情况的计算，也会因为应用算法的实例分布可能并不均匀而难以计算。</p><p>因此，我们主要关注算法的最坏情况，亦即最坏时间复杂度。</p><h3>时间复杂度的几条基本计算规则</h3><p>1、基本操作，即只有常数项，认为其时间复杂度为O(1)</p><p>2、顺序结构，时间复杂度按加法进行计算</p><p>3、循环结构，时间复杂度按乘法进行计算</p><p>4、分支结构，时间复杂度取最大值</p><p>5、判断一个算法的效率时，往往只需要关注操作数量的最高次项，其它次要项和常数项可以忽略</p><p>6、在没有特殊说明时，我们所分析的算法的时间复杂度都是指最坏时间复杂度</p><h3>算法的目标编辑</h3><p><strong>容易理解</strong></p><p>编码和调试</p><p>优秀的算法通常是简洁而清晰的，这样带来的直接好处就是易于编码和理解，同时这样算法也必定是健壮的，如果一个算法晦涩难懂，则很可能其中会隐藏较多的错误。</p><p>最小的代价</p><p>算法的代价的最小化是指其执行时间最短且占用的存储空间最少，它们之间 往往是相互矛盾的，然而一般而言，算法的执行时间是主要的评价标准。</p>
-            <p class="text-left text-muted">2018-05-24 02:18</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2018/11/8/把自己当做一个企业来经营/">上一篇: 把自己当做一个企业来经营</a></div>
-                <div class="col-6 text-right"><a href="/p/2018/5/21/story-little-sheep-cross-river/">下一篇:小羊过河</a></div>
-            </div>
-        </div>
-
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
-
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2018/11/8/把自己当做一个企业来经营/">上一篇: 把自己当做一个企业来经营</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2018/5/21/story-little-sheep-cross-river/">下一篇: 小羊过河</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2018/5/24/Big-O-notation/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

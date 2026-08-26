@@ -3,108 +3,121 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>future and promise in clojure - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">future and promise in clojure</h1>
-
-
-
-
-            <h2>future</h2><p>future函数可以接受一段代码，并在一段单独的线程中执行这段代码，最后返回一个future对象。</p><p>使用future创建一个线程，然后相关的执行就都放到这个线程中去执行</p><pre><code class=".language-clojure">&#40;def a &#40;future &#40;+ 1 2 3 4&#41;&#41;&#41;
-</code></pre><p>这个时候future返回的不是执行结果，只是一个future对象。使用(deref a) 或者 @a 来获取其代表的值。</p><pre><code class=".language-clojure">user=&gt; &#40;deref a&#41;
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">future and promise in clojure</h1>
+  <h2>future</h2>
+<p>future函数可以接受一段代码，并在一段单独的线程中执行这段代码，最后返回一个future对象。</p>
+<p>使用future创建一个线程，然后相关的执行就都放到这个线程中去执行</p>
+<pre><code class="language-.language-clojure">(def a (future (+ 1 2 3 4)))
+</code></pre>
+<p>这个时候future返回的不是执行结果，只是一个future对象。使用(deref a) 或者 @a 来获取其代表的值。</p>
+<pre><code class="language-.language-clojure">user=&gt; (deref a)
 10
 
 user=&gt; @a
 10
-</code></pre><p>对future对象解引用会阻塞当前线程，直到future 收到的代码在另外的线程中执行结束获得结果。</p><p>我们可以使用future来进行数据流式编程(dataflow programming)</p><p><img src="/static/2018/11/img/100806.png" alt="" /></p><pre><code class=".language-clojure">&#40;let &#91;a &#40;future &#40;+ 1 2&#41;&#41;
-      b &#40;future &#40;+ 3 4&#41;&#41;&#93;
-      &#40;+ @a @b&#41;
-      &#41;
-</code></pre><p>这段代码先将(future (+ 1 2))赋值给a, 然后将(future (+ 3 4))赋值给b, 然后分别在不同的线程中并行的去执行(+ 1 2)和(+ 3 4)，当前线程(+ @a @b)将一直阻塞，直到两个线程中的加法完成。</p><h2>promise</h2><p>promise和future一样，也是在一个线程中去跑，异步求值。通过deref或@求值，获得值前也会阻塞线程。但是不一样的是，promise不会立即执行，直到 deliver为promise对象赋值后他才会执行。</p><pre><code class=".language-clojure">&#40;def b &#40;promise&#41;&#41; ; 如果这个时候@b，那么会发生阻塞，直到 b 获得值
+</code></pre>
+<p>对future对象解引用会阻塞当前线程，直到future 收到的代码在另外的线程中执行结束获得结果。</p>
+<p>我们可以使用future来进行数据流式编程(dataflow programming)</p>
+<p><img src="/static/2018/11/img/100806.png" alt="" /></p>
+<pre><code class="language-.language-clojure">(let [a (future (+ 1 2))
+      b (future (+ 3 4))]
+      (+ @a @b)
+      )
+</code></pre>
+<p>这段代码先将(future (+ 1 2))赋值给a, 然后将(future (+ 3 4))赋值给b, 然后分别在不同的线程中并行的去执行(+ 1 2)和(+ 3 4)，当前线程(+ @a @b)将一直阻塞，直到两个线程中的加法完成。</p>
+<h2>promise</h2>
+<p>promise和future一样，也是在一个线程中去跑，异步求值。通过deref或@求值，获得值前也会阻塞线程。但是不一样的是，promise不会立即执行，直到 deliver为promise对象赋值后他才会执行。</p>
+<pre><code class="language-.language-clojure">(def b (promise)) ; 如果这个时候@b，那么会发生阻塞，直到 b 获得值
 
-&#40;future &#40;println &quot;hello a value is: &quot; @b&#41;&#41; ; 把@b放到另外一个线程中去，这样阻塞不会影响当前线程
+(future (println "hello a value is: " @b)) ; 把@b放到另外一个线程中去，这样阻塞不会影响当前线程
 
-&#40;deliver b &quot;cool&quot;&#41;;
+(deliver b "cool");
 Hello b value is: cool
 
-</code></pre><p>当promise对象被赋值后，再次调用deliver进行赋值将不会触发任何动作。</p><pre><code class=".language-clojure">&#40;deliver b &quot;hey&quot;&#41;
+</code></pre>
+<p>当promise对象被赋值后，再次调用deliver进行赋值将不会触发任何动作。</p>
+<pre><code class="language-.language-clojure">(deliver b "hey")
 nil
 </code></pre>
-            <p class="text-left text-muted">2018-11-27 02:34</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2018/11/29/cookie-and-session/">上一篇: cookie and session</a></div>
-                <div class="col-6 text-right"><a href="/p/2018/11/19/评论程序分析展示排序与交互/">下一篇:评论程序分析展示排序与交互</a></div>
-            </div>
-        </div>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2018-11-27</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2018/11/29/cookie-and-session/">上一篇: cookie and session</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2018/11/19/评论程序分析展示排序与交互/">下一篇: 评论程序分析展示排序与交互</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2018/11/27/clojure-future-promise/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

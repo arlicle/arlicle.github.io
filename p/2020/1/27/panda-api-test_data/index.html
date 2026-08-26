@@ -3,357 +3,398 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>Panda-api test_data匹配说明 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">Panda-api test_data匹配说明</h1>
-
-
-
-
-            <p>Panda api中， test_data是一个非常非常重要的设计，可以方便前端进行各种情况的测试。</p><p>test_data中，有这么几个字段可以进行数据匹配</p><pre><code class=".language-json5">{
-    method: &quot;GET&quot;, // 请求方法匹配
-    url:&quot;/post/10/&quot;, // 网址匹配
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">Panda-api test_data匹配说明</h1>
+  <p>Panda api中， test_data是一个非常非常重要的设计，可以方便前端进行各种情况的测试。</p>
+<p>test_data中，有这么几个字段可以进行数据匹配</p>
+<pre><code class="language-.language-json5">{
+    method: "GET", // 请求方法匹配
+    url:"/post/10/", // 网址匹配
     query: {}, // query/GET 参数匹配
     body: {}, // post中body参数匹配
-    form&#95;data: {}, // post中请求数据在form&#95;data中的参数匹配
+    form_data: {}, // post中请求数据在form_data中的参数匹配
     response:{} // 匹配成功后返回的结果
     delay:0 // 请求后需要延迟多少时间返回数据，用于模拟网络慢或者超时
 }
-</code></pre><p><code>method</code>, <code>url</code>、<code>query</code>、<code>body</code> 或 <code>form&#95;data</code> 是请求时的相关数据，这四者是可以同时存在或者只有其中一个存在，或者都不存在， 匹配成功后返回<code>response</code>中的结果</p><h3>定义test_data某个字段的mock</h3><p>在写用户登录的<code>test&#95;data</code>数据匹配的时候，我们是这么写的：</p><pre><code class=".language-json5">...
+</code></pre>
+<p><code>method</code>, <code>url</code>、<code>query</code>、<code>body</code> 或 <code>form_data</code> 是请求时的相关数据，这四者是可以同时存在或者只有其中一个存在，或者都不存在， 匹配成功后返回<code>response</code>中的结果</p>
+<h3>定义test_data某个字段的mock</h3>
+<p>在写用户登录的<code>test_data</code>数据匹配的时候，我们是这么写的：</p>
+<pre><code class="language-.language-json5">...
 body:{
-    username:{name:&quot;用户名&quot;},
-    password:{name:&quot;用户登录密码&quot;}
+    username:{name:"用户名"},
+    password:{name:"用户登录密码"}
 },
 response:{
-    code:{name:&quot;返回结果的代码&quot;, type:&quot;int&quot;, desc:&quot;登录成功只返回1&quot;},
-    msg:{name:&quot;登录成功返回消息&quot;, type:&quot;string&quot;, desc:&quot;通常返回都是空&quot;},
-    token:{name:&quot;登录成功返回的用户token&quot;, type:&quot;string&quot;, required:false}
+    code:{name:"返回结果的代码", type:"int", desc:"登录成功只返回1"},
+    msg:{name:"登录成功返回消息", type:"string", desc:"通常返回都是空"},
+    token:{name:"登录成功返回的用户token", type:"string", required:false}
 },
-test&#95;data:&#91;
+test_data:[
     {
-        body:{username:&quot;edison&quot;, password:&quot;123&quot;},
-        response:{code:-1, msg:&quot;密码输入不正确&quot;}
+        body:{username:"edison", password:"123"},
+        response:{code:-1, msg:"密码输入不正确"}
     },
     {
-        body:{username:&quot;lily&quot;, password:&quot;123&quot;},
-        response:{code:-2, msg:&quot;用户名不存在&quot;}
+        body:{username:"lily", password:"123"},
+        response:{code:-2, msg:"用户名不存在"}
     },
     {
-        body:{username:&quot;root&quot;, password:&quot;123&quot;},
-        response:{code:1, msg:&quot;登录成功&quot;, token:&quot;5lCadRru&#40;ADn2IE!$LV%x%JF3JNmz&#42;Nf5nFieUG!r&#40;&#40;&amp;esi2CLI$jb!227Lh&quot;}
+        body:{username:"root", password:"123"},
+        response:{code:1, msg:"登录成功", token:"5lCadRru(ADn2IE!$LV%x%JF3JNmz*Nf5nFieUG!r((&amp;esi2CLI$jb!227Lh"}
     },
     {
-        body:{username:&quot;lily&quot;},
-        response:{code:-1, msg:&quot;密码是必填的&quot;}
+        body:{username:"lily"},
+        response:{code:-1, msg:"密码是必填的"}
     },
     {
-        body:{password:&quot;123&quot;},
-        response:{code:-1, msg:&quot;用户名是必填的&quot;}
+        body:{password:"123"},
+        response:{code:-1, msg:"用户名是必填的"}
     }
-&#93;
+]
 ...
-</code></pre><p>这个是一个登陆成功的测试数据，他已经可以满足满足我们前端开发的需求，但是稍微有一点不完美，就是正常情况下，我们每次登陆返回的<code>token</code>应该是动态随机生成的，而不应该是固定的，我们需要对<code>token</code>字段使用<code>mock</code>，所以我们改一下这一组数据：<pre><code class=".language-json5">{
-test&#95;data:&#91;
+</code></pre>
+<p>这个是一个登陆成功的测试数据，他已经可以满足满足我们前端开发的需求，但是稍微有一点不完美，就是正常情况下，我们每次登陆返回的<code>token</code>应该是动态随机生成的，而不应该是固定的，我们需要对<code>token</code>字段使用<code>mock</code>，所以我们改一下这一组数据：</p>
+<pre><code class="language-.language-json5">{
+test_data:[
     ...
     {
-        body:{username:&quot;root&quot;, password:&quot;123&quot;},
-        response:{code:1, msg:&quot;登录成功&quot;, token:{$mock:true, required:true}}
+        body:{username:"root", password:"123"},
+        response:{code:1, msg:"登录成功", token:{$mock:true, required:true}}
     }
     ...
-&#93;
+]
 },
-</code></pre></p><p>保存文档，然后请求接口<code>/login/</code>，请求<code>body</code>数据为<code>{username:&quot;root&quot;, password:&quot;123&quot;}</code>，你就会得到动态的符合要求的<code>token</code>。</p><p>这里修改中，我们把<code>token</code>原设置的字符串给为了一个对象<code>{$mock:true}</code>，表示这个字段开启<code>mock</code>数据生成，这要求<code>token</code>字段必须在接口<code>response</code>文档中中有对应的定义，否则这个字段就会被忽略。然后在接口<code>response</code>中<code>token</code>字段是可有可无的<code>required:false</code>，生成的mock有时候回有，有时候没有，但是在我们指定了用户名密码是登录成功的状态下，<code>token</code>是必须有的，所以我们重写了<code>token</code>字段的<code>required:true</code>，这样就每次请求，一定有token返回。</p><p>在<code>token:{$mock:true, required:true}</code>这里，你可以重写你想要的任何<code>token</code>字段的属性。</p><h3>使用url匹配的test_data</h3><pre><code class=".language-json5">{
-    name:&quot;Article view&quot;,
-    method:&quot;GET&quot;,
-    url:&quot;/post/{id:\\d+}/&quot;, // the url support regex match
+</code></pre>
+<p>保存文档，然后请求接口<code>/login/</code>，请求<code>body</code>数据为<code>{username:"root", password:"123"}</code>，你就会得到动态的符合要求的<code>token</code>。</p>
+<p>这里修改中，我们把<code>token</code>原设置的字符串给为了一个对象<code>{$mock:true}</code>，表示这个字段开启<code>mock</code>数据生成，这要求<code>token</code>字段必须在接口<code>response</code>文档中中有对应的定义，否则这个字段就会被忽略。然后在接口<code>response</code>中<code>token</code>字段是可有可无的<code>required:false</code>，生成的mock有时候回有，有时候没有，但是在我们指定了用户名密码是登录成功的状态下，<code>token</code>是必须有的，所以我们重写了<code>token</code>字段的<code>required:true</code>，这样就每次请求，一定有token返回。</p>
+<p>在<code>token:{$mock:true, required:true}</code>这里，你可以重写你想要的任何<code>token</code>字段的属性。</p>
+<h3>使用url匹配的test_data</h3>
+<pre><code class="language-.language-json5">{
+    name:"Article view",
+    method:"GET",
+    url:"/post/{id:\\d+}/", // the url support regex match
     response:{
-        code:{name:&quot;response result code&quot;, type:&quot;int&quot;, desc:&quot;success is 1&quot;},
-        msg:{name:&quot;response result message&quot;, type:&quot;string&quot;, desc:&quot;&quot;},
+        code:{name:"response result code", type:"int", desc:"success is 1"},
+        msg:{name:"response result message", type:"string", desc:""},
         data: {
-            $name:&quot;data field name&quot;,
-            $desc:&quot;data field description&quot;,
+            $name:"data field name",
+            $desc:"data field description",
             $required:false,
-            id:{name:&quot;article id&quot;, type:&quot;number&quot;},
-            title:{name:&quot;article title&quot;},
-            summary:{name:&quot;article summary&quot;},
-            content:{name:&quot;article content&quot;},
-            category&#95;name:{name:&quot;article category name&quot;},
-            author&#95;name:{name:&quot;article author name&quot;},
-            source:{name:&quot;article source&quot;},
-            tag:{name:&quot;article tag&quot;},
-            read&#95;count:{name:&quot;article read count&quot;, type:&quot;number&quot;},
-            created:{name:&quot;article created time&quot;, type:&quot;number&quot;},
+            id:{name:"article id", type:"number"},
+            title:{name:"article title"},
+            summary:{name:"article summary"},
+            content:{name:"article content"},
+            category_name:{name:"article category name"},
+            author_name:{name:"article author name"},
+            source:{name:"article source"},
+            tag:{name:"article tag"},
+            read_count:{name:"article read count", type:"number"},
+            created:{name:"article created time", type:"number"},
             }
     },
-    test&#95;data:&#91;
+    test_data:[
         {
-            url:&quot;/post/1/&quot;, // use url match
+            url:"/post/1/", // use url match
             response:{
                 code:1,
-                msg:&quot;&quot;,
+                msg:"",
                 data: {
                     id:1,
-                    title:&quot;Hello World&quot;,
-                    summary:&quot;This is the first post&quot;,
-                    content:&quot;This is the first post, and it is a test case data&quot;,
-                    category&#95;name:&quot;Other Category&quot;,
-                    author&#95;name:&quot;Edison&quot;,
-                    source:&quot;Panda api&quot;,
-                    tag:&quot;test&quot;,
-                    read&#95;count:1,
+                    title:"Hello World",
+                    summary:"This is the first post",
+                    content:"This is the first post, and it is a test case data",
+                    category_name:"Other Category",
+                    author_name:"Edison",
+                    source:"Panda api",
+                    tag:"test",
+                    read_count:1,
                     created:1580048711
                 }
             },
         },
         {
-            url:&quot;/post/3000/&quot;,
+            url:"/post/3000/",
             response:{
                 code:-1,
-                msg:&quot;article not found&quot;
+                msg:"article not found"
             },
         }
-    &#93;
+    ]
 },
 
-</code></pre><p>首先，我们的url是一个正则匹配<code>/post/{id:\\d+}/</code>，<code>/post/&#40;数字&#41;/</code>的都满足匹配条件，</p><p>test_data中的第一个元素，<code>url:&quot;/post/1/&quot;</code>， 必须请求url是<code>/post/1/</code>, 才会返回其对应的 <code>response</code>；</p><p>test_data中的第二个元素，<code>url:&quot;/post/3000/&quot;</code>, 必须请求url是 <code>/post/3000/</code>，才会返回其对应的<code>response</code>；</p><p>test_data中<code>url</code>的匹配有一点特殊，如果设置test_data中的<code>url</code>，表示忽略<code>url</code>匹配，也就是默认<code>url</code>是匹配的。</p><p>其它字段不一样，就是没有设置，也会拿着空去匹配</p><h3>使用query 进行匹配</h3><pre><code class=".language-json5">{
-    name:&quot;user logout&quot;,
-    method:&quot;GET&quot;,
-    url:&quot;/logout/&quot;,
+</code></pre>
+<p>首先，我们的url是一个正则匹配<code>/post/{id:\\d+}/</code>，<code>/post/(数字)/</code>的都满足匹配条件，</p>
+<p>test_data中的第一个元素，<code>url:"/post/1/"</code>， 必须请求url是<code>/post/1/</code>, 才会返回其对应的 <code>response</code>；</p>
+<p>test_data中的第二个元素，<code>url:"/post/3000/"</code>, 必须请求url是 <code>/post/3000/</code>，才会返回其对应的<code>response</code>；</p>
+<p>test_data中<code>url</code>的匹配有一点特殊，如果设置test_data中的<code>url</code>，表示忽略<code>url</code>匹配，也就是默认<code>url</code>是匹配的。</p>
+<p>其它字段不一样，就是没有设置，也会拿着空去匹配</p>
+<h3>使用query 进行匹配</h3>
+<pre><code class="language-.language-json5">{
+    name:"user logout",
+    method:"GET",
+    url:"/logout/",
     query:{
-        id:{name:&quot;user id&quot;, type:&quot;int&quot;},
+        id:{name:"user id", type:"int"},
         username:{}
     },
     response:{
-        code:{name:&quot;response result code&quot;, type:&quot;int&quot;, desc:&quot;success is 1&quot;},
-        msg:{name:&quot;response result message&quot;, type:&quot;string&quot;, desc:&quot;&quot;}
+        code:{name:"response result code", type:"int", desc:"success is 1"},
+        msg:{name:"response result message", type:"string", desc:""}
     },
-    test&#95;data:&#91;
+    test_data:[
         {
-            query:{id:1, username:&quot;root&quot;},
-            response:{code:1, msg:&quot;logout success&quot;}
+            query:{id:1, username:"root"},
+            response:{code:1, msg:"logout success"}
         },
         {
-            response:{code:-1, msg:&quot;error&quot;}
+            response:{code:-1, msg:"error"}
         },
         {
-            query:{id:3, username:&quot;lily&quot;},
-            response:{code:-1, msg:&quot;username and id not match&quot;}
+            query:{id:3, username:"lily"},
+            response:{code:-1, msg:"username and id not match"}
         }
-    &#93;
+    ]
 }
 
-</code></pre><p>注意，这里接口中定义域<code>query</code>的<code>id</code>为<code>id:{name:&quot;user id&quot;, type:&quot;int&quot;}</code>，<code>id</code>是一个整数，那么<code>test&#95;data</code>中<code>query</code>里<code>id</code>的值也必须是整数，否则不会匹配。也就是</p><pre><code class=".language-json5">// 接口中query定义
+</code></pre>
+<p>注意，这里接口中定义域<code>query</code>的<code>id</code>为<code>id:{name:"user id", type:"int"}</code>，<code>id</code>是一个整数，那么<code>test_data</code>中<code>query</code>里<code>id</code>的值也必须是整数，否则不会匹配。也就是</p>
+<pre><code class="language-.language-json5">// 接口中query定义
 query:{
-    id:{name:&quot;user id&quot;, type:&quot;int&quot;}
+    id:{name:"user id", type:"int"}
     ....
 }
 // 请求 /logout/?id=1&amp;username=root
-query:{id:1, username:&quot;root&quot;}, // 会匹配
-query:{id:&quot;1&quot;, username:&quot;root&quot;}, // 不会匹配
-</code></pre><p>如果我们把接口<code>query</code>的定义改为：<code>id:{name:&quot;user id&quot;, type:&quot;string&quot;}</code>，<code>id</code>是一个字符串，那么<code>test&#95;data</code>中<code>query</code>里<code>id</code>的值也必须为整数，否则不会匹配。也就是</p><pre><code class=".language-json5">// 接口中query定义
+query:{id:1, username:"root"}, // 会匹配
+query:{id:"1", username:"root"}, // 不会匹配
+</code></pre>
+<p>如果我们把接口<code>query</code>的定义改为：<code>id:{name:"user id", type:"string"}</code>，<code>id</code>是一个字符串，那么<code>test_data</code>中<code>query</code>里<code>id</code>的值也必须为整数，否则不会匹配。也就是</p>
+<pre><code class="language-.language-json5">// 接口中query定义
 query:{
-    id:{name:&quot;user id&quot;, type:&quot;string&quot;}
+    id:{name:"user id", type:"string"}
     ....
 }
 // 请求 /logout/?id=1&amp;username=root
-query:{id:1, username:&quot;root&quot;}, // 不会匹配
-query:{id:&quot;1&quot;, username:&quot;root&quot;}, // 会匹配
-</code></pre><p>如果没有定义接口的<code>response</code>或者<code>query</code>，那么请求的所有query中的整数都是当做字符串处理，写在<code>test&#95;data</code>中也必须全部写为字符串</p><h3>使用body进行匹配</h3><pre><code class=".language-json5">{
-    name:&quot;user login&quot;,
-    desc:&quot;if user login success, will get a token&quot;,
-    method: &quot;POST&quot;,
-    url:&quot;/login/&quot;,
-    body&#95;mode:&quot;json&quot;, // form-data, text, json, html, xml, javascript, binary
+query:{id:1, username:"root"}, // 不会匹配
+query:{id:"1", username:"root"}, // 会匹配
+</code></pre>
+<p>如果没有定义接口的<code>response</code>或者<code>query</code>，那么请求的所有query中的整数都是当做字符串处理，写在<code>test_data</code>中也必须全部写为字符串</p>
+<h3>使用body进行匹配</h3>
+<pre><code class="language-.language-json5">{
+    name:"user login",
+    desc:"if user login success, will get a token",
+    method: "POST",
+    url:"/login/",
+    body_mode:"json", // form-data, text, json, html, xml, javascript, binary
     body:{
-        username:{name: &quot;username&quot;},
-        password:{name: &quot;password&quot;}
+        username:{name: "username"},
+        password:{name: "password"}
     },
     response:{
-        code:{name:&quot;response result code&quot;, type:&quot;int&quot;, desc:&quot;success is 1&quot;},
-        msg:{name:&quot;response result message&quot;, type:&quot;string&quot;, desc:&quot;&quot;},
-        token:{name:&quot;login success, get a user token; login failed, no token&quot;, type:&quot;string&quot;, required:false}
+        code:{name:"response result code", type:"int", desc:"success is 1"},
+        msg:{name:"response result message", type:"string", desc:""},
+        token:{name:"login success, get a user token; login failed, no token", type:"string", required:false}
     },
-    test&#95;data:&#91;
+    test_data:[
         {
-            body:{username:&quot;edison&quot;, password:&quot;123&quot;},
-            response:{code:-1, msg:&quot;password incorrect&quot;}
+            body:{username:"edison", password:"123"},
+            response:{code:-1, msg:"password incorrect"}
         },
         {
-            body:{username:&quot;lily&quot;, password:&quot;123&quot;},
-            response:{code:-2, msg:&quot;username not exist&quot;}
+            body:{username:"lily", password:"123"},
+            response:{code:-2, msg:"username not exist"}
         },
         {
-            body:{username:&quot;root&quot;, password:&quot;123&quot;},
-            response:{code:1, msg:&quot;login success&quot;, token:&quot;fjdlkfjlafjdlaj3jk2l4j&quot;}
+            body:{username:"root", password:"123"},
+            response:{code:1, msg:"login success", token:"fjdlkfjlafjdlaj3jk2l4j"}
         },
         {
-            body:{username:&quot;lily&quot;},
-            response:{code:-1, msg:&quot;password is required&quot;}
+            body:{username:"lily"},
+            response:{code:-1, msg:"password is required"}
         },
         {
-            body:{password:&quot;123&quot;},
-            response:{code:-1, msg:&quot;username is required&quot;}
+            body:{password:"123"},
+            response:{code:-1, msg:"username is required"}
         }
-    &#93;
+    ]
 },
-</code></pre><h3>form_data匹配</h3><p>把上个例子中<code>body</code>字段名改为<code>form&#95;data</code>即可。</p><h3>使用method进行匹配</h3><p><code>method</code>可以直接写字符串<code>method:&quot;GET&quot;</code>，单个方法匹配，也可以写数组，一次匹配多种方法，<code>method:&#91;&quot;GET&quot;, &quot;POST&quot;&#93;</code>，也可以匹配全部方法：<code>method:&quot;&#42;&quot;</code></p><p>如果不在test_data中设置<code>method</code>，表示<code>method</code>请求方法默认都是匹配的。</p><pre><code class=".language-json5">{
+</code></pre>
+<h3>form_data匹配</h3>
+<p>把上个例子中<code>body</code>字段名改为<code>form_data</code>即可。</p>
+<h3>使用method进行匹配</h3>
+<p><code>method</code>可以直接写字符串<code>method:"GET"</code>，单个方法匹配，也可以写数组，一次匹配多种方法，<code>method:["GET", "POST"]</code>，也可以匹配全部方法：<code>method:"*"</code></p>
+<p>如果不在test_data中设置<code>method</code>，表示<code>method</code>请求方法默认都是匹配的。</p>
+<pre><code class="language-.language-json5">{
     // 假设在这个接口中，编辑获取数据和提交保存是一个接口，真实开发中，不建议这么做
-    name:&quot;Article add&quot;,
-    desc:&quot;Article add or edit&quot;,
-    method:&#91;&quot;GET&quot;, &quot;POST&quot;&#93;,
-    url:&quot;/post/add/&quot;,
-    body&#95;mode:&quot;json&quot;, // form-data, text, json, html, xml, javascript, binary
+    name:"Article add",
+    desc:"Article add or edit",
+    method:["GET", "POST"],
+    url:"/post/add/",
+    body_mode:"json", // form-data, text, json, html, xml, javascript, binary
     body:{
-        id:{name: &quot;article id&quot;},
-        title:{name: &quot;article title&quot;, required:false},
-        content:{name: &quot;article content&quot;, required:false}
+        id:{name: "article id"},
+        title:{name: "article title", required:false},
+        content:{name: "article content", required:false}
     },
     response:{
-        id: {name: &quot;Article id&quot;, type:&quot;PosInt&quot;},
-        title:{name: &quot;article title&quot;},
-        content:{name: &quot;article content&quot;}
+        id: {name: "Article id", type:"PosInt"},
+        title:{name: "article title"},
+        content:{name: "article content"}
     },
-    test&#95;data:&#91;
+    test_data:[
         {
-            method:&quot;GET&quot;,
+            method:"GET",
             body:{
                 id:1
             },
             response: {
                 id:1,
-                title:&quot;Hello World&quot;,
-                content:&quot;Article Content&quot;
+                title:"Hello World",
+                content:"Article Content"
             }
         },
         {
-            method:&quot;POST&quot;,
+            method:"POST",
             body:{
                 id:1,
-                title:&quot;Hello World&quot;,
-                content:&quot;Article Content&quot;
+                title:"Hello World",
+                content:"Article Content"
             },
             response: {
                 id:1,
-                title:&quot;Hello World&quot;,
-                content:&quot;Article Content&quot;
+                title:"Hello World",
+                content:"Article Content"
             }
         },
-    &#93;
+    ]
 }
 
-</code></pre><p>如果请求的method不匹配，那么将会返回错误<pre><code class=".language-json5">{
-  &quot;code&quot;: -1,
-  &quot;msg&quot;: &quot;this api address /logout/ not defined method POST&quot;
+</code></pre>
+<p>如果请求的method不匹配，那么将会返回错误</p>
+<pre><code class="language-.language-json5">{
+  "code": -1,
+  "msg": "this api address /logout/ not defined method POST"
 }
-</code></pre></p><h2>增加test_data数据的描述说明</h2><p>可以在<code>test&#95;data</code>的数据列表的元素中，增加<code>name</code>字段和<code>desc</code>字段，进行测试用例数据的描述，<code>name</code>字段和<code>desc</code>字段与<code>method</code>、<code>body</code>这些字段是同级的。增加了<code>name</code>和<code>desc</code>不会影响<code>test&#95;data</code>的匹配，两个字段都是可选的。</p><pre><code class=".language-json5">test&#95;data:&#91;
+</code></pre>
+<h2>增加test_data数据的描述说明</h2>
+<p>可以在<code>test_data</code>的数据列表的元素中，增加<code>name</code>字段和<code>desc</code>字段，进行测试用例数据的描述，<code>name</code>字段和<code>desc</code>字段与<code>method</code>、<code>body</code>这些字段是同级的。增加了<code>name</code>和<code>desc</code>不会影响<code>test_data</code>的匹配，两个字段都是可选的。</p>
+<pre><code class="language-.language-json5">test_data:[
     {
-        name:&quot;编辑文章时获取文章内容&quot;,
-        method:&quot;GET&quot;,
+        name:"编辑文章时获取文章内容",
+        method:"GET",
         body:{
             id:1
         },
         response: {
             id:1,
-            title:&quot;Hello World&quot;,
-            content:&quot;Article Content&quot;
+            title:"Hello World",
+            content:"Article Content"
         }
     },
     {
-        name:&quot;提交文章编辑内容&quot;,
-        desc:&quot;提价文章编辑内容后，数据立即更新内容&quot;,
-        method:&quot;POST&quot;,
+        name:"提交文章编辑内容",
+        desc:"提价文章编辑内容后，数据立即更新内容",
+        method:"POST",
         body:{
             id:1,
-            title:&quot;Hello World&quot;,
-            content:&quot;Article Content&quot;
+            title:"Hello World",
+            content:"Article Content"
         },
         response: {
             id:1,
-            title:&quot;Hello World&quot;,
-            content:&quot;Article Content&quot;
+            title:"Hello World",
+            content:"Article Content"
         }
     },
-&#93;
-</code></pre><p>如果请求的url不匹配，那么将会返回错误<pre><code class=".language-json5">{
-  &quot;code&quot;: -1,
-  &quot;msg&quot;: &quot;this api address /logout/aaa/ not defined method POST&quot;
+]
+</code></pre>
+<p>如果请求的url不匹配，那么将会返回错误</p>
+<pre><code class="language-.language-json5">{
+  "code": -1,
+  "msg": "this api address /logout/aaa/ not defined method POST"
 }
-</code></pre></p><h3>其它</h3><p>虽然不推荐，但是其实你可以这么做，就是不定义<code>response</code>，直接写<code>test&#95;data</code>里面的数据就开始前端访问。</p><p>这么做可以快速的提供接口服务，不好的是，没有了<code>response</code>文档，同时也不会自动生成<code>mock</code>数据。</p>
-            <p class="text-left text-muted">2020-02-24 09:04</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2020/1/29/panda-api-field/">上一篇: Panda-api字段说明</a></div>
-                <div class="col-6 text-right"><a href="/p/2020/1/24/panda_api_read_me/">下一篇:Rust 开发的一款接口设计工具 Panda Api</a></div>
-            </div>
-        </div>
+</code></pre>
+<h3>其它</h3>
+<p>虽然不推荐，但是其实你可以这么做，就是不定义<code>response</code>，直接写<code>test_data</code>里面的数据就开始前端访问。</p>
+<p>这么做可以快速的提供接口服务，不好的是，没有了<code>response</code>文档，同时也不会自动生成<code>mock</code>数据。</p>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2020-01-27</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2020/1/29/panda-api-field/">上一篇: Panda-api字段说明</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2020/1/24/panda_api_read_me/">下一篇: Rust 开发的一款接口设计工具 Panda Api</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2020/1/27/panda-api-test_data/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

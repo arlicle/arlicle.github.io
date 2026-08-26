@@ -3,23 +3,29 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>2. 两数相加 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">2. 两数相加</h1>
-
-
-
-
-            <h3>题目</h3><p>给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。</p><p>如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。</p><p>您可以假设除了数字 0 之外，这两个数都不会以 0 开头。</p><h3>示例</h3><p>输入：(2 -> 4 -> 3) + (5 -> 6 -> 4)</p><p>输出：7 -> 0 -> 8</p><p>原因：342 + 465 = 807</p><p><code>题型归类: Linked-list, Recursive, HashMap</code></p><h3>首先构造做题环境</h3><p>因为传入参数是链表，开发和测试都要反复用到，如果在开发或者测试直接徒手撸链表，代码量大又不容易维护，所以需要一个东西来方便的吧vec转换为链表。</p><pre><code class=".lang-rust">fn vec2linked&#95;list&#40;mut arr: Vec&lt;i32&gt;&#41; -&gt; Option&lt;Box&lt;ListNode&gt;&gt; {
-    arr.reverse&#40;&#41;;
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">2. 两数相加</h1>
+  <p>###题目</p>
+<p>给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。</p>
+<p>如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。</p>
+<p>您可以假设除了数字 0 之外，这两个数都不会以 0 开头。</p>
+<p>###示例</p>
+<p>输入：(2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)</p>
+<p>输出：7 -&gt; 0 -&gt; 8</p>
+<p>原因：342 + 465 = 807</p>
+<p><code>题型归类: Linked-list, Recursive, HashMap</code></p>
+<h3>首先构造做题环境</h3>
+<p>因为传入参数是链表，开发和测试都要反复用到，如果在开发或者测试直接徒手撸链表，代码量大又不容易维护，所以需要一个东西来方便的吧vec转换为链表。</p>
+<pre><code class="language-.lang-rust">fn vec2linked_list(mut arr: Vec&lt;i32&gt;) -&gt; Option&lt;Box&lt;ListNode&gt;&gt; {
+    arr.reverse();
     let mut node = ListNode {
         val: 0,
         next: None,
@@ -28,26 +34,26 @@
     let mut index = 0;
     for i in arr {
         if index == 0 {
-            node = ListNode::new&#40;i&#41;;
+            node = ListNode::new(i);
         } else {
-            node = node.prepend&#40;i&#41;;
+            node = node.prepend(i);
         }
         index += 1;
     }
 
-    Some&#40;Box::new&#40;node&#41;&#41;
+    Some(Box::new(node))
 }
 
 // Definition for singly-linked list.
-#&#91;derive&#40;PartialEq, Eq, Clone, Debug&#41;&#93;
+#[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
     pub val: i32,
     pub next: Option&lt;Box&lt;ListNode&gt;&gt;,
 }
 
 impl ListNode {
-    #&#91;inline&#93;
-    fn new&#40;val: i32&#41; -&gt; Self {
+    #[inline]
+    fn new(val: i32) -&gt; Self {
         ListNode {
             next: None,
             val,
@@ -56,209 +62,246 @@ impl ListNode {
 }
 
 impl ListNode {
-    fn prepend&#40;self, val: i32&#41; -&gt; Self {
+    fn prepend(self, val: i32) -&gt; Self {
         /// 从最末端开始，一个接一个的创建一个链表
         ListNode {
             val,
-            next: Some&#40;Box::new&#40;self&#41;&#41;,
+            next: Some(Box::new(self)),
         }
     }
 }
 
-#&#91;cfg&#40;test&#41;&#93;
+#[cfg(test)]
 mod test {
-    use crate::{vec2linked&#95;list, ListNode};
+    use crate::{vec2linked_list, ListNode};
 
-    pub fn vec2linked&#95;list&#95;test&#40;&#41; {
-        assert&#95;eq!&#40;
-            Some&#40;Box::new&#40;ListNode {
+    pub fn vec2linked_list_test() {
+        assert_eq!(
+            Some(Box::new(ListNode {
                 val: 1,
-                next: Some&#40;
-                    Box::new&#40;
+                next: Some(
+                    Box::new(
                         ListNode {
                             val: 2,
-                            next: Some&#40;Box::new&#40;ListNode {
+                            next: Some(Box::new(ListNode {
                                 val: 3,
                                 next: None,
-                            }&#41;&#41;,
-                        }&#41;&#41;,
-            }&#41;&#41;,
-            vec2linked&#95;list&#40;vec!&#91;1, 2, 3&#93;&#41;&#41;;
+                            })),
+                        })),
+            })),
+            vec2linked_list(vec![1, 2, 3]));
     }
 }
-</code></pre> <h3>思路一</h3><p>使用循环，分别从第一位开始相加，会遇到3种情况：</p><p>1、相加之和大于10，那么就要记录进位；<br /> 2、只有其中其中一个链表有值，另一个链表结束，那么相当于+0；<br /> 3 两个链表都结束，如果有之前的进位，那么就为进位创建1位数字1，如果没有进位，返回结果。</p><pre><code class=".lang-rust">// 代码实现
+</code></pre>
+<h3>思路一</h3>
+<p>使用循环，分别从第一位开始相加，会遇到3种情况：</p>
+<p>1、相加之和大于10，那么就要记录进位；<br />
+2、只有其中其中一个链表有值，另一个链表结束，那么相当于+0；<br />
+3 两个链表都结束，如果有之前的进位，那么就为进位创建1位数字1，如果没有进位，返回结果。</p>
+<pre><code class="language-.lang-rust">// 代码实现
 impl Solution {
-    pub fn add&#95;two&#95;numbers&#40;l1: Option&lt;Box&lt;ListNode&gt;&gt;, l2: Option&lt;Box&lt;ListNode&gt;&gt;&#41; -&gt; Option&lt;Box&lt;ListNode&gt;&gt; {
+    pub fn add_two_numbers(l1: Option&lt;Box&lt;ListNode&gt;&gt;, l2: Option&lt;Box&lt;ListNode&gt;&gt;) -&gt; Option&lt;Box&lt;ListNode&gt;&gt; {
         let mut l1 = l1;
         let mut l2 = l2;
 
-        let mut head = Some&#40;Box::new&#40;ListNode::new&#40;0&#41;&#41;&#41;; // 记录链表头
+        let mut head = Some(Box::new(ListNode::new(0))); // 记录链表头
         let mut tail = &amp;mut head; // 记录链表末端节点，好继续往末端追加节点
 
-        let mut extra&#95;add = 0; // 记录是否有进位
+        let mut extra_add = 0; // 记录是否有进位
         loop {
-            let mut r = extra&#95;add; // 两个节点的求和，再加上进位
+            let mut r = extra_add; // 两个节点的求和，再加上进位
 
-            let mut l1&#95;none = true; // 记录链表1是否结束了
-            let mut l2&#95;none = true; // 记录链表2是否结束了
-            if let Some&#40;l1&#95;node&#41; = l1 {
-                r += l1&#95;node.val;
-                l1 = l1&#95;node.next;
-                l1&#95;none = false;
+            let mut l1_none = true; // 记录链表1是否结束了
+            let mut l2_none = true; // 记录链表2是否结束了
+            if let Some(l1_node) = l1 {
+                r += l1_node.val;
+                l1 = l1_node.next;
+                l1_none = false;
             }
 
-            if let Some&#40;l2&#95;node&#41; = l2 {
-                r += l2&#95;node.val;
-                l2 = l2&#95;node.next;
-                l2&#95;none = false;
+            if let Some(l2_node) = l2 {
+                r += l2_node.val;
+                l2 = l2_node.next;
+                l2_none = false;
             }
 
-            if l1&#95;none &amp;&amp; l2&#95;none &amp;&amp; r == 0 {
+            if l1_none &amp;&amp; l2_none &amp;&amp; r == 0 {
                 // 当两个链表都结束，并且没有进位，那么就返回结果链表
-                break head.unwrap&#40;&#41;.next;
+                break head.unwrap().next;
             }
 
-            extra&#95;add = r / 10;
-            tail.as&#95;mut&#40;&#41;.unwrap&#40;&#41;.next = Some&#40;Box::new&#40;ListNode::new&#40;r % 10&#41;&#41;&#41;;
-            tail = &amp;mut tail.as&#95;mut&#40;&#41;.unwrap&#40;&#41;.next;
+            extra_add = r / 10;
+            tail.as_mut().unwrap().next = Some(Box::new(ListNode::new(r % 10)));
+            tail = &amp;mut tail.as_mut().unwrap().next;
         }
     }
 }
 
-#&#91;cfg&#40;test&#41;&#93;
+#[cfg(test)]
 mod test {
-    use crate::{vec2linked&#95;list, Solution};
+    use crate::{vec2linked_list, Solution};
 
-    pub fn add&#95;two&#95;numbers&#95;test&#40;&#41;{
-        let l1 = vec2linked&#95;list&#40;vec!&#91;1,2,3&#93;&#41;;
-        let l2 = vec2linked&#95;list&#40;vec!&#91;2,3,4&#93;&#41;;
-        assert&#95;eq!&#40;vec2linked&#95;list&#40;vec!&#91;3,5,7&#93;&#41;, Solution::add&#95;two&#95;numbers&#40;l1,l2&#41;&#41;;
+    pub fn add_two_numbers_test(){
+        let l1 = vec2linked_list(vec![1,2,3]);
+        let l2 = vec2linked_list(vec![2,3,4]);
+        assert_eq!(vec2linked_list(vec![3,5,7]), Solution::add_two_numbers(l1,l2));
     }
 }
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户 <br /> 内存消耗 : 2.1 MB , 在所有 Rust 提交中击败了 100.00% 的用户 </p></blockquote><p>这个思路，循环是最长链表的长度n+1?(加1或不加1)，因此算法复杂度是$O(n)$，这个算法的特殊处理在于，我们记录了链表的尾节点的指针，然后把它变为mut，往next里面继续增加节点，然后再把新增加的节点地址更新尾指针，在改变尾指针的时候，需要as_mut来转换Option类型为可变，否则编译器会报错。</p><h3>思路二</h3><p>使用递归， 因为链表是从最里面开始，逐步向外一层一层的包上去的，那么我们就可以用递归的特点，计算最外层时，一层一层的往里面去取最里层。</p><pre><code class=".lang-rust">// 代码实现
+</code></pre>
+<h4>leetcode执行结果</h4>
+<blockquote>
+<p>执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户<br />
+内存消耗 : 2.1 MB , 在所有 Rust 提交中击败了 100.00% 的用户</p>
+</blockquote>
+<p>这个思路，循环是最长链表的长度n+1?(加1或不加1)，因此算法复杂度是$O(n)$，这个算法的特殊处理在于，我们记录了链表的尾节点的指针，然后把它变为mut，往next里面继续增加节点，然后再把新增加的节点地址更新尾指针，在改变尾指针的时候，需要as_mut来转换Option类型为可变，否则编译器会报错。</p>
+<h3>思路二</h3>
+<p>使用递归， 因为链表是从最里面开始，逐步向外一层一层的包上去的，那么我们就可以用递归的特点，计算最外层时，一层一层的往里面去取最里层。</p>
+<pre><code class="language-.lang-rust">// 代码实现
 impl Solution {
-    pub fn add&#95;two&#95;numbers&#40;l1: Option&lt;Box&lt;ListNode&gt;&gt;, l2: Option&lt;Box&lt;ListNode&gt;&gt;&#41; -&gt; Option&lt;Box&lt;ListNode&gt;&gt; {
-        add&#95;two&#95;numbers&#40;l1, l2, 0&#41;
+    pub fn add_two_numbers(l1: Option&lt;Box&lt;ListNode&gt;&gt;, l2: Option&lt;Box&lt;ListNode&gt;&gt;) -&gt; Option&lt;Box&lt;ListNode&gt;&gt; {
+        add_two_numbers(l1, l2, 0)
     }
 }
 
 
-pub fn add&#95;two&#95;numbers&#40;l1: Option&lt;Box&lt;ListNode&gt;&gt;, l2: Option&lt;Box&lt;ListNode&gt;&gt;, extra&#95;add: i32&#41; -&gt; Option&lt;Box&lt;ListNode&gt;&gt; {
-    // extra&#95;add 表示节点相加的进位
-    let mut r = extra&#95;add;
+pub fn add_two_numbers(l1: Option&lt;Box&lt;ListNode&gt;&gt;, l2: Option&lt;Box&lt;ListNode&gt;&gt;, extra_add: i32) -&gt; Option&lt;Box&lt;ListNode&gt;&gt; {
+    // extra_add 表示节点相加的进位
+    let mut r = extra_add;
 
     let mut n1 = None;
     let mut n2 = None;
 
-    let mut is&#95;l1&#95;none = true;
-    let mut is&#95;l2&#95;none = true;
+    let mut is_l1_none = true;
+    let mut is_l2_none = true;
 
-    if let Some&#40;l1&#95;node&#41; = l1 {
-        r += l1&#95;node.val;
-        n1 = l1&#95;node.next;
-        is&#95;l1&#95;none = false;
+    if let Some(l1_node) = l1 {
+        r += l1_node.val;
+        n1 = l1_node.next;
+        is_l1_none = false;
     }
 
-    if let Some&#40;l2&#95;node&#41; = l2 {
-        r += l2&#95;node.val;
-        n2 = l2&#95;node.next;
-        is&#95;l2&#95;none = false;
+    if let Some(l2_node) = l2 {
+        r += l2_node.val;
+        n2 = l2_node.next;
+        is_l2_none = false;
     }
 
-    if is&#95;l1&#95;none &amp;&amp; is&#95;l2&#95;none {
-        if extra&#95;add &gt; 0 {
+    if is_l1_none &amp;&amp; is_l2_none {
+        if extra_add &gt; 0 {
             // 如果两个链表都结束了，但是有进位，需要为进位增加一个节点
-            return Some&#40;Box::new&#40;ListNode::new&#40;extra&#95;add&#41;&#41;&#41;;
+            return Some(Box::new(ListNode::new(extra_add)));
         } else {
             // 如果没有进位，直接返回None即可
             return None;
         }
     }
 
-    Some&#40;Box::new&#40;ListNode {
+    Some(Box::new(ListNode {
         val: r % 10,
-        next: add&#95;two&#95;numbers&#40;n1, n2, r / 10&#41;,
-    }&#41;&#41;
+        next: add_two_numbers(n1, n2, r / 10),
+    }))
 }
 
-#&#91;cfg&#40;test&#41;&#93;
+#[cfg(test)]
 mod test {
-    use crate::{vec2linked&#95;list, Solution};
+    use crate::{vec2linked_list, Solution};
 
-    pub fn add&#95;two&#95;numbers&#95;test&#40;&#41;{
-        let l1 = vec2linked&#95;list&#40;vec!&#91;1,2,3&#93;&#41;;
-        let l2 = vec2linked&#95;list&#40;vec!&#91;2,3,4&#93;&#41;;
-        assert&#95;eq!&#40;vec2linked&#95;list&#40;vec!&#91;3,5,7&#93;&#41;, Solution::add&#95;two&#95;numbers&#40;l1,l2&#41;&#41;;
+    pub fn add_two_numbers_test(){
+        let l1 = vec2linked_list(vec![1,2,3]);
+        let l2 = vec2linked_list(vec![2,3,4]);
+        assert_eq!(vec2linked_list(vec![3,5,7]), Solution::add_two_numbers(l1,l2));
     }
 }
-</code></pre><h3>leetcode执行结果</h3><blockquote><p> 执行用时 : 4 ms , 在所有 Rust 提交中击败了 93.52% 的用户 <br /> 内存消耗 : 2 MB , 在所有 Rust 提交中击败了 100.00% 的用户 </p></blockquote><p>使用递归，执行效率和思路一是一样的，执行了n次(比思路一少了1次)，算法复杂度同样为$O(n)$，递归过程可能有额外的一点点消耗，时间上和内存上稍微多了一点点。</p><h3>做题中的困惑</h3><ol><li>在Clojure中，除非使用尾递归调用或者惰性序列，才会使用递归，否则一般是不使用递归的，因为递归有额外的性能损耗，不知道Rust有没有对尾递归进行优化，或者Rust的惰性序列构造的方式。</li><li>在构造vec的时候，我使用range 来构造vec, 比如  1..10, 但是输入 'let a:Vec<i32> = (1..10).'的时候，不会提示出collect方法，但实际是有这个方法的，因为<code>let a:Vec&lt;i32&gt; = &#40;1..10&#41;.collect&#40;&#41;;</code>是可以执行的，这应该怎么解决呢？</li></ol><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/multiply-strings/'>字符串相乘</a></p><p><a href='https://leetcode-cn.com/problems/add-binary/'>二进制求和</a></p><p><a href='https://leetcode-cn.com/problems/sum-of-two-integers/'>两整数之和</a></p>
-            <p class="text-left text-muted">2019-09-02 12:13</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2019/9/2/monotone-increasing-digits/">上一篇: 738. 单调递增的数字</a></div>
-                <div class="col-6 text-right"><a href="/p/2019/9/1/two-sum/">下一篇:1. 两数之和 - leetcode刷题</a></div>
-            </div>
-        </div>
+</code></pre>
+<h3>leetcode执行结果</h3>
+<blockquote>
+<p>执行用时 : 4 ms , 在所有 Rust 提交中击败了 93.52% 的用户<br />
+内存消耗 : 2 MB , 在所有 Rust 提交中击败了 100.00% 的用户</p>
+</blockquote>
+<p>使用递归，执行效率和思路一是一样的，执行了n次(比思路一少了1次)，算法复杂度同样为$O(n)$，递归过程可能有额外的一点点消耗，时间上和内存上稍微多了一点点。</p>
+<h3>做题中的困惑</h3>
+<ol>
+<li>
+<p>在Clojure中，除非使用尾递归调用或者惰性序列，才会使用递归，否则一般是不使用递归的，因为递归有额外的性能损耗，不知道Rust有没有对尾递归进行优化，或者Rust的惰性序列构造的方式。</p>
+</li>
+<li>
+<p>在构造vec的时候，我使用range 来构造vec, 比如  1..10, 但是输入 'let a:Vec<i32> = (1..10).'的时候，不会提示出collect方法，但实际是有这个方法的，因为<code>let a:Vec&lt;i32&gt; = (1..10).collect();</code>是可以执行的，这应该怎么解决呢？</p>
+</li>
+</ol>
+<h3>leetcode相似题型</h3>
+<p><a href="https://leetcode-cn.com/problems/multiply-strings/">字符串相乘</a></p>
+<p><a href="https://leetcode-cn.com/problems/add-binary/">二进制求和</a></p>
+<p><a href="https://leetcode-cn.com/problems/sum-of-two-integers/">两整数之和</a></p>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2019-09-01</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2019/9/1/two-sum/">上一篇: 1. 两数之和 - leetcode刷题</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2019/8/8/rust/">下一篇: 国内Rustcc 源 专属crates.io镜像</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2019/9/1/add-two-numbers/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

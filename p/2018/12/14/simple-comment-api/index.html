@@ -3,119 +3,194 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>评论系统接口文档 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">评论系统接口文档</h1>
-
-
-
-
-            <h2>接口地址</h2><p>https://comment.debugmyself.com</p><h2>微信API接口</h2><h3>获取微信登录的二维码</h3><p>GET /login/qrcode  <code>无需登录</code></p><p>返回结果为：<pre><code class=".language-html">&lt;img class=&quot;qrcode lightBorder&quot; src=&quot;/connect/qrcode/`qrcode`&quot; /&gt;
-</code></pre></p><p>需要用正则把<code>qrcode</code>拿出来</p><h3>检查用户是否扫码或者是否点击确认登录</h3><p>GET /login/qrcode/check  <code>无需登录</code></p><p>返回结果为：<pre><code class=".language-html">window.wx&#95;errcode=`408`;window.wx&#95;code=`wx&#95;code`;
-</code></pre></p><p><code>408</code> 这里表示返回扫码结果的状态嘛，<code>wx&#95;code</code>表示获取到的权限code</p><p>返回结果格式为</p><p><table class="table"> <thead><tr> <th>状态码</th> <th>说明</th> </tr> </thead> <tbody> <tr> <td>404</td> <td>用户扫码成功，等待用户点击确认登录</td> </tr> <tr> <td>405</td> <td>用户点击确认登录了，获取到wx_code</td> </tr> <tr> <td>403</td> <td>用户点击取消登录</td> </tr> <tr> <td>402 或 500</td> <td>超时或获取失败，需要重新获取二维码，然后继续获取二维码状态</td> </tr> <tr> <td>408</td> <td>表示用户一直没有扫码，一直未获取到用户扫码信息，需要重新发起请求</td> </tr> </tbody> </table></p><h2>根据微信 wx_code获取用户微信信息</h2><p>GET /user/data/wechat  <code>无需登录</code></p><p>参数         <br /><pre><code class=".language-javascript">{
-    &quot;code&quot; : wx&#95;code // wx&#95;code为从微信获得的code
-} 
-</code></pre></p><p>返回结果 {:nickname "xx" :avatar "xxx" :token "xxx}</p><p>获取到用户 token 信息，需要存储到cookies和localStorage中，取的时候，先从cookie中取，如果没有再从localStorage中取。</p><p>获取到用户 token 还要再做一件事情，就是把token信息请求回js服务器，实现跨域支持cookie，这样用户在多个使用该评论系统的网站都无需再登录就可以进行评论。</p><pre><code class=".language-javascript">    var hm = document.createElement&#40;&quot;script&quot;&#41;;
-    hm.src = &quot;https://comment.debugmyself.com/sc.js?t=token&quot;;
-    var s = document.body.appendChild&#40;hm&#41;;
-</code></pre><h2>需要登录时，需要在 Request Headers 中提交用户 token 信息</h2><pre><code class=".language-javascript">Authorization: Bearer 917529d866c23f3053a68be78f59925c4b9570g9
-</code></pre><p>如果使用需要登录的端口，没有在Request Headers 带着用户token信息，会返回未登录或没有权限错误</p><h2>提交评论到服务器</h2><p>POST /comment/post <code>需要登录</code></p><p>参数<pre><code class=".language-javascript">{
-    &quot;content&quot;:&quot;&quot;, // 评论内容
-    &quot;appid&quot;:&quot;&quot;, // 网站的appid
-    &quot;post&#95;id&quot;, // 文章的post id, 用户会在外部AL&#95;configs中进行配置
-    &quot;parent&quot;:&quot;&quot;, //评论的上级ID, parent id
-    &quot;reply&quot;:&quot;&quot; // 回复对象的id
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">评论系统接口文档</h1>
+  <h2>接口地址</h2>
+<p>https://comment.debugmyself.com</p>
+<h2>微信API接口</h2>
+<h3>获取微信登录的二维码</h3>
+<p>GET /login/qrcode  <code>无需登录</code></p>
+<p>返回结果为：</p>
+<pre><code class="language-.language-html">&lt;img class="qrcode lightBorder" src="/connect/qrcode/`qrcode`" /&gt;
+</code></pre>
+<p>需要用正则把<code>qrcode</code>拿出来</p>
+<h3>检查用户是否扫码或者是否点击确认登录</h3>
+<p>GET /login/qrcode/check  <code>无需登录</code></p>
+<p>返回结果为：</p>
+<pre><code class="language-.language-html">window.wx_errcode=`408`;window.wx_code=`wx_code`;
+</code></pre>
+<p><code>408</code> 这里表示返回扫码结果的状态嘛，<code>wx_code</code>表示获取到的权限code</p>
+<p>返回结果格式为</p>
+<table class="table">
+<thead><tr>
+<th>状态码</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>404</td>
+<td>用户扫码成功，等待用户点击确认登录</td>
+</tr>
+<tr>
+<td>405</td>
+<td>用户点击确认登录了，获取到wx_code</td>
+</tr>
+<tr>
+<td>403</td>
+<td>用户点击取消登录</td>
+</tr>
+<tr>
+<td>402 或 500</td>
+<td>超时或获取失败，需要重新获取二维码，然后继续获取二维码状态</td>
+</tr>
+<tr>
+<td>408</td>
+<td>表示用户一直没有扫码，一直未获取到用户扫码信息，需要重新发起请求</td>
+</tr>
+</tbody>
+</table>
+<h2>根据微信 wx_code获取用户微信信息</h2>
+<p>GET /user/data/wechat  <code>无需登录</code></p>
+<p>参数</p>
+<pre><code class="language-.language-javascript">{
+    "code" : wx_code // wx_code为从微信获得的code
 }
-</code></pre></p><h2>提交点赞到服务器</h2><p>GET /comment/like <code>需要登录</code></p><p>参数</p><pre><code class=".language-javascript">{
-    &quot;id&quot;:&quot;&quot;, // 评论id
-    &quot;appid&quot;:&quot;&quot;, // 网站的appid
-    &quot;post&#95;id&quot;, // 文章的post id, 用户会在外部AL&#95;configs中进行配置
+</code></pre>
+<p>返回结果
+{:nickname "xx" :avatar "xxx" :token "xxx}</p>
+<p>获取到用户 token 信息，需要存储到cookies和localStorage中，取的时候，先从cookie中取，如果没有再从localStorage中取。</p>
+<p>获取到用户 token 还要再做一件事情，就是把token信息请求回js服务器，实现跨域支持cookie，这样用户在多个使用该评论系统的网站都无需再登录就可以进行评论。</p>
+<pre><code class="language-.language-javascript">    var hm = document.createElement("script");
+    hm.src = "https://comment.debugmyself.com/sc.js?t=token";
+    var s = document.body.appendChild(hm);
+</code></pre>
+<h2>需要登录时，需要在 Request Headers 中提交用户 token 信息</h2>
+<pre><code class="language-.language-javascript">Authorization: Bearer 917529d866c23f3053a68be78f59925c4b9570g9
+</code></pre>
+<p>如果使用需要登录的端口，没有在Request Headers 带着用户token信息，会返回未登录或没有权限错误</p>
+<h2>提交评论到服务器</h2>
+<p>POST /comment/post <code>需要登录</code></p>
+<p>参数</p>
+<pre><code class="language-.language-javascript">{
+    "content":"", // 评论内容
+    "appid":"", // 网站的appid
+    "post_id", // 文章的post id, 用户会在外部AL_configs中进行配置
+    "parent":"", //评论的上级ID, parent id
+    "reply":"" // 回复对象的id
 }
-</code></pre><p>如果该用户没有点赞过，那么系统会自动记录点赞，并返回1， 如果该用户已经点赞过，那么系统会自动取消点赞，返回-1</p><h2>第一次打开页面进行数据请求</h2><p>GET /init/data <code>如果用户已登录，请携带token信息，如果没有登录则不用带</code></p><p>参数</p><pre><code class=".language-javascript">{
-    &quot;appid&quot;:&quot;&quot;, // 网站的appid
-    &quot;post&#95;id&quot;, // 文章的post id, 用户会在外部AL&#95;configs中进行配置
+</code></pre>
+<h2>提交点赞到服务器</h2>
+<p>GET /comment/like <code>需要登录</code></p>
+<p>参数</p>
+<pre><code class="language-.language-javascript">{
+    "id":"", // 评论id
+    "appid":"", // 网站的appid
+    "post_id", // 文章的post id, 用户会在外部AL_configs中进行配置
 }
-</code></pre><p>如果请求带着token 信息，会返回用户信息和评论列表，评论列表数据会携带用户是否点赞过的状态</p><p>如果请求没有带着 token 信息，只会返回评论列表</p><p>每次请求会返回15条评论</p><h2>请求更多评论数据</h2><p>GET /init/data <code>如果用户已登录，请携带token信息，如果没有登录则不用带</code></p><p>参数</p><pre><code class=".language-javascript">{
-    &quot;appid&quot;:&quot;&quot;, // 网站的appid
-    &quot;post&#95;id&quot;, // 文章的post id, 用户会在外部AL&#95;configs中进行配置
-    &quot;last&#95;comment&#95;id&quot;:&quot;&quot;, // 最后一条评论的id
+</code></pre>
+<p>如果该用户没有点赞过，那么系统会自动记录点赞，并返回1， 如果该用户已经点赞过，那么系统会自动取消点赞，返回-1</p>
+<h2>第一次打开页面进行数据请求</h2>
+<p>GET /init/data <code>如果用户已登录，请携带token信息，如果没有登录则不用带</code></p>
+<p>参数</p>
+<pre><code class="language-.language-javascript">{
+    "appid":"", // 网站的appid
+    "post_id", // 文章的post id, 用户会在外部AL_configs中进行配置
 }
-</code></pre><p>如果请求带着token 信息，会返回用户信息和评论列表</p><p>如果请求没有带着 token 信息，只会返回评论列表</p><p>每次请求会返回15条评论</p>
-            <p class="text-left text-muted">2018-12-30 08:06</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2018/12/14/preact-render/">上一篇: preact 虚拟dom学习</a></div>
-                <div class="col-6 text-right"><a href="/p/2018/12/12/rest-vs-next/">下一篇:Clojure: rest vs next</a></div>
-            </div>
-        </div>
+</code></pre>
+<p>如果请求带着token 信息，会返回用户信息和评论列表，评论列表数据会携带用户是否点赞过的状态</p>
+<p>如果请求没有带着 token 信息，只会返回评论列表</p>
+<p>每次请求会返回15条评论</p>
+<h2>请求更多评论数据</h2>
+<p>GET /init/data <code>如果用户已登录，请携带token信息，如果没有登录则不用带</code></p>
+<p>参数</p>
+<pre><code class="language-.language-javascript">{
+    "appid":"", // 网站的appid
+    "post_id", // 文章的post id, 用户会在外部AL_configs中进行配置
+    "last_comment_id":"", // 最后一条评论的id
+}
+</code></pre>
+<p>如果请求带着token 信息，会返回用户信息和评论列表</p>
+<p>如果请求没有带着 token 信息，只会返回评论列表</p>
+<p>每次请求会返回15条评论</p>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2018-12-14</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2018/12/14/preact-render/">上一篇: preact 虚拟dom学习</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2018/12/12/rest-vs-next/">下一篇: Clojure: rest vs next</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2018/12/14/simple-comment-api/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

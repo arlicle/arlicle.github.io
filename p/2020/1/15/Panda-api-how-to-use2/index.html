@@ -3,554 +3,639 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>Panda api 高级使用说明 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">Panda api 高级使用说明</h1>
-
-
-
-
-            <h3>全局字段属性，不需要重复写相同的字段</h3><p>我们在上一篇的简易教学文章中，用户登录接口和用户退出接口的response返回字段，都有一个<code>code</code>字段和<code>msg</code>字段，<pre><code class=".language-json5">response:{
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">Panda api 高级使用说明</h1>
+  <h3>全局字段属性，不需要重复写相同的字段</h3>
+<p>我们在上一篇的简易教学文章中，用户登录接口和用户退出接口的response返回字段，都有一个<code>code</code>字段和<code>msg</code>字段，</p>
+<pre><code class="language-.language-json5">response:{
     code:{...},
     msg:{...}
 }
-</code></pre></p><p>实际上，很有可能，我们整个系统的接口，都遵循同样的标准，所有接口都有<code>code</code>字段和<code>msg</code>字段，那么，每个地方的body和response都去写岂不是很麻烦；另外，可能我们整个网站绝大部分的接口都是要登录的，只有很少的一小部分不需要登录，每个都去设置也很麻烦啊。我承认就是懒，所以Panda api提供了一个简单的全局设置方法。</p><p>打开<code>&#95;settings.json5</code>文件<pre><code class=".language-json5">// &#95;settings.json5
+</code></pre>
+<p>实际上，很有可能，我们整个系统的接口，都遵循同样的标准，所有接口都有<code>code</code>字段和<code>msg</code>字段，那么，每个地方的body和response都去写岂不是很麻烦；另外，可能我们整个网站绝大部分的接口都是要登录的，只有很少的一小部分不需要登录，每个都去设置也很麻烦啊。我承认就是懒，所以Panda api提供了一个简单的全局设置方法。</p>
+<p>打开<code>_settings.json5</code>文件</p>
+<pre><code class="language-.language-json5">// _settings.json5
 {
-  project&#95;name: &quot;Panda Api&quot;, /&#42; 项目名称 &#42;/
-  project&#95;desc: &quot;Panda Api is a simple api manage tool&quot; /&#42; 项目简述 &#42;/
+  project_name: "Panda Api", /* 项目名称 */
+  project_desc: "Panda Api is a simple api manage tool" /* 项目简述 */
 }
-</code></pre></p><p>我们增加<code>global</code>字段，内容变为：</p><pre><code class=".language-json5">// &#95;settings.json5
+</code></pre>
+<p>我们增加<code>global</code>字段，内容变为：</p>
+<pre><code class="language-.language-json5">// _settings.json5
 {
-  project&#95;name: &quot;Panda Api&quot;,
-  project&#95;desc: &quot;Panda Api is a simple api manage tool&quot;,
+  project_name: "Panda Api",
+  project_desc: "Panda Api is a simple api manage tool",
   global: {
     apis:{
       auth: true,
       response:{
-        code:{name:&quot;返回的状态码&quot;, type:&quot;number&quot;},
-        msg:{name:&quot;返回的状态说明&quot;}
+        code:{name:"返回的状态码", type:"number"},
+        msg:{name:"返回的状态说明"}
       }
     },
   }
 }
-</code></pre><p>这样我们设置了全局所有api接口的<code>auth</code>字段全部为<code>true</code>，全部都有权限验证，全局的<code>response</code>都有了字段<code>code</code>和<code>msg</code>，我们可以打开我们的接口文档来查看<code>http://localhost:9000</code></p><p>当然，我们的用户登录接口<code>/login</code>是不需要验证用户登录的，我们可以在用户登录接口中单独设置<code>auth</code>为<code>false</code>，这就像继承的概念一样。</p><p>如果某一个请求的<code>response</code>返回中不需要<code>code</code>或者不需要<code>msg</code>，我们也可以去掉。</p><pre><code class=".language-json5">{
-    name:&quot;用户登录&quot;,
-    desc:&quot;用户登录成功，接口会返回一个token&quot;,
-    method: &quot;POST&quot;,
-    url:&quot;/login/&quot;,
-    auth:false, /&#42; 单独设置登录接口不需要验证和用户登录状态 &#42;/
-    body&#95;mode:&quot;json&quot;,
+</code></pre>
+<p>这样我们设置了全局所有api接口的<code>auth</code>字段全部为<code>true</code>，全部都有权限验证，全局的<code>response</code>都有了字段<code>code</code>和<code>msg</code>，我们可以打开我们的接口文档来查看<code>http://localhost:9000</code></p>
+<p>当然，我们的用户登录接口<code>/login</code>是不需要验证用户登录的，我们可以在用户登录接口中单独设置<code>auth</code>为<code>false</code>，这就像继承的概念一样。</p>
+<p>如果某一个请求的<code>response</code>返回中不需要<code>code</code>或者不需要<code>msg</code>，我们也可以去掉。</p>
+<pre><code class="language-.language-json5">{
+    name:"用户登录",
+    desc:"用户登录成功，接口会返回一个token",
+    method: "POST",
+    url:"/login/",
+    auth:false, /* 单独设置登录接口不需要验证和用户登录状态 */
+    body_mode:"json",
     body:...
-</code></pre><p><code>code</code>字段和<code>msg</code>字段，如果有的地方不需要这两个字段，就不能简单的像auth字段一样修改一个值，你要做的是再不需要的地方设置删除。</p><pre><code class=".language-json5">response:{
-    code:&quot;$del&quot;, /&#42; 删除继承得来的code字段 &#42;/
-    msg:&quot;$del&quot;, /&#42; 删除继承得来的msg字段 &#42;/
+</code></pre>
+<p><code>code</code>字段和<code>msg</code>字段，如果有的地方不需要这两个字段，就不能简单的像auth字段一样修改一个值，你要做的是再不需要的地方设置删除。</p>
+<pre><code class="language-.language-json5">response:{
+    code:"$del", /* 删除继承得来的code字段 */
+    msg:"$del", /* 删除继承得来的msg字段 */
     ...
 }
-</code></pre><p>这个时候设置了值为<code>$del</code>的字段就没有了，我们可以刷新前端文档看一下。 或者也可以这么写:<pre><code class=".language-json5">response:{
-    code:{$del:true}, /&#42; 删除继承得来的code字段 &#42;/
-    msg:{$del:true}, /&#42; 删除继承得来的msg字段 &#42;/
+</code></pre>
+<p>这个时候设置了值为<code>$del</code>的字段就没有了，我们可以刷新前端文档看一下。
+或者也可以这么写:</p>
+<pre><code class="language-.language-json5">response:{
+    code:{$del:true}, /* 删除继承得来的code字段 */
+    msg:{$del:true}, /* 删除继承得来的msg字段 */
     ...
 }
-</code></pre></p><p>如果平时我们调试的时候,想让某个设置的字段不出现,也可以用这个方法.例如:</p><pre><code class=".language-json5">body:{
-    title:{name:&quot;文章标题&quot;},
-    summary:{name:&quot;文章摘要&quot;},
-    category&#95;id:{name:&quot;文章分类id&quot;, type:&quot;number&quot;},
-    author&#95;name:{name:&quot;文章作者姓名&quot;},
-    source:{name:&quot;文章来源&quot;, $del:true}, // 标记为不要source字段
-    tag:{name:&quot;文章标签&quot;, $del:true} // 标记为不要标签字段
+</code></pre>
+<p>如果平时我们调试的时候,想让某个设置的字段不出现,也可以用这个方法.例如:</p>
+<pre><code class="language-.language-json5">body:{
+    title:{name:"文章标题"},
+    summary:{name:"文章摘要"},
+    category_id:{name:"文章分类id", type:"number"},
+    author_name:{name:"文章作者姓名"},
+    source:{name:"文章来源", $del:true}, // 标记为不要source字段
+    tag:{name:"文章标签", $del:true} // 标记为不要标签字段
 },
-</code></pre><h3>继承重用相同的数据模型</h3><p>有时候，几个接口的字段差不多，又只是几个接口会这样，是不能用全局设置来表示的，比如用户操作的文章列表的字段、文章添加的字段、文章查看的字段差不多，如果字段很多，每个都重复写就很累，虽然可以复制粘贴，但是维护的时候又要同时维护多个地方，带来了麻烦。</p><p>所以Panda api上我参考swagger设计了<code>$ref</code>语法，方便的引用数据模型，此外又增加了<code>$exclude</code>语法、<code>$include</code>语法和继承语法，让我们使用起来更方便，我们来看例子吧。</p><p>我们的文章的接口文档是这样的：</p><pre><code class=".language-json5">{
-    name:&quot;文章接口&quot;,
-    apis:&#91;
+</code></pre>
+<h3>继承重用相同的数据模型</h3>
+<p>有时候，几个接口的字段差不多，又只是几个接口会这样，是不能用全局设置来表示的，比如用户操作的文章列表的字段、文章添加的字段、文章查看的字段差不多，如果字段很多，每个都重复写就很累，虽然可以复制粘贴，但是维护的时候又要同时维护多个地方，带来了麻烦。</p>
+<p>所以Panda api上我参考swagger设计了<code>$ref</code>语法，方便的引用数据模型，此外又增加了<code>$exclude</code>语法、<code>$include</code>语法和继承语法，让我们使用起来更方便，我们来看例子吧。</p>
+<p>我们的文章的接口文档是这样的：</p>
+<pre><code class="language-.language-json5">{
+    name:"文章接口",
+    apis:[
         {
-            name:&quot;文章添加/编辑&quot;,
-            url:&quot;/post/add/&quot;,
+            name:"文章添加/编辑",
+            url:"/post/add/",
             body:{
-                id:{name:&quot;文章id&quot;, desc:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, type:&quot;PosInt&quot;}, required:false}, // PosInt 表示正整数
-                title:{name:&quot;文章标题&quot;},
-                summary:{name:&quot;文章摘要&quot;, type:&quot;csummary&quot;}, // csummary表示中文一小段文字
-                category&#95;id:{name:&quot;文章分类id&quot;, type:&quot;PosInt&quot;},
-                author&#95;name:{name:&quot;文章作者姓名&quot;, type:&quot;cname&quot;}, // cname表示中文姓名
-                source:{name:&quot;文章来源&quot;},
-                tag:{name:&quot;文章标签&quot;}
+                id:{name:"文章id", desc:"添加提交的时候是没有id, 编辑提交的时候才有", type:"PosInt"}, required:false}, // PosInt 表示正整数
+                title:{name:"文章标题"},
+                summary:{name:"文章摘要", type:"csummary"}, // csummary表示中文一小段文字
+                category_id:{name:"文章分类id", type:"PosInt"},
+                author_name:{name:"文章作者姓名", type:"cname"}, // cname表示中文姓名
+                source:{name:"文章来源"},
+                tag:{name:"文章标签"}
             },
             response:{
-                /&#42; code 和 msg 字段来自全局了 &#42;/
-                id: {name:&quot;文章id&quot;}
+                /* code 和 msg 字段来自全局了 */
+                id: {name:"文章id"}
             }
         },
         {
-            name:&quot;查看文章&quot;,
-            method:&quot;GET&quot;,
-            url:&quot;/post/{id:\\d+}/&quot;,
+            name:"查看文章",
+            method:"GET",
+            url:"/post/{id:\\d+}/",
             query:{
-                page:{name:&quot;分页&quot;, type:&quot;PosInt&quot;} // PosInt 表示正整数
+                page:{name:"分页", type:"PosInt"} // PosInt 表示正整数
             },
             response:{
-                /&#42; code 和 msg 字段来自全局了 &#42;/
-                total&#95;page: {name:&quot;总页数&quot;, type:&quot;PosInt&quot;},
-                total&#95;count: {name:&quot;总记录数&quot;, type:&quot;PosInt&quot;},
-                current&#95;page: {name:&quot;当前页码&quot;, type:&quot;PosInt&quot;},
+                /* code 和 msg 字段来自全局了 */
+                total_page: {name:"总页数", type:"PosInt"},
+                total_count: {name:"总记录数", type:"PosInt"},
+                current_page: {name:"当前页码", type:"PosInt"},
                 result:
-                    &#91;{
-                        id:{name:&quot;文章id&quot;, desc:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, type:&quot;PosInt&quot;},
-                        title:{name:&quot;文章标题&quot;},
-                        summary:{name:&quot;文章摘要&quot;, type:&quot;csummary&quot;},
-                        category&#95;name:{name:&quot;文章分类名称&quot;},
-                        author&#95;name:{name:&quot;文章作者姓名&quot;, type:&quot;cname&quot;},
-                        source:{name:&quot;文章来源&quot;},
-                        tag:{name:&quot;文章标签&quot;},
-                        read&#95;count:{name:&quot;阅读次数&quot;, type:&quot;PosInt&quot;},
-                        created:{name:&quot;创建时间&quot;, type:&quot;PosInt&quot;},
-                        create&#95;username:{name:&quot;文章创建人姓名&quot;}
-                    }&#93;
+                    [{
+                        id:{name:"文章id", desc:"添加提交的时候是没有id, 编辑提交的时候才有", type:"PosInt"},
+                        title:{name:"文章标题"},
+                        summary:{name:"文章摘要", type:"csummary"},
+                        category_name:{name:"文章分类名称"},
+                        author_name:{name:"文章作者姓名", type:"cname"},
+                        source:{name:"文章来源"},
+                        tag:{name:"文章标签"},
+                        read_count:{name:"阅读次数", type:"PosInt"},
+                        created:{name:"创建时间", type:"PosInt"},
+                        create_username:{name:"文章创建人姓名"}
+                    }]
             }
         },
         {
-            name:&quot;文章列表&quot;,
-            method:&quot;POST&quot;,
-            url:&quot;/post/star/list/&quot;,
+            name:"文章列表",
+            method:"POST",
+            url:"/post/star/list/",
             body:{
-                page:{name:&quot;分页&quot;, type:&quot;number&quot;}
+                page:{name:"分页", type:"number"}
             },
             response:{
-                total&#95;page: {name:&quot;总页数&quot;, type:&quot;number&quot;},
-                total&#95;count: {name:&quot;总记录数&quot;, type:&quot;number&quot;},
-                current&#95;page: {name:&quot;当前页码&quot;, type:&quot;number&quot;},
+                total_page: {name:"总页数", type:"number"},
+                total_count: {name:"总记录数", type:"number"},
+                current_page: {name:"当前页码", type:"number"},
                 result:
-                    &#91;{
-                        id:{name:&quot;文章id&quot;, desc:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, type:&quot;PosInt&quot;}, /&#42; 这时id是必有的 &#42;/
-                        title:{name:&quot;文章标题&quot;},
-                        category&#95;name:{name:&quot;文章分类名称&quot;},
-                        author&#95;name:{name:&quot;文章作者姓名&quot;, type:&quot;cname&quot;},
-                        tag:{name:&quot;文章标签&quot;},
-                        created:{name:&quot;创建时间&quot;},
-                    }&#93;
+                    [{
+                        id:{name:"文章id", desc:"添加提交的时候是没有id, 编辑提交的时候才有", type:"PosInt"}, /* 这时id是必有的 */
+                        title:{name:"文章标题"},
+                        category_name:{name:"文章分类名称"},
+                        author_name:{name:"文章作者姓名", type:"cname"},
+                        tag:{name:"文章标签"},
+                        created:{name:"创建时间"},
+                    }]
             }
         }
-    &#93;
+    ]
 }
-</code></pre><p>我们的文章接口文档里面一共有三个接口：文章添加，文章查看，文章列表，</p><p>如果以文章添加为基础来看的话，文章查看与文章添加的区别是：id变为了必填，category_id变为了category_name，增加了3个字段<code>read&#95;count</code>阅读次数，<code>created</code>创建时间，<code>create&#95;username</code>文章创建人姓名，</p><pre><code class=".language-json5">title:{name:&quot;文章标题&quot;},
-summary:{name:&quot;文章摘要&quot;},
-category&#95;id:{name:&quot;文章分类id&quot;, type:&quot;number&quot;},
-author&#95;name:{name:&quot;文章作者姓名&quot;},
-source:{name:&quot;文章来源&quot;},
-tag:{name:&quot;文章标签&quot;}
-</code></pre><p>这个部分的字段是一模一样的，</p><p>再看文章列表，<code>id</code>，<code>title</code>，<code>author&#95;name</code>，<code>tag</code>，是一样的，<code>category&#95;name</code>、<code>author&#95;name</code>、<code>created</code>是增加字段。</p><p>实际上，这些新增的字段也都是文章模型的属性，相同的不同字段分开写就导致如果发生字段调整，属性调整，要维护的地方就会很多，容易出错。</p><p>所以Panda api设计的是，我们可以统一设计一个模型，然后每次调用的时候，只调用需要的部分。这样写和维护就统一只在一个地方。</p><h3>设计文章模型</h3><p>创建文件夹 <code>&#95;data</code>, 在<code>&#95;data</code>文件夹中创建文件<code>models.json5</code>(文件名可以根据自己的需要设定)，在<code>models.json5</code>中敲下面的代码：</p><pre><code class=".language-json5">{
+</code></pre>
+<p>我们的文章接口文档里面一共有三个接口：文章添加，文章查看，文章列表，</p>
+<p>如果以文章添加为基础来看的话，文章查看与文章添加的区别是：id变为了必填，category_id变为了category_name，增加了3个字段<code>read_count</code>阅读次数，<code>created</code>创建时间，<code>create_username</code>文章创建人姓名，</p>
+<pre><code class="language-.language-json5">title:{name:"文章标题"},
+summary:{name:"文章摘要"},
+category_id:{name:"文章分类id", type:"number"},
+author_name:{name:"文章作者姓名"},
+source:{name:"文章来源"},
+tag:{name:"文章标签"}
+</code></pre>
+<p>这个部分的字段是一模一样的，</p>
+<p>再看文章列表，<code>id</code>，<code>title</code>，<code>author_name</code>，<code>tag</code>，是一样的，<code>category_name</code>、<code>author_name</code>、<code>created</code>是增加字段。</p>
+<p>实际上，这些新增的字段也都是文章模型的属性，相同的不同字段分开写就导致如果发生字段调整，属性调整，要维护的地方就会很多，容易出错。</p>
+<p>所以Panda api设计的是，我们可以统一设计一个模型，然后每次调用的时候，只调用需要的部分。这样写和维护就统一只在一个地方。</p>
+<h3>设计文章模型</h3>
+<p>创建文件夹 <code>_data</code>, 在<code>_data</code>文件夹中创建文件<code>models.json5</code>(文件名可以根据自己的需要设定)，在<code>models.json5</code>中敲下面的代码：</p>
+<pre><code class="language-.language-json5">{
     Article:{
-        id:{name:&quot;文章id&quot;, desc:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, type:&quot;number&quot;}, /&#42; 这时id是必有的 &#42;/
-        title:{name:&quot;文章标题&quot;},
-        summary:{name:&quot;文章摘要&quot;},
-        category&#95;id:{name:&quot;文章分类id&quot;, type:&quot;number&quot;},
-        category&#95;name:{name:&quot;文章分类名称&quot;},
-        author&#95;name:{name:&quot;文章作者姓名&quot;},
-        source:{name:&quot;文章来源&quot;},
-        tag:{name:&quot;文章标签&quot;},
-        read&#95;count:{name:&quot;阅读次数&quot;, type:&quot;number&quot;},
-        created:{name:&quot;创建时间&quot;, type:&quot;number&quot;},
-        create&#95;username:{name:&quot;文章创建人姓名&quot;}
+        id:{name:"文章id", desc:"添加提交的时候是没有id, 编辑提交的时候才有", type:"number"}, /* 这时id是必有的 */
+        title:{name:"文章标题"},
+        summary:{name:"文章摘要"},
+        category_id:{name:"文章分类id", type:"number"},
+        category_name:{name:"文章分类名称"},
+        author_name:{name:"文章作者姓名"},
+        source:{name:"文章来源"},
+        tag:{name:"文章标签"},
+        read_count:{name:"阅读次数", type:"number"},
+        created:{name:"创建时间", type:"number"},
+        create_username:{name:"文章创建人姓名"}
     }
 }
-</code></pre><p>我们的文章接口可以这么改写：</p><pre><code class=".language-json5">{
-    name:&quot;文章接口&quot;,
-    apis:&#91;
+</code></pre>
+<p>我们的文章接口可以这么改写：</p>
+<pre><code class="language-.language-json5">{
+    name:"文章接口",
+    apis:[
         {
-            name:&quot;文章添加/编辑&quot;,
-            url:&quot;/post/add/&quot;,
+            name:"文章添加/编辑",
+            url:"/post/add/",
             body:{
-                $ref: &quot;./&#95;data/models.json5:Article&quot;,
-                $exclude:&#91;&quot;category&#95;name&quot;, &quot;read&#95;count&quot;, &quot;created&quot;, &quot;create&#95;username&quot;&#93;,
-                id:{name:&quot;文章id&quot;, desc:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, type:&quot;number&quot;, required:false}
+                $ref: "./_data/models.json5:Article",
+                $exclude:["category_name", "read_count", "created", "create_username"],
+                id:{name:"文章id", desc:"添加提交的时候是没有id, 编辑提交的时候才有", type:"number", required:false}
             },
             response:{
-                /&#42; code 和 msg 字段来自全局了 &#42;/
-                id: {name:&quot;文章id&quot;}
+                /* code 和 msg 字段来自全局了 */
+                id: {name:"文章id"}
             }
         },
         {
-            name:&quot;查看文章&quot;,
-            method:&quot;POST&quot;,
-            url:&quot;/post/{id:\\d+}/&quot;,
+            name:"查看文章",
+            method:"POST",
+            url:"/post/{id:\\d+}/",
             body:{
-                page:{name:&quot;分页&quot;, type:&quot;number&quot;}
+                page:{name:"分页", type:"number"}
             },
             response:{
-                /&#42; code 和 msg 字段来自全局了 &#42;/
-                total&#95;page: {name:&quot;总页数&quot;, type:&quot;number&quot;},
-                total&#95;count: {name:&quot;总记录数&quot;, type:&quot;number&quot;},
-                current&#95;page: {name:&quot;当前页码&quot;, type:&quot;number&quot;},
+                /* code 和 msg 字段来自全局了 */
+                total_page: {name:"总页数", type:"number"},
+                total_count: {name:"总记录数", type:"number"},
+                current_page: {name:"当前页码", type:"number"},
                 result:
-                    &#91;{
-                        $ref: &quot;./&#95;data/models.json5:Article&quot;,
-                        $exclude:&#91;&quot;category&#95;id&quot;&#93;
-                    }&#93;
+                    [{
+                        $ref: "./_data/models.json5:Article",
+                        $exclude:["category_id"]
+                    }]
             }
         },
         {
-            name:&quot;文章列表&quot;,
-            method:&quot;POST&quot;,
-            url:&quot;/post/star/list/&quot;,
+            name:"文章列表",
+            method:"POST",
+            url:"/post/star/list/",
             body:{
-                page:{name:&quot;分页&quot;, type:&quot;number&quot;}
+                page:{name:"分页", type:"number"}
             },
             response:{
-                total&#95;page: {name:&quot;总页数&quot;, type:&quot;number&quot;},
-                total&#95;count: {name:&quot;总记录数&quot;, type:&quot;number&quot;},
-                current&#95;page: {name:&quot;当前页码&quot;, type:&quot;number&quot;},
+                total_page: {name:"总页数", type:"number"},
+                total_count: {name:"总记录数", type:"number"},
+                current_page: {name:"当前页码", type:"number"},
                 result:
-                    &#91;{
-                        $ref: &quot;./&#95;data/models.json5:Article&quot;,
-                        $include:&#91;&quot;id&quot;, &quot;title&quot;, &quot;category&#95;name&quot;, &quot;author&#95;name&quot;, &quot;tag&quot;, &quot;created&quot;&#93;
-                    }&#93;
+                    [{
+                        $ref: "./_data/models.json5:Article",
+                        $include:["id", "title", "category_name", "author_name", "tag", "created"]
+                    }]
             }
         }
-    &#93;
+    ]
 }
-</code></pre><h3>设置只继承哪些字段,不继承哪些字段:<code>$include</code>和<code>$exclude</code>语法</h3><p>在文件添加接口中，我们使用<code>$ref</code>引用了文章模型，语法是:<code>./&#95;data/models.json5:Article</code> 就是文件路径，后面是冒号<code>:</code>，后是具体的模型引用路径，如果只引用一个title字段，也可以这么写:<code>$ref:&quot;./&#95;data/models.json5:Article/title&quot;</code>，</p><p>接着有的字段我们是不要的，我们就可以使用<code>$exclude</code>语法，排除一些字段，<code>$exclude:&#91;&quot;category&#95;name&quot;, &quot;read&#95;count&quot;, &quot;created&quot;, &quot;create&#95;username&quot;&#93;,</code>，放入<code>$exclude</code>中的字段就不会被加载进来。</p><p><strong><code>可以排除对象或数组的嵌套属性</code></strong>, 可以用<code>/</code>标识字段路径来删除,例如, 假设<code>$ref</code>的文章模型里面还有嵌套的对象和数组<pre><code class=".language-json5">Article:{
-    id: {name:&quot;用户id&quot;, type:&quot;number&quot;},
-    title: {name:&quot;文章标题&quot;},
+</code></pre>
+<h3>设置只继承哪些字段,不继承哪些字段:<code>$include</code>和<code>$exclude</code>语法</h3>
+<p>在文件添加接口中，我们使用<code>$ref</code>引用了文章模型，语法是:<code>./_data/models.json5:Article</code> 就是文件路径，后面是冒号<code>:</code>，后是具体的模型引用路径，如果只引用一个title字段，也可以这么写:<code>$ref:"./_data/models.json5:Article/title"</code>，</p>
+<p>接着有的字段我们是不要的，我们就可以使用<code>$exclude</code>语法，排除一些字段，<code>$exclude:["category_name", "read_count", "created", "create_username"],</code>，放入<code>$exclude</code>中的字段就不会被加载进来。</p>
+<p><strong><code>可以排除对象或数组的嵌套属性</code></strong>, 可以用<code>/</code>标识字段路径来删除,例如, 假设<code>$ref</code>的文章模型里面还有嵌套的对象和数组</p>
+<pre><code class="language-.language-json5">Article:{
+    id: {name:"用户id", type:"number"},
+    title: {name:"文章标题"},
     category: {
-        id:{name:&quot;分类id&quot;, type:&quot;number&quot;},
-        name:{name:&quot;分类名称&quot;, type:&quot;string&quot;}
+        id:{name:"分类id", type:"number"},
+        name:{name:"分类名称", type:"string"}
     },
-    tags:&#91;{
-        id:{name:&quot;标签id&quot;},
-        title:{name:&quot;标签内容&quot;}
-    }&#93;
+    tags:[{
+        id:{name:"标签id"},
+        title:{name:"标签内容"}
+    }]
 }
-</code></pre></p><p>假设我们<code>$ref</code>这个<code>Article</code>, 不要<code>category</code>对象的<code>id</code>, 不要<code>tags</code>对象列表的<code>id</code>.可以这么写: <code>$exclude:&#91;&quot;category/id&quot;, tags/0/id&#93;</code> :<pre><code class=".language-json5">...
+</code></pre>
+<p>假设我们<code>$ref</code>这个<code>Article</code>, 不要<code>category</code>对象的<code>id</code>, 不要<code>tags</code>对象列表的<code>id</code>.可以这么写: <code>$exclude:["category/id", tags/0/id]</code> :</p>
+<pre><code class="language-.language-json5">...
 {
-    name:&quot;文章添加/编辑&quot;,
-    url:&quot;/post/add/&quot;,
+    name:"文章添加/编辑",
+    url:"/post/add/",
     body:{
-        $ref: &quot;./&#95;data/models.json5:Article&quot;,
-        $exclude:&#91;&quot;category/id&quot;, &quot;tags/0/id&quot;, &quot;created&quot;&#93;,
+        $ref: "./_data/models.json5:Article",
+        $exclude:["category/id", "tags/0/id", "created"],
     },
     response:{
-        id: {name:&quot;文章id&quot;}
+        id: {name:"文章id"}
     }
 },
 ...
-</code></pre></p><p>我们会得到下面的数据:</p><pre><code class=".language-json5">...
+</code></pre>
+<p>我们会得到下面的数据:</p>
+<pre><code class="language-.language-json5">...
 {
-    name:&quot;文章添加/编辑&quot;,
-    url:&quot;/post/add/&quot;,
+    name:"文章添加/编辑",
+    url:"/post/add/",
     body:{
-        id: {name:&quot;用户id&quot;, type:&quot;number&quot;},
-        title: {name:&quot;文章标题&quot;},
+        id: {name:"用户id", type:"number"},
+        title: {name:"文章标题"},
         category: {
-            name:{name:&quot;分类名称&quot;, type:&quot;string&quot;}
+            name:{name:"分类名称", type:"string"}
         },
-        tags:&#91;{
-            title:{name:&quot;标签内容&quot;}
-        }&#93;
+        tags:[{
+            title:{name:"标签内容"}
+        }]
     },
     response:{
-        id: {name:&quot;文章id&quot;}
+        id: {name:"文章id"}
     }
 },
 ...
-</code></pre><h3>重写继承到的字段</h3><p>我们在<code>/post/add/</code>接口,重写了<code>id</code>字段，<code>id:{name:&quot;文章id&quot;, desc:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, type:&quot;number&quot;, required:false}</code>。当把字段在当前重写了，那么就会以当前字段为准。</p><p><strong><code>可以重写对象或数组的嵌套属性</code></strong>,如果我们想重写嵌套到对象或数组中的属性,可以这么写:<pre><code class=".language-json5">Article:{
-    id: {name:&quot;用户id&quot;, type:&quot;number&quot;},
-    title: {name:&quot;文章标题&quot;},
+</code></pre>
+<h3>重写继承到的字段</h3>
+<p>我们在<code>/post/add/</code>接口,重写了<code>id</code>字段，<code>id:{name:"文章id", desc:"添加提交的时候是没有id, 编辑提交的时候才有", type:"number", required:false}</code>。当把字段在当前重写了，那么就会以当前字段为准。</p>
+<p><strong><code>可以重写对象或数组的嵌套属性</code></strong>,如果我们想重写嵌套到对象或数组中的属性,可以这么写:</p>
+<pre><code class="language-.language-json5">Article:{
+    id: {name:"用户id", type:"number"},
+    title: {name:"文章标题"},
     category: {
-        id:{name:&quot;分类id&quot;, type:&quot;number&quot;},
-        name:{name:&quot;分类名称&quot;, type:&quot;string&quot;}
+        id:{name:"分类id", type:"number"},
+        name:{name:"分类名称", type:"string"}
     },
-    tags:&#91;{
-        id:{name:&quot;标签id&quot;},
-        title:{name:&quot;标签内容&quot;}
-    }&#93;
+    tags:[{
+        id:{name:"标签id"},
+        title:{name:"标签内容"}
+    }]
 }
-</code></pre></p><p>如果我们<code>$ref</code>了<code>Article</code>, 并且要重写<code>category</code>对象的<code>id</code>属性, 同时为<code>category</code>对象增加一个<code>order</code>, 为<code>tags</code>对象增加一个<code>order</code>, 可以这么写:</p><pre><code class=".language-json5">...
+</code></pre>
+<p>如果我们<code>$ref</code>了<code>Article</code>, 并且要重写<code>category</code>对象的<code>id</code>属性, 同时为<code>category</code>对象增加一个<code>order</code>, 为<code>tags</code>对象增加一个<code>order</code>, 可以这么写:</p>
+<pre><code class="language-.language-json5">...
 {
-    name:&quot;文章添加/编辑&quot;,
-    url:&quot;/post/add/&quot;,
+    name:"文章添加/编辑",
+    url:"/post/add/",
     body:{
-        $ref: &quot;./&#95;data/models.json5:Article&quot;,
-        &quot;category/id&quot;:{name:&quot;新的分类id&quot;, type:&quot;PosInt&quot;},
-        &quot;category/order&quot;:{name:&quot;分类排序&quot;, type:&quot;int&quot;},
-        &quot;tags/0/order&quot;:{name:&quot;标签排序&quot;, type:&quot;int&quot;}
+        $ref: "./_data/models.json5:Article",
+        "category/id":{name:"新的分类id", type:"PosInt"},
+        "category/order":{name:"分类排序", type:"int"},
+        "tags/0/order":{name:"标签排序", type:"int"}
     },
     response:{
-        id: {name:&quot;文章id&quot;}
+        id: {name:"文章id"}
     }
 },
 ...
-</code></pre><p>这么写以后,就会重写了<code>category</code>对象的<code>id</code>属性, 并为<code>category</code>对象增加<code>order</code>,为<code>tags</code>对象增加<code>order</code>. 变成下面的样子:<pre><code class=".language-json5">...
+</code></pre>
+<p>这么写以后,就会重写了<code>category</code>对象的<code>id</code>属性, 并为<code>category</code>对象增加<code>order</code>,为<code>tags</code>对象增加<code>order</code>. 变成下面的样子:</p>
+<pre><code class="language-.language-json5">...
 {
-    name:&quot;文章添加/编辑&quot;,
-    url:&quot;/post/add/&quot;,
+    name:"文章添加/编辑",
+    url:"/post/add/",
     body:{
-        id: {name:&quot;用户id&quot;, type:&quot;number&quot;},
-        title: {name:&quot;文章标题&quot;},
+        id: {name:"用户id", type:"number"},
+        title: {name:"文章标题"},
         category: {
-            id:{name:&quot;新的分类id&quot;, type:&quot;PosInt&quot;}, // 修改
-            name:{name:&quot;分类名称&quot;, type:&quot;string&quot;},
-            order:{name:&quot;分类排序&quot;, type:&quot;int&quot;} // 新增
+            id:{name:"新的分类id", type:"PosInt"}, // 修改
+            name:{name:"分类名称", type:"string"},
+            order:{name:"分类排序", type:"int"} // 新增
         },
-        tags:&#91;{
-            id:{name:&quot;标签id&quot;},
-            title:{name:&quot;标签内容&quot;},
-            order:{name:&quot;标签排序&quot;, type:&quot;int&quot;} // 新增
-        }&#93;
+        tags:[{
+            id:{name:"标签id"},
+            title:{name:"标签内容"},
+            order:{name:"标签排序", type:"int"} // 新增
+        }]
     },
     response:{
-        id: {name:&quot;文章id&quot;}
+        id: {name:"文章id"}
     }
 },
 ...
-</code></pre></p><p>文章列表中，我们一样的引入了<code>Article</code>模型，然后没用<code>$exclude</code>，而是用<code>$include</code>语法指定我们需要的字段，这么的好处是，当我们再Article模型中增加了字段，增加的字段不会在模型自动加载出来，因为系统只会加载<code>$include</code>里面的字段；但是<code>$exclude</code>语法因为一开始没有设置这个新增加的字段，所以在<code>$exclude</code>模型的情况，模型<code>Article</code>中增加的字段会自动加载出来。</p><p>如果同时使用了<code>$include</code>和<code>$exclude</code>字段，那么先加载<code>$include</code>中设置的字段,然后再删除掉<code>$exclude</code>中设置的字段.</p><p>所以一共是四步操作：</p><ol><li>写一个文章模型</li><li>引入模型, 当前就会继承引入模型的字段</li><li>设置需要的字段,排除不需要的字段</li><li>重写不一样的字段</li></ol><h3>指定按字段引用</h3><p>我们还可以只引入某一个字段，比如有一个简单的文章列表接口，只需要文章标题和文章id，<pre><code class=".language-json5">{
-    name:&quot;简要文章列表&quot;,
-    method:&quot;POST&quot;,
-    url:&quot;/post/simple/list/&quot;,
+</code></pre>
+<p>文章列表中，我们一样的引入了<code>Article</code>模型，然后没用<code>$exclude</code>，而是用<code>$include</code>语法指定我们需要的字段，这么的好处是，当我们再Article模型中增加了字段，增加的字段不会在模型自动加载出来，因为系统只会加载<code>$include</code>里面的字段；但是<code>$exclude</code>语法因为一开始没有设置这个新增加的字段，所以在<code>$exclude</code>模型的情况，模型<code>Article</code>中增加的字段会自动加载出来。</p>
+<p>如果同时使用了<code>$include</code>和<code>$exclude</code>字段，那么先加载<code>$include</code>中设置的字段,然后再删除掉<code>$exclude</code>中设置的字段.</p>
+<p>所以一共是四步操作：</p>
+<ol>
+<li>写一个文章模型</li>
+<li>引入模型, 当前就会继承引入模型的字段</li>
+<li>设置需要的字段,排除不需要的字段</li>
+<li>重写不一样的字段</li>
+</ol>
+<h3>指定按字段引用</h3>
+<p>我们还可以只引入某一个字段，比如有一个简单的文章列表接口，只需要文章标题和文章id，</p>
+<pre><code class="language-.language-json5">{
+    name:"简要文章列表",
+    method:"POST",
+    url:"/post/simple/list/",
     body:{
-        page:{name:&quot;分页&quot;, type:&quot;number&quot;}
+        page:{name:"分页", type:"number"}
     },
     response:{
-        total&#95;page: {name:&quot;总页数&quot;, type:&quot;number&quot;},
-        total&#95;count: {name:&quot;总记录数&quot;, type:&quot;number&quot;},
-        current&#95;page: {name:&quot;当前页码&quot;, type:&quot;number&quot;},
+        total_page: {name:"总页数", type:"number"},
+        total_count: {name:"总记录数", type:"number"},
+        current_page: {name:"当前页码", type:"number"},
         result:
-            &#91;{
-                id:{$ref: &quot;./&#95;data/models.json5:Article/id&quot;},
-                title:{$ref: &quot;./&#95;data/models.json5:Article/title&quot;}
-            }&#93;
+            [{
+                id:{$ref: "./_data/models.json5:Article/id"},
+                title:{$ref: "./_data/models.json5:Article/title"}
+            }]
     }
 }
-</code></pre></p><h3>简化引用路径</h3><p>每个地方都要去写<code>./&#95;data/models.json5</code>这么一长段路径，很麻烦，万一路径变了，那么每个地方都要改。因此我们可以使用define语法。来定义路径，所以，我们的文章接口改进未这样：</p><pre><code class=".language-json5">{
-    name:&quot;文章接口&quot;,
+</code></pre>
+<h3>简化引用路径</h3>
+<p>每个地方都要去写<code>./_data/models.json5</code>这么一长段路径，很麻烦，万一路径变了，那么每个地方都要改。因此我们可以使用define语法。来定义路径，所以，我们的文章接口改进未这样：</p>
+<pre><code class="language-.language-json5">{
+    name:"文章接口",
     define:{
-        model: &quot;./&#95;data/models.json5&quot;,
-        article: &quot;./&#95;data/models.json5:Article&quot;
+        model: "./_data/models.json5",
+        article: "./_data/models.json5:Article"
     },
-    apis:&#91;
+    apis:[
         {
-            name:&quot;文章添加/编辑&quot;,
-            url:&quot;/post/add/&quot;,
+            name:"文章添加/编辑",
+            url:"/post/add/",
             body:{
-                $ref: &quot;$model:Article&quot;,
-                $exclude:&#91;&quot;category&#95;name&quot;, &quot;read&#95;count&quot;, &quot;created&quot;, &quot;create&#95;username&quot;&#93;,
-                id:{name:&quot;文章id&quot;, desc:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, type:&quot;number&quot;, required:false},
+                $ref: "$model:Article",
+                $exclude:["category_name", "read_count", "created", "create_username"],
+                id:{name:"文章id", desc:"添加提交的时候是没有id, 编辑提交的时候才有", type:"number", required:false},
             },
             response:{
-                /&#42; code 和 msg 字段来自全局了 &#42;/
-                id: {name:&quot;文章id&quot;}
+                /* code 和 msg 字段来自全局了 */
+                id: {name:"文章id"}
             }
         },
         {
-            name:&quot;查看文章&quot;,
-            method:&quot;POST&quot;,
-            url:&quot;/post/{id:\\d+}/&quot;,
+            name:"查看文章",
+            method:"POST",
+            url:"/post/{id:\\d+}/",
             body:{
-                page:{name:&quot;分页&quot;, type:&quot;number&quot;}
+                page:{name:"分页", type:"number"}
             },
             response:{
-                /&#42; code 和 msg 字段来自全局了 &#42;/
-                total&#95;page: {name:&quot;总页数&quot;, type:&quot;number&quot;},
-                total&#95;count: {name:&quot;总记录数&quot;, type:&quot;number&quot;},
-                current&#95;page: {name:&quot;当前页码&quot;, type:&quot;number&quot;},
+                /* code 和 msg 字段来自全局了 */
+                total_page: {name:"总页数", type:"number"},
+                total_count: {name:"总记录数", type:"number"},
+                current_page: {name:"当前页码", type:"number"},
                 result:
-                    &#91;{
-                        $ref: &quot;$article&quot;,
-                        $exclude:&#91;&quot;category&#95;id&quot;&#93;
-                    }&#93;
+                    [{
+                        $ref: "$article",
+                        $exclude:["category_id"]
+                    }]
             }
         },
         {
-            name:&quot;文章列表&quot;,
-            method:&quot;POST&quot;,
-            url:&quot;/post/star/list/&quot;,
+            name:"文章列表",
+            method:"POST",
+            url:"/post/star/list/",
             body:{
-                page:{name:&quot;分页&quot;, type:&quot;number&quot;}
+                page:{name:"分页", type:"number"}
             },
             response:{
-                total&#95;page: {name:&quot;总页数&quot;, type:&quot;number&quot;},
-                total&#95;count: {name:&quot;总记录数&quot;, type:&quot;number&quot;},
-                current&#95;page: {name:&quot;当前页码&quot;, type:&quot;number&quot;},
+                total_page: {name:"总页数", type:"number"},
+                total_count: {name:"总记录数", type:"number"},
+                current_page: {name:"当前页码", type:"number"},
                 result:
-                    &#91;{
-                        $ref: &quot;$article&quot;,
-                        $include:&#91;&quot;id&quot;, &quot;title&quot;, &quot;category&#95;name&quot;, &quot;author&#95;name&quot;, &quot;tag&quot;, &quot;created&quot;&#93;
-                    }&#93;
+                    [{
+                        $ref: "$article",
+                        $include:["id", "title", "category_name", "author_name", "tag", "created"]
+                    }]
             }
         },
         {
-            name:&quot;简要文章列表&quot;,
-            method:&quot;POST&quot;,
-            url:&quot;/post/simple/list/&quot;,
+            name:"简要文章列表",
+            method:"POST",
+            url:"/post/simple/list/",
             body:{
-                page:{name:&quot;分页&quot;, type:&quot;number&quot;}
+                page:{name:"分页", type:"number"}
             },
             response:{
-                total&#95;page: {name:&quot;总页数&quot;, type:&quot;number&quot;},
-                total&#95;count: {name:&quot;总记录数&quot;, type:&quot;number&quot;},
-                current&#95;page: {name:&quot;当前页码&quot;, type:&quot;number&quot;},
+                total_page: {name:"总页数", type:"number"},
+                total_count: {name:"总记录数", type:"number"},
+                current_page: {name:"当前页码", type:"number"},
                 result:
-                    &#91;{
-                        id:{$ref: &quot;$article/id&quot;},
-                        title:{$ref: &quot;$article/title&quot;}
-                    }&#93;
+                    [{
+                        id:{$ref: "$article/id"},
+                        title:{$ref: "$article/title"}
+                    }]
             }
         }
-    &#93;
+    ]
 }
-</code></pre><h3>文章地址支持正则匹配</h3><p>查看文章接口，接口地址是这么写的：<code>&quot;url&quot;:&quot;/post/{id:\\d+}/&quot;</code>，<pre><code class=".language-json5">{
-    name:&quot;查看文章&quot;,
-    method:&quot;POST&quot;,
-    url:&quot;/post/{id:\\d+}/&quot;,
-</code></pre></p><p>这么写的意思是：我们匹配的url是<code>/post/id/</code>，然后我们对<code>id</code>进行了约束，只要<code>id</code>是数字就会匹配，我也可以写单词匹配，<code>/post/{id:\\w+}/</code>，然后也可以写更复杂的正则匹配。</p><h3>整个接口的复用</h3><p>有的接口，会在多个地方去体现和是用，比如，用户操作有图片上传，文章上传有图片，后台管理员操作也有上传图片，或者多个角色都有上传图片，但是我们开发的时候，需要把文档放到一起。</p><p>所有复用的东西需要创建在<code>&#95;data</code>目录，我们在<code>&#95;data</code>里面，创建文件<code>common&#95;api.json5</code>(文件名可以根据我们的实际需求修改)，里面的代码是：</p><pre><code class=".language-json5">
+</code></pre>
+<h3>文章地址支持正则匹配</h3>
+<p>查看文章接口，接口地址是这么写的：<code>"url":"/post/{id:\\d+}/"</code>，</p>
+<pre><code class="language-.language-json5">{
+    name:"查看文章",
+    method:"POST",
+    url:"/post/{id:\\d+}/",
+</code></pre>
+<p>这么写的意思是：我们匹配的url是<code>/post/id/</code>，然后我们对<code>id</code>进行了约束，只要<code>id</code>是数字就会匹配，我也可以写单词匹配，<code>/post/{id:\\w+}/</code>，然后也可以写更复杂的正则匹配。</p>
+<h3>整个接口的复用</h3>
+<p>有的接口，会在多个地方去体现和是用，比如，用户操作有图片上传，文章上传有图片，后台管理员操作也有上传图片，或者多个角色都有上传图片，但是我们开发的时候，需要把文档放到一起。</p>
+<p>所有复用的东西需要创建在<code>_data</code>目录，我们在<code>_data</code>里面，创建文件<code>common_api.json5</code>(文件名可以根据我们的实际需求修改)，里面的代码是：</p>
+<pre><code class="language-.language-json5">
 {
-    photo&#95;upload:{
-        name:&quot;上传照片&quot;,
-        desc:&quot;这个接口既可以上传处方单扫描件、本地处方单照片，还可以上传身份证扫描件和本地身份证照片&quot;,
-        url:&quot;/common/photo/upload/&quot;,
-        method:&quot;POST&quot;,
-        body&#95;mode:&quot;form-data&quot;,
+    photo_upload:{
+        name:"上传照片",
+        desc:"这个接口既可以上传处方单扫描件、本地处方单照片，还可以上传身份证扫描件和本地身份证照片",
+        url:"/common/photo/upload/",
+        method:"POST",
+        body_mode:"form-data",
         body: {
-            file: {name:&quot;要上传的文件&quot;, desc:&quot;如果是扫描件要转变为扫描好的本地文件&quot;, type:&quot;image&quot;},
-            file&#95;type:{name:&quot;文件类型&quot;, desc:&quot;分为处方单，身份证&quot;, $enum:&#91;&#91;&quot;id&#95;no&quot;,&quot;身份证&quot;&#93;, &#91;&quot;chufangdan&quot;, &quot;处方单&quot;&#93;, &#91;&quot;other&quot;, &quot;其它普通照片&quot;&#93;&#93;}
+            file: {name:"要上传的文件", desc:"如果是扫描件要转变为扫描好的本地文件", type:"image"},
+            file_type:{name:"文件类型", desc:"分为处方单，身份证", $enum:[["id_no","身份证"], ["chufangdan", "处方单"], ["other", "其它普通照片"]]}
         },
         response:{
-            $ref:&quot;./&#95;data/models.json5:Response&quot;,
+            $ref:"./_data/models.json5:Response",
             result:{
-                upload&#95;id:{name:&quot;上传文件id&quot;, desc:&quot;上传文件保存后的返回id&quot;, type:&quot;number&quot;},
-                upload&#95;url:{name:&quot;上传文件后访问的url地址&quot;, $value:&quot;$body/file:url&quot;},
-                ocr:{name:&quot;OCR识别数据&quot;, desc:&quot;上传文件系统自动识别OCR返回的结果,目前只有部分处方单和身份证有这个数据&quot;, required:false}
+                upload_id:{name:"上传文件id", desc:"上传文件保存后的返回id", type:"number"},
+                upload_url:{name:"上传文件后访问的url地址", $value:"$body/file:url"},
+                ocr:{name:"OCR识别数据", desc:"上传文件系统自动识别OCR返回的结果,目前只有部分处方单和身份证有这个数据", required:false}
             }
         },
-        test&#95;data:&#91;{
-            body:{file:&quot;aaa.jpg&quot;, file&#95;type:&quot;id&#95;no&quot;},
+        test_data:[{
+            body:{file:"aaa.jpg", file_type:"id_no"},
             response:{
                 code: 1,
-                msg: &quot;&quot;,
+                msg: "",
                 result: {
-                    upload&#95;id: 1,
-                    upload&#95;url: &quot;/&#95;upload/aaa.jpg&quot;,
-                    ocr:{id&#95;no:&quot;533025199002160013&quot;, name:&quot;张三&quot;, gender:&quot;男&quot;, age:&quot;29&quot;}
+                    upload_id: 1,
+                    upload_url: "/_upload/aaa.jpg",
+                    ocr:{id_no:"533025199002160013", name:"张三", gender:"男", age:"29"}
                 }
             }
-        }&#93;
+        }]
     }
 }
 
-</code></pre><p>当我们定义好这个公共接口后，我们就可以在文章中直接引用这个接口</p><pre><code class=".language-json5">{
-    name:&quot;文章接口&quot;,
+</code></pre>
+<p>当我们定义好这个公共接口后，我们就可以在文章中直接引用这个接口</p>
+<pre><code class="language-.language-json5">{
+    name:"文章接口",
     define:{
-        model: &quot;./&#95;data/models.json&quot;,
-        article: &quot;./&#95;data/models.json:Article&quot;
+        model: "./_data/models.json",
+        article: "./_data/models.json:Article"
     },
-    apis:&#91;
+    apis:[
         {
-            $ref:&quot;./&#95;data/common&#95;api.json:photo&#95;upload&quot;,
-            name:&quot;照片上传&quot;
+            $ref:"./_data/common_api.json:photo_upload",
+            name:"照片上传"
         },
         {
-            name:&quot;文章添加/编辑&quot;,
-            url:&quot;/post/add/&quot;,
+            name:"文章添加/编辑",
+            url:"/post/add/",
             body:{
-                $ref: &quot;$model:Article&quot;,
-                $exclude:&#91;&quot;category&#95;name&quot;, &quot;read&#95;count&quot;, &quot;created&quot;, &quot;create&#95;username&quot;&#93;,
-                id:{name:&quot;文章id&quot;, desc:&quot;添加提交的时候是没有id, 编辑提交的时候才有&quot;, type:&quot;number&quot;, required:false},
+                $ref: "$model:Article",
+                $exclude:["category_name", "read_count", "created", "create_username"],
+                id:{name:"文章id", desc:"添加提交的时候是没有id, 编辑提交的时候才有", type:"number", required:false},
             },
             response:{
-                /&#42; code 和 msg 字段来自全局了 &#42;/
-                id: {name:&quot;文章id&quot;}
+                /* code 和 msg 字段来自全局了 */
+                id: {name:"文章id"}
             }
         },
         ...
-    &#93;
+    ]
 }
 
-</code></pre><p>同样的，继承过来以后还是可以自定义里面的字段属性，比如这里<code>name</code>字段就进行了自定义，这里主要还有就是写上<code>name</code>方便维护的时候看</p><h3>文件上传接口</h3><p>在照片上传的接口中，有两个特殊的地方，首先：我们的<code>body&#95;mode</code>是<code>form-data</code>，也必须是<code>form-data</code>才会进行文件的接收。</p><p>在<code>test&#95;data</code>中，<code>body</code>中的上传文件的匹配用的是文件名进行匹配，</p><p><code>test&#95;data</code>的返回值<code>response</code>中，我们还可以获取文件的访问<code>url</code>地址，<code>url</code>访问地址为：<code>&#95;upload/</code> + 文件名。即如果我们的文件名是：<code>aaa.jpg</code>, 那么我们访问的文件url地址是：<code>/&#95;upload/aaa.jpg</code>。当你访问这个地址: <code>http://localhost:9000/&#95;upload/aaa.jpg</code>时，就可以访问到文件。</p><p>我们也可以在<code>response</code>的定义中，根据<code>body</code>直接获取上传文件的url。例如:<pre><code class=".language-json5">...
+</code></pre>
+<p>同样的，继承过来以后还是可以自定义里面的字段属性，比如这里<code>name</code>字段就进行了自定义，这里主要还有就是写上<code>name</code>方便维护的时候看</p>
+<h3>文件上传接口</h3>
+<p>在照片上传的接口中，有两个特殊的地方，首先：我们的<code>body_mode</code>是<code>form-data</code>，也必须是<code>form-data</code>才会进行文件的接收。</p>
+<p>在<code>test_data</code>中，<code>body</code>中的上传文件的匹配用的是文件名进行匹配，</p>
+<p><code>test_data</code>的返回值<code>response</code>中，我们还可以获取文件的访问<code>url</code>地址，<code>url</code>访问地址为：<code>_upload/</code> + 文件名。即如果我们的文件名是：<code>aaa.jpg</code>, 那么我们访问的文件url地址是：<code>/_upload/aaa.jpg</code>。当你访问这个地址: <code>http://localhost:9000/_upload/aaa.jpg</code>时，就可以访问到文件。</p>
+<p>我们也可以在<code>response</code>的定义中，根据<code>body</code>直接获取上传文件的url。例如:</p>
+<pre><code class="language-.language-json5">...
 body: {
-    file: {name:&quot;要上传的文件&quot;, desc:&quot;如果是扫描件要转变为扫描好的本地文件&quot;, type:&quot;image&quot;},
-    file&#95;type:{name:&quot;文件类型&quot;, desc:&quot;分为处方单，身份证&quot;, $enum:&#91;&#91;&quot;id&#95;no&quot;,&quot;身份证&quot;&#93;, &#91;&quot;chufangdan&quot;, &quot;处方单&quot;&#93;, &#91;&quot;other&quot;, &quot;其它普通照片&quot;&#93;&#93;}
+    file: {name:"要上传的文件", desc:"如果是扫描件要转变为扫描好的本地文件", type:"image"},
+    file_type:{name:"文件类型", desc:"分为处方单，身份证", $enum:[["id_no","身份证"], ["chufangdan", "处方单"], ["other", "其它普通照片"]]}
 },
 response:{
     result:{
-        upload&#95;id:{name:&quot;上传文件id&quot;, desc:&quot;上传文件保存后的返回id&quot;, type:&quot;number&quot;},
-        upload&#95;url:{name:&quot;上传文件后访问的url地址&quot;, $value:&quot;$body/file:url&quot;},
-        ocr:{name:&quot;OCR识别数据&quot;, desc:&quot;上传文件系统自动识别OCR返回的结果,目前只有部分处方单和身份证有这个数据&quot;, required:false}
+        upload_id:{name:"上传文件id", desc:"上传文件保存后的返回id", type:"number"},
+        upload_url:{name:"上传文件后访问的url地址", $value:"$body/file:url"},
+        ocr:{name:"OCR识别数据", desc:"上传文件系统自动识别OCR返回的结果,目前只有部分处方单和身份证有这个数据", required:false}
     }
 },
 ...
-</code></pre></p><p><code>$value:&quot;$body/file:url&quot;</code>的意思就是 <code>upload&#95;url</code>这个字段的值是通过<code>$body</code>中的<code>file</code>字段的可访问的<code>url</code>来进行输出。</p><h3>引入cvs外部数据</h3><p>正在搞...</p>
-            <p class="text-left text-muted">2020-03-01 05:41</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2020/1/17/Mac下安装Panda-Api/">上一篇: Mac 或 Linux 下安装Panda api</a></div>
-                <div class="col-6 text-right"><a href="/p/2020/1/15/Panda-api-how-to-use/">下一篇:Panda api 接口文档工具使用说明</a></div>
-            </div>
-        </div>
+</code></pre>
+<p><code>$value:"$body/file:url"</code>的意思就是 <code>upload_url</code>这个字段的值是通过<code>$body</code>中的<code>file</code>字段的可访问的<code>url</code>来进行输出。</p>
+<h3>引入cvs外部数据</h3>
+<p>正在搞...</p>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2020-01-15</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2020/1/15/Panda-api-how-to-use/">上一篇: Panda api 接口文档工具使用说明</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2020/1/4/设计一个接口管理工具/">下一篇: 设计一个方便前后端分离项目开发的接口管理工具</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2020/1/15/Panda-api-how-to-use2/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

@@ -3,45 +3,50 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>Panda Api _settings配置说明 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">Panda Api _settings配置说明</h1>
-
-
-
-
-            <p>Panda Api <code>&#95;settings.json5</code> 文件包含了所有的基础设置.</p><p>这是一个默认的基础配置:<pre><code class=".language-json5">// &#95;settings.json5
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">Panda Api _settings配置说明</h1>
+  <p>Panda Api <code>_settings.json5</code> 文件包含了所有的基础设置.</p>
+<p>这是一个默认的基础配置:</p>
+<pre><code class="language-.language-json5">// _settings.json5
 {
-  project&#95;name: &quot;Panda Api&quot;,
-  project&#95;desc: &quot;Panda Api is a simple api manage tool&quot;
+  project_name: "Panda Api",
+  project_desc: "Panda Api is a simple api manage tool"
 }
-</code></pre></p><p><code>project&#95;name</code>配置项目名称, <code>project&#95;desc</code>:配置项目简介, 如果需要详细的大篇幅的项目简介, 可以放到<code>README.md</code>文件中, Panda Api会自动进行加载.</p><h3>全局字段属性配置</h3><p>我们可以为api接口字段的一些公共属性进行全局的设置, 比如,如果大部分接口都是需要<code>auth</code>, 那么我们就可以在全局变量中设置<code>auth</code>为<code>true</code>, 如果所有接口的<code>response</code>都有<code>code</code>和<code>msg</code>,那么我们就可以在全局<code>response</code>配置上<code>code</code>和<code>msg</code></p><pre><code class=".language-json5">{
-  project&#95;name: &quot;Panda Api&quot;,
-  project&#95;desc: &quot;Panda Api is a simple api manage tool&quot;,
+</code></pre>
+<p><code>project_name</code>配置项目名称, <code>project_desc</code>:配置项目简介, 如果需要详细的大篇幅的项目简介, 可以放到<code>README.md</code>文件中, Panda Api会自动进行加载.</p>
+<h3>全局字段属性配置</h3>
+<p>我们可以为api接口字段的一些公共属性进行全局的设置, 比如,如果大部分接口都是需要<code>auth</code>, 那么我们就可以在全局变量中设置<code>auth</code>为<code>true</code>, 如果所有接口的<code>response</code>都有<code>code</code>和<code>msg</code>,那么我们就可以在全局<code>response</code>配置上<code>code</code>和<code>msg</code></p>
+<pre><code class="language-.language-json5">{
+  project_name: "Panda Api",
+  project_desc: "Panda Api is a simple api manage tool",
   global: {
     apis:{
       auth: true,
       response:{
-        code:{name:&quot;返回的状态码&quot;, type:&quot;number&quot;},
-        msg:{name:&quot;返回的状态说明&quot;}
+        code:{name:"返回的状态码", type:"number"},
+        msg:{name:"返回的状态说明"}
       }
     },
   }
 }
-</code></pre><p>一旦配置后,所有有的接口就会默认继承有<code>auth:true</code>, 所有接口的<code>response</code>就自动有<code>code:{name:&quot;返回的状态码&quot;, type:&quot;number&quot;}</code>和<code>msg:{name:&quot;返回的状态说明&quot;}</code>,<h3>重写继承的属性:</h3> 虽然我们所有接口都会继承有<code>global</code>中设置的属性,我们还是可以根据需要重写这些属性,一旦在自己接口中重新定义属性<code>auth</code>或者<code>response</code>的<code>code</code>或<code>msg</code>,属性就会以接口定义的为准, 例如:</p><pre><code class=".language-json5">// auth.json5
+</code></pre>
+<p>一旦配置后,所有有的接口就会默认继承有<code>auth:true</code>, 所有接口的<code>response</code>就自动有<code>code:{name:"返回的状态码", type:"number"}</code>和<code>msg:{name:"返回的状态说明"}</code>,</p>
+<h3>重写继承的属性:</h3>
+<p>虽然我们所有接口都会继承有<code>global</code>中设置的属性,我们还是可以根据需要重写这些属性,一旦在自己接口中重新定义属性<code>auth</code>或者<code>response</code>的<code>code</code>或<code>msg</code>,属性就会以接口定义的为准, 例如:</p>
+<pre><code class="language-.language-json5">// auth.json5
 {
-    url:&quot;/login/&quot;,
-    method:&quot;POST&quot;,
+    url:"/login/",
+    method:"POST",
     auth:false,
-    body&#95;mode:&quot;json&quot;,
+    body_mode:"json",
     body:{
         ...
     },
@@ -49,27 +54,33 @@
         result:{...}
     }
 }
-</code></pre><p>这个例子中,接口'/login/'原本继承了全局属性<code>auth:true</code>,但是在接口重新定义了<code>auth:false</code>,那么最终结果以接口定义为准. <code>response</code>中定义了一个<code>result</code>属性,未重写<code>code</code>和<code>auth</code>, 所以最终结果为:<pre><code class=".language-json5">// auth.json5
+</code></pre>
+<p>这个例子中,接口'/login/'原本继承了全局属性<code>auth:true</code>,但是在接口重新定义了<code>auth:false</code>,那么最终结果以接口定义为准.
+<code>response</code>中定义了一个<code>result</code>属性,未重写<code>code</code>和<code>auth</code>, 所以最终结果为:</p>
+<pre><code class="language-.language-json5">// auth.json5
 {
-    url:&quot;/login/&quot;,
-    method:&quot;POST&quot;,
+    url:"/login/",
+    method:"POST",
     auth:false,
-    body&#95;mode:&quot;json&quot;,
+    body_mode:"json",
     body:{
         ...
     },
     response:{
-        code:{name:&quot;返回的状态码&quot;, type:&quot;number&quot;},
-        msg:{name:&quot;返回的状态说明&quot;},
+        code:{name:"返回的状态码", type:"number"},
+        msg:{name:"返回的状态说明"},
         result:{...}
     }
 }
-</code></pre></p><h3>删除继承的属性</h3><p>我们可以把不要的属性进行删除,例如:<pre><code class=".language-json5">// auth.json5
+</code></pre>
+<h3>删除继承的属性</h3>
+<p>我们可以把不要的属性进行删除,例如:</p>
+<pre><code class="language-.language-json5">// auth.json5
 {
-    url:&quot;/login/&quot;,
-    method:&quot;POST&quot;,
+    url:"/login/",
+    method:"POST",
     auth:false,
-    body&#95;mode:&quot;json&quot;,
+    body_mode:"json",
     body:{
         ...
     },
@@ -78,117 +89,131 @@
         result:{...}
     }
 }
-</code></pre></p><p>我们设置了<code>response</code>的<code>code</code>属性为删除,那么就不会继承这个属性. 最终结果将为:<pre><code class=".language-json5">// auth.json5
+</code></pre>
+<p>我们设置了<code>response</code>的<code>code</code>属性为删除,那么就不会继承这个属性. 最终结果将为:</p>
+<pre><code class="language-.language-json5">// auth.json5
 {
-    url:&quot;/login/&quot;,
-    method:&quot;POST&quot;,
+    url:"/login/",
+    method:"POST",
     auth:false,
-    body&#95;mode:&quot;json&quot;,
+    body_mode:"json",
     body:{
         ...
     },
     response:{
-        msg:{name:&quot;返回的状态说明&quot;},
+        msg:{name:"返回的状态说明"},
         result:{...}
     }
 }
-</code></pre></p><p>可以看到,<code>code</code>字段没有了,</p><h3>设置全局base_path</h3><p>我们可以为所有接口的<code>url</code>设置一个<code>base path</code>, 例如有的团队的开发习惯,喜欢把版本标记在url地址上,例如<code>/v1/login/</code>, <code>/v3/login/</code>, 或者有的是子项目,所有接口的<code>url</code>都会有一个子项目的地址<code>/sub/login/</code>, <code>/sub/article/list/</code>, 遇到这样的情况,我们就可以设置全局<code>base&#95;path</code>,</p><pre><code class=".language-json5">{
-    project&#95;name: &quot;Panda Api&quot;,
-    project&#95;desc: &quot;Panda Api is a simple api manage tool&quot;,
+</code></pre>
+<p>可以看到,<code>code</code>字段没有了,</p>
+<h3>设置全局base_path</h3>
+<p>我们可以为所有接口的<code>url</code>设置一个<code>base path</code>, 例如有的团队的开发习惯,喜欢把版本标记在url地址上,例如<code>/v1/login/</code>, <code>/v3/login/</code>, 或者有的是子项目,所有接口的<code>url</code>都会有一个子项目的地址<code>/sub/login/</code>, <code>/sub/article/list/</code>, 遇到这样的情况,我们就可以设置全局<code>base_path</code>,</p>
+<pre><code class="language-.language-json5">{
+    project_name: "Panda Api",
+    project_desc: "Panda Api is a simple api manage tool",
     global: {
         apis:{
-            base&#95;path:&quot;/v2/&quot;, // 全局 base path
+            base_path:"/v2/", // 全局 base path
             auth: true,
             response:{
-                code:{name:&quot;返回的状态码&quot;, type:&quot;number&quot;},
-                msg:{name:&quot;返回的状态说明&quot;}
+                code:{name:"返回的状态码", type:"number"},
+                msg:{name:"返回的状态说明"}
             }
         },
     }
 }
-</code></pre><p>我们在全局<code>global</code>中设置了<code>base&#95;path</code>为<code>/v2/</code>, 所以我们所有接口文档中的<code>url</code>在文档输出时全部都会加上<code>/v2/</code>前缀, 比如用户登录的接口地址为<code>/login/</code>会自动变成<code>/v2/login/</code>, 所以我们请求的地址也要相应的改变为<code>/v2/login/</code>.</p><p>如果我们不需要,同样可以在接口中重写<code>base&#95;path</code>属性.</p><h3>配置:开发服务器 测试服务器 正式服务器</h3><p>我们可以配置我们开发的各类服务器环境,然后可以使用Panda Api自动进行各类接口的测试, 还是可以在本地开发的时候, 路由请求到对应服务器上.<pre><code class=".language-json5">servers:{
+</code></pre>
+<p>我们在全局<code>global</code>中设置了<code>base_path</code>为<code>/v2/</code>, 所以我们所有接口文档中的<code>url</code>在文档输出时全部都会加上<code>/v2/</code>前缀, 比如用户登录的接口地址为<code>/login/</code>会自动变成<code>/v2/login/</code>, 所以我们请求的地址也要相应的改变为<code>/v2/login/</code>.</p>
+<p>如果我们不需要,同样可以在接口中重写<code>base_path</code>属性.</p>
+<h3>配置:开发服务器 测试服务器 正式服务器</h3>
+<p>我们可以配置我们开发的各类服务器环境,然后可以使用Panda Api自动进行各类接口的测试, 还是可以在本地开发的时候, 路由请求到对应服务器上.</p>
+<pre><code class="language-.language-json5">servers:{
     dev:{
-        name:&quot;开发服务器&quot;,
-        desc:&quot;&quot;,
-        url:&quot;http://127.0.0.1:9000&quot;,
+        name:"开发服务器",
+        desc:"",
+        url:"http://127.0.0.1:9000",
     },
     test:{
-        name:&quot;测试服务器&quot;,
-        url:&quot;http://www.c.com&quot;,
+        name:"测试服务器",
+        url:"http://www.c.com",
     },
     pro:{
-        name:&quot;正式服务器&quot;,
-        url:&quot;http://www.b.com&quot;,
+        name:"正式服务器",
+        url:"http://www.b.com",
     }
 }
-</code></pre></p>
-            <p class="text-left text-muted">2020-02-23 01:26</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2020/2/17/panda_api_markdown_docs/">上一篇: Panda Api纯文档编写和多级菜单目录文档</a></div>
-                <div class="col-6 text-right"><a href="/p/2020/2/11/panda-api-backend-test/">下一篇:Panda-api后端接口测试</a></div>
-            </div>
-        </div>
+</code></pre>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2020-02-16</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2020/2/17/panda_api_markdown_docs/">上一篇: Panda Api纯文档编写和多级菜单目录文档</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2020/2/11/panda-api-backend-test/">下一篇: Panda-api后端接口测试</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2020/2/16/panda_api_settings/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

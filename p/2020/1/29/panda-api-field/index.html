@@ -3,524 +3,779 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>Panda-api字段说明 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">Panda-api字段说明</h1>
-
-
-
-
-            <p>为了更人方便、更人性化的进行body、query或者response中的字段设计，我又拓展了字段类型，一方面可以更快速的进行字段设计，另外一方面，可以生成更符合实际情况的mock数据。系统会在test_data匹配不到数据的时候，默认返回response设定好的字段里面的mock数据。</p><h2>字段的公共属性</h2><p>所有字段都共有的属性</p><ul><li><code>name</code> : 字段名称</li><li><code>desc</code> : 字段描述</li><li><code>required</code> : 字段是否必填，(可选) 不填写的时候默认是必填</li><li><code>type</code> : 字段类型</li><li><code>default</code> :  字段的默认值，(可选) 不填写时默认是空</li><li><code>value</code> : 一旦设置了<code>value</code>, 那么mock就一直只会返回<code>value</code>的值，其它所有值范围属性都会忽略<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, value:10},
-</code></pre>设定后mock只会一直返回值 10</li><li><code>enum</code> : <code>enum</code>是一个数组，mock会随机返回<code>enum</code>数组中的值，例如<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, enum:&#91;10,20,30&#93;},
-</code></pre>mock会随机返回<code>enum</code>列表[10,20,30]中的其中一个</li></ul><p><code>enum</code>有两种写法:</p><ul><li>一种直接就是值: <code>enum:&#91;-1, 1&#93;</code>，</li><li>第二种是 值加值的描述 <code>$enum:&#91;&#91;-1,&quot;失败&quot;&#93;, &#91;1, &quot;成功&quot;&#93;&#93;</code>，注意<code>$enum</code>是以<code>$</code>美元符号开头的，表示后面的元素是以数组形式表现，元素的第一个是值，第二个是值的描述。第二种写法和第一种写法获得的结果都是一样的，值只能是：-1 和 1中的一个。</li></ul><p>增加说明的目的是为了方便以后值的阅读和维护，我们经常时间长了会忘记每一个枚举值的作用。</p><p>如果你这么写：<pre><code class=".language-json5">enum:&#91;&#91;-1, &quot;s&quot;&#93;, &#91;1, &quot;d&quot;&#93;&#93;
-</code></pre></p><p>表示值只能是<code>&#91;-1, &quot;s&quot;&#93;</code> 和<code>&#91;1, &quot;d&quot;&#93;</code> 中其中一个数组</p><h2>int</h2><p><code>int</code> 就是整数类型，是<code>number</code>的一个子集，他有这么几个范围的参数，他们分别是（按有效优先级别展示）：</p><ul><li><code>min&#95;value</code> 最小值，设定后，所有mock的值会大于这个值，例如：<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, min&#95;value:1},
-</code></pre></li><li><code>max&#95;value</code> 最大值，设定后，所有mock的值会小于这个值，例如：<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, max&#95;value:1000},
-</code></pre></li></ul><p>通常<code>min&#95;value</code>和<code>max&#95;value</code>会同时使用，例如<pre><code class=".language-json5">category&#95;id: {name: &quot;category id&quot;, type: &quot;int&quot;, min&#95;value:1, max&#95;value:1000},
-</code></pre></p><h2>其它数字类型</h2><p>我们还有其它数字类型，如：正整数<code>PosInt</code>、负整数<code>NegInt</code>，浮点数<code>Float</code>，正浮点数<code>PosFloat</code>，负浮点数<code>NegFloat</code>，时间戳<code>Timestamp</code>。</p><h2>PosInt</h2><p>表示正整数， 是<code>int</code>的子集</p><h2>NegInt</h2><p>表示负整数， 是<code>int</code>的子集</p><h2>Float</h2><p>表示小数， 是<code>number</code>的子集</p><h2>PosFloat</h2><p>表示正小数， 是<code>Float</code>的子集</p><h2>NegFloat</h2><p>表示负小数， 是<code>Float</code>的子集</p><p>小数比整数多了三个参数：</p><ul><li><code>decimal&#95;places</code> 表示小数的固定位数，默认是2位<pre><code class=".language-json5">money: {name: &quot;Money&quot;, type: &quot;float&quot;, decimal&#95;places:2},
-</code></pre>mock 生成的小数就会只保留两位小数</li><li><code>min&#95;decimal&#95;places</code> 表示小数的随机的最小位数，默认为2位<pre><code class=".language-json5">money: {name: &quot;Money&quot;, type: &quot;float&quot;, min&#95;decimal&#95;places:2},
-</code></pre></li><li><code>max&#95;decimal&#95;places</code> 表示小数的随机位数的最大位数， 默认最大10位<pre><code class=".language-json5">money: {name: &quot;Money&quot;, type: &quot;float&quot;, max&#95;decimal&#95;places:10},
-</code></pre></li></ul><p>通常<code>min&#95;decimal&#95;places</code>和<code>max&#95;decimal&#95;places</code>会同时使用，例如<pre><code class=".language-json5">money: {name: &quot;Money&quot;, type: &quot;int&quot;, min&#95;value:1, min&#95;decimal&#95;places:2, max&#95;decimal&#95;places:10},
-</code></pre></p><p>注意：小数位数长度最好设置太大，不然有可能依法溢出错误</p><h2>Timestamp</h2><p>时间戳，是<code>int</code>的子集，默认随机返回当前时间前后两年的时间戳<pre><code class=".language-json5">created: {name: &quot;Created time&quot;, type: &quot;timestamp&quot;},
-</code></pre></p><p>同样可以设置最小值<code>min&#95;value</code>和最大值<code>max&#95;value</code>，但是整数 <code>min&#95;value</code>默认的最小值是当前时间戳提前两年，最大值的时间戳是当前时间戳</p><h2>string 字符串类型</h2><p>除了<code>array</code>和<code>object</code>字段,其它字段中如果没有设置<code>type</code>，则默认都为<code>string</code>类型，<code>string</code>类型返回的是随机的应为字符串。 <code>string</code>除了<code>value</code>属性和<code>enum</code>属性，<code>string</code>特有的属性是：<code>length</code>字符串固定长度，<code>min&#95;length</code>字符串最小长度，<code>max&#95;length</code>字符串最大长度，</p><pre><code class=".language-json5">{name: &quot;字符串&quot;, type: &quot;string&quot;},
-// 随机返回长度在5到30的英文字符串，例如：1@AK&#40;&#41;r8r&#42;N2vvVEkWk6Fg
-</code></pre><p><code>string</code>的默认长度范围是<code>min&#95;length:5</code>, <code>max&#95;length:30</code></p><p><code>string</code> 一样有很多的子类型。以下类型均为<code>string</code>类型，拥有<code>string</code>的全部属性</p><h2>date 和 datetime</h2><p><code>date</code>和<code>datetime</code>都是<code>string</code>的子集 <code>date</code>日期类型， <code>datetime</code>是日期+时间类型，两个的所有属性都一样，只是返回日期的格式不一样。 <code>date</code>返回的格式是：2020-01-30 ， <code>datetime</code> 返回的是 <code>2020-01-30 10:03 15</code>这样的格式，具体返回格式可以自定义。</p><pre><code class=".language-json5">created: {name: &quot;Created Time&quot;, type: &quot;datetime&quot;, format:&quot;%Y-%m-%d %H:%M&quot; min&#95;value:&quot;1999-1-1&quot;, max&#95;value:&quot;2020-12-12&quot;},
-</code></pre><p><code>date</code> 和 <code>datetime</code>这么几个属性：</p><ul><li>format 表示日期格式</li><li>min_value 表示日期的最小值范围，默认是当前时间提前两年</li><li>max_value 表示日期的最大值范围，默认是当前时间</li></ul><h2>regex 正则表达式</h2><p>是<code>string</code>的子集，可以写正则表达式来生成字符串 例如，生成一个手机号码：<pre><code class=".language-json5">mobile:{name:&quot;手机号码&quot;, type:&quot;regex&quot;, regex:&quot;&#94;1&#91;3456789&#93;\\d{9}&quot;},
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">Panda-api字段说明</h1>
+  <p>为了更人方便、更人性化的进行body、query或者response中的字段设计，我又拓展了字段类型，一方面可以更快速的进行字段设计，另外一方面，可以生成更符合实际情况的mock数据。系统会在test_data匹配不到数据的时候，默认返回response设定好的字段里面的mock数据。</p>
+<h2>字段的公共属性</h2>
+<p>所有字段都共有的属性</p>
+<ul>
+<li><code>name</code> : 字段名称</li>
+<li><code>desc</code> : 字段描述</li>
+<li><code>required</code> : 字段是否必填，(可选) 不填写的时候默认是必填</li>
+<li><code>type</code> : 字段类型</li>
+<li><code>default</code> :  字段的默认值，(可选) 不填写时默认是空</li>
+<li><code>value</code> : 一旦设置了<code>value</code>, 那么mock就一直只会返回<code>value</code>的值，其它所有值范围属性都会忽略</li>
+</ul>
+<pre><code class="language-.language-json5">category_id: {name: "category id", type: "int", value:10},
+</code></pre>
+<p>设定后mock只会一直返回值 10</p>
+<ul>
+<li><code>enum</code> : <code>enum</code>是一个数组，mock会随机返回<code>enum</code>数组中的值，例如</li>
+</ul>
+<pre><code class="language-.language-json5">category_id: {name: "category id", type: "int", enum:[10,20,30]},
+</code></pre>
+<p>mock会随机返回<code>enum</code>列表[10,20,30]中的其中一个</p>
+<p><code>enum</code>有两种写法:</p>
+<ul>
+<li>一种直接就是值: <code>enum:[-1, 1]</code>，</li>
+<li>第二种是 值加值的描述 <code>$enum:[[-1,"失败"], [1, "成功"]]</code>，注意<code>$enum</code>是以<code>$</code>美元符号开头的，表示后面的元素是以数组形式表现，元素的第一个是值，第二个是值的描述。第二种写法和第一种写法获得的结果都是一样的，值只能是：-1 和 1中的一个。</li>
+</ul>
+<p>增加说明的目的是为了方便以后值的阅读和维护，我们经常时间长了会忘记每一个枚举值的作用。</p>
+<p>如果你这么写：</p>
+<pre><code class="language-.language-json5">enum:[[-1, "s"], [1, "d"]]
+</code></pre>
+<p>表示值只能是<code>[-1, "s"]</code> 和<code>[1, "d"]</code> 中其中一个数组</p>
+<h2>int</h2>
+<p><code>int</code> 就是整数类型，是<code>number</code>的一个子集，他有这么几个范围的参数，他们分别是（按有效优先级别展示）：</p>
+<ul>
+<li><code>min_value</code> 最小值，设定后，所有mock的值会大于这个值，例如：</li>
+</ul>
+<pre><code class="language-.language-json5">category_id: {name: "category id", type: "int", min_value:1},
+</code></pre>
+<ul>
+<li><code>max_value</code> 最大值，设定后，所有mock的值会小于这个值，例如：</li>
+</ul>
+<pre><code class="language-.language-json5">category_id: {name: "category id", type: "int", max_value:1000},
+</code></pre>
+<p>通常<code>min_value</code>和<code>max_value</code>会同时使用，例如</p>
+<pre><code class="language-.language-json5">category_id: {name: "category id", type: "int", min_value:1, max_value:1000},
+</code></pre>
+<h2>其它数字类型</h2>
+<p>我们还有其它数字类型，如：正整数<code>PosInt</code>、负整数<code>NegInt</code>，浮点数<code>Float</code>，正浮点数<code>PosFloat</code>，负浮点数<code>NegFloat</code>，时间戳<code>Timestamp</code>。</p>
+<h2>PosInt</h2>
+<p>表示正整数， 是<code>int</code>的子集</p>
+<h2>NegInt</h2>
+<p>表示负整数， 是<code>int</code>的子集</p>
+<h2>Float</h2>
+<p>表示小数， 是<code>number</code>的子集</p>
+<h2>PosFloat</h2>
+<p>表示正小数， 是<code>Float</code>的子集</p>
+<h2>NegFloat</h2>
+<p>表示负小数， 是<code>Float</code>的子集</p>
+<p>小数比整数多了三个参数：</p>
+<ul>
+<li><code>decimal_places</code> 表示小数的固定位数，默认是2位</li>
+</ul>
+<pre><code class="language-.language-json5">money: {name: "Money", type: "float", decimal_places:2},
+</code></pre>
+<p>mock 生成的小数就会只保留两位小数</p>
+<ul>
+<li><code>min_decimal_places</code> 表示小数的随机的最小位数，默认为2位</li>
+</ul>
+<pre><code class="language-.language-json5">money: {name: "Money", type: "float", min_decimal_places:2},
+</code></pre>
+<ul>
+<li><code>max_decimal_places</code> 表示小数的随机位数的最大位数， 默认最大10位</li>
+</ul>
+<pre><code class="language-.language-json5">money: {name: "Money", type: "float", max_decimal_places:10},
+</code></pre>
+<p>通常<code>min_decimal_places</code>和<code>max_decimal_places</code>会同时使用，例如</p>
+<pre><code class="language-.language-json5">money: {name: "Money", type: "int", min_value:1, min_decimal_places:2, max_decimal_places:10},
+</code></pre>
+<p>注意：小数位数长度最好设置太大，不然有可能依法溢出错误</p>
+<h2>Timestamp</h2>
+<p>时间戳，是<code>int</code>的子集，默认随机返回当前时间前后两年的时间戳</p>
+<pre><code class="language-.language-json5">created: {name: "Created time", type: "timestamp"},
+</code></pre>
+<p>同样可以设置最小值<code>min_value</code>和最大值<code>max_value</code>，但是整数 <code>min_value</code>默认的最小值是当前时间戳提前两年，最大值的时间戳是当前时间戳</p>
+<h2>string 字符串类型</h2>
+<p>除了<code>array</code>和<code>object</code>字段,其它字段中如果没有设置<code>type</code>，则默认都为<code>string</code>类型，<code>string</code>类型返回的是随机的应为字符串。
+<code>string</code>除了<code>value</code>属性和<code>enum</code>属性，<code>string</code>特有的属性是：<code>length</code>字符串固定长度，<code>min_length</code>字符串最小长度，<code>max_length</code>字符串最大长度，</p>
+<pre><code class="language-.language-json5">{name: "字符串", type: "string"},
+// 随机返回长度在5到30的英文字符串，例如：1@AK()r8r*N2vvVEkWk6Fg
+</code></pre>
+<p><code>string</code>的默认长度范围是<code>min_length:5</code>, <code>max_length:30</code></p>
+<p><code>string</code> 一样有很多的子类型。以下类型均为<code>string</code>类型，拥有<code>string</code>的全部属性</p>
+<h2>date 和 datetime</h2>
+<p><code>date</code>和<code>datetime</code>都是<code>string</code>的子集
+<code>date</code>日期类型， <code>datetime</code>是日期+时间类型，两个的所有属性都一样，只是返回日期的格式不一样。
+<code>date</code>返回的格式是：2020-01-30 ， <code>datetime</code> 返回的是 <code>2020-01-30 10:03 15</code>这样的格式，具体返回格式可以自定义。</p>
+<pre><code class="language-.language-json5">created: {name: "Created Time", type: "datetime", format:"%Y-%m-%d %H:%M" min_value:"1999-1-1", max_value:"2020-12-12"},
+</code></pre>
+<p><code>date</code> 和 <code>datetime</code>这么几个属性：</p>
+<ul>
+<li>format 表示日期格式</li>
+<li>min_value 表示日期的最小值范围，默认是当前时间提前两年</li>
+<li>max_value 表示日期的最大值范围，默认是当前时间</li>
+</ul>
+<h2>regex 正则表达式</h2>
+<p>是<code>string</code>的子集，可以写正则表达式来生成字符串
+例如，生成一个手机号码：</p>
+<pre><code class="language-.language-json5">mobile:{name:"手机号码", type:"regex", regex:"^1[3456789]\\d{9}"},
 // 随机返回手机号码，例如：13854309473 , 15413021985
-</code></pre></p><p><code>regex:&quot;&#94;1&#91;3456789&#93;\\d{9}&quot;</code>里面的就是正则表达式,注意一下的是平时我们的<code>\d</code>在这里要写为<code>\\d</code>,因为json5里面单个`&#8216;变成了一个转义字符.</p><h2>word 英文单词</h2><p>是<code>string</code>的子集， 例如：<pre><code class=".language-json5">{name: &quot;English Word&quot;, type: &quot;word&quot;},
+</code></pre>
+<p><code>regex:"^1[3456789]\\d{9}"</code>里面的就是正则表达式,注意一下的是平时我们的<code>\d</code>在这里要写为<code>\\d</code>,因为json5里面单个<code>\</code>变成了一个转义字符.</p>
+<h2>word 英文单词</h2>
+<p>是<code>string</code>的子集，
+例如：</p>
+<pre><code class="language-.language-json5">{name: "English Word", type: "word"},
 // 随机返回长度在3到10的英文字符串，例如：bnsjnw
-</code></pre></p><p><code>word</code>的默认长度范围是<code>min&#95;length:3</code>, <code>max&#95;length:10</code>，默认返回长度在3到10的英文字符串</p><h2>cword | cw 中文单词</h2><p>是<code>string</code>的子集， 你在标记属性的时候，可以使用<code>cword</code>，也可以使用简写<code>cw</code>，例如：<pre><code class=".language-json5">{name: &quot;Chinese Word&quot;, type: &quot;cword&quot;},
+</code></pre>
+<p><code>word</code>的默认长度范围是<code>min_length:3</code>, <code>max_length:10</code>，默认返回长度在3到10的英文字符串</p>
+<h2>cword | cw 中文单词</h2>
+<p>是<code>string</code>的子集，
+你在标记属性的时候，可以使用<code>cword</code>，也可以使用简写<code>cw</code>，例如：</p>
+<pre><code class="language-.language-json5">{name: "Chinese Word", type: "cword"},
 // 随机返回长度在1到4的中文字符串，例如：向放路
-</code></pre></p><p>或者 下面使用简写也是是一样的<pre><code class=".language-json5">{name: &quot;Chinese Word&quot;, type: &quot;cw&quot;},
-</code></pre></p><p><code>cword</code>的默认长度范围是<code>min&#95;length:1</code>，<code>max&#95;length:4</code>，也就是默认随机返回1到4个汉字</p><h2>title 英文标题</h2><p>是<code>string</code>的子集，例如：<pre><code class=".language-json5">{name: &quot;English Title&quot;, type: &quot;title&quot;},
+</code></pre>
+<p>或者 下面使用简写也是是一样的</p>
+<pre><code class="language-.language-json5">{name: "Chinese Word", type: "cw"},
+</code></pre>
+<p><code>cword</code>的默认长度范围是<code>min_length:1</code>，<code>max_length:4</code>，也就是默认随机返回1到4个汉字</p>
+<h2>title 英文标题</h2>
+<p>是<code>string</code>的子集，例如：</p>
+<pre><code class="language-.language-json5">{name: "English Title", type: "title"},
 // 随机返回 长度在20到90的英文标题，例如：Fohzgbb ywpmpwpg ogxoal cuwwqb yxqjy softj ygihb zyizqqcbu nyqb？
-</code></pre></p><p><code>title</code>的默认长度范围是：<code>min&#95;length:20</code>，<code>max&#95;length:90</code><h2>ctitle | ct 中文标题</h2> 是<code>string</code>的子集，例如：<pre><code class=".language-json5">{name: &quot;中文标题&quot;, type: &quot;ctitle&quot;},
+</code></pre>
+<p><code>title</code>的默认长度范围是：<code>min_length:20</code>，<code>max_length:90</code></p>
+<h2>ctitle | ct 中文标题</h2>
+<p>是<code>string</code>的子集，例如：</p>
+<pre><code class="language-.language-json5">{name: "中文标题", type: "ctitle"},
 // 随机返回 长度在5到50个字的中文标题，例如：全性书性实会众下例元回员广用根问动设理说角算？
-</code></pre></p><p><code>ctitle</code>的默认长度范围是：<code>min&#95;length:5</code>，<code>max&#95;length:40</code>。标题结尾的标点符号是随机生成的，有时候又，有时候没有。</p><h2>sentence 英文语句</h2><p>是<code>string</code>的子集<pre><code class=".language-json5">{name: &quot;English sentence&quot;, type: &quot;sentence&quot;},
+</code></pre>
+<p><code>ctitle</code>的默认长度范围是：<code>min_length:5</code>，<code>max_length:40</code>。标题结尾的标点符号是随机生成的，有时候又，有时候没有。</p>
+<h2>sentence 英文语句</h2>
+<p>是<code>string</code>的子集</p>
+<pre><code class="language-.language-json5">{name: "English sentence", type: "sentence"},
 // 随机返回 长度在20到90长度的英文句子，例如：Fohzgbb ywpmpwpg ogxoal cuwwqb yxqjy softj ygihb zyizqqcbu nyqb？
-</code></pre></p><p><code>sentence</code>的默认长度范围是：<code>min&#95;length:5</code>，<code>max&#95;length:40</code>。<code>sentence</code>和<code>title</code>很像，不同的是<code>sentence</code>结尾一定会有标点符号</p><h2>csentence | cstring | cs 中文语句</h2><p>是<code>string</code>的子集<pre><code class=".language-json5">{name: &quot;中文标题&quot;, type: &quot;ctitle&quot;},
+</code></pre>
+<p><code>sentence</code>的默认长度范围是：<code>min_length:5</code>，<code>max_length:40</code>。<code>sentence</code>和<code>title</code>很像，不同的是<code>sentence</code>结尾一定会有标点符号</p>
+<h2>csentence | cstring | cs 中文语句</h2>
+<p>是<code>string</code>的子集</p>
+<pre><code class="language-.language-json5">{name: "中文标题", type: "ctitle"},
 // 随机返回 长度在5到50长度的中文句子，例如：全性书性实会众下例元回员广用根问动设理说角算？
-</code></pre></p><p><code>csentence</code>的默认长度范围是：<code>min&#95;length:5</code>，<code>max&#95;length:50</code>。<code>csentence</code>和<code>ctitle</code>很像，不同的是<code>csentence</code>结尾一定会有标点符号</p><h2>summary 小段的英文</h2><p>是<code>string</code>的子集<pre><code class=".language-json5">{name: &quot;一小段英文段落&quot;, type: &quot;summary&quot;},
+</code></pre>
+<p><code>csentence</code>的默认长度范围是：<code>min_length:5</code>，<code>max_length:50</code>。<code>csentence</code>和<code>ctitle</code>很像，不同的是<code>csentence</code>结尾一定会有标点符号</p>
+<h2>summary 小段的英文</h2>
+<p>是<code>string</code>的子集</p>
+<pre><code class="language-.language-json5">{name: "一小段英文段落", type: "summary"},
 // 随机返回 长度在到120到300长度的小段英文段落，例如：Tytuigr vfqnkhs cznqzyiq libshz, Rhpuvlxl opxqewlgy pmswwh xqbgavct pvv kaymb suoca rlqfllvhx ocybrioq? Tvxf wkdazfk exz nngosy bjxhfdc sxmsqsh kskah qwphro hpnddptmq skxgtk yemllrr rnsc.
-</code></pre></p><p><code>summary</code>的默认长度范围是：<code>min&#95;length:120</code>，<code>max&#95;length:300</code></p><h2>csummary | cm 小段的中文</h2><p>是<code>string</code>的子集<pre><code class=".language-json5">{name: &quot;一小段中文段落&quot;, type: &quot;csummary&quot;},
+</code></pre>
+<p><code>summary</code>的默认长度范围是：<code>min_length:120</code>，<code>max_length:300</code></p>
+<h2>csummary | cm 小段的中文</h2>
+<p>是<code>string</code>的子集</p>
+<pre><code class="language-.language-json5">{name: "一小段中文段落", type: "csummary"},
 // 随机返回 长度在60到250长度的中文段落，例如：速作真市正积除带先构解计生维离数没区什出何节济水年外细查资志阶格政；厂图级性给，身调等压律三海几于出议领法一传但心林种议属前件科战支务问合元准门劳例回细准教省装相是间它元指每。样同天东情需支文局界始油委军作六代事阶界科分员积律八中，道强四性都养例水化气观少斯四亲完。开局行观象受论那白法验许始始党始压基京被交质什并无值么果风增规，可由马带在位历门最般手约从将至水千须儿性响带则这上导起生手合记商四形运格外重示更一多员接亲科领。
-</code></pre></p><p><code>csummary</code>的默认长度范围是：<code>min&#95;length:60</code>，<code>max&#95;length:250</code></p><h2>paragraph 大段的英文段落</h2><p>是<code>string</code>的子集 拥有额外参数<code>content&#95;type</code>标记内容类型，目前可选为：<code>html</code>、<code>markdown</code>。<code>html</code>输出带有html标记标签<code>&lt;p&gt;</code>的内容段落；<code>markdown</code>输出带有<code>\n\n</code>作为换行分隔的内容段落，默认是<code>markdown</code></p><pre><code class=".language-json5">{name: &quot;大段的英文段落&quot;, type: &quot;paragraph&quot;},
+</code></pre>
+<p><code>csummary</code>的默认长度范围是：<code>min_length:60</code>，<code>max_length:250</code></p>
+<h2>paragraph 大段的英文段落</h2>
+<p>是<code>string</code>的子集
+拥有额外参数<code>content_type</code>标记内容类型，目前可选为：<code>html</code>、<code>markdown</code>。<code>html</code>输出带有html标记标签<code>&lt;p&gt;</code>的内容段落；<code>markdown</code>输出带有<code>\n\n</code>作为换行分隔的内容段落，默认是<code>markdown</code></p>
+<pre><code class="language-.language-json5">{name: "大段的英文段落", type: "paragraph"},
 // 随机返回 长度在300到1600长度的英文段落
-</code></pre><h2>cparagraph | cp 大段的中文段落</h2><p>是<code>string</code>的子集 拥有额外参数<code>content&#95;type</code>标记内容类型，目前可选为：<code>html</code>、<code>markdown</code>。<code>html</code>输出带有html标记标签<code>&lt;p&gt;</code>的内容段落；<code>markdown</code>输出带有<code>\n\n</code>作为换行分隔的内容段落，默认是<code>markdown</code></p><pre><code class=".language-json5">{name: &quot;大段的中文段落&quot;, type: &quot;cparagraph&quot;},
+</code></pre>
+<h2>cparagraph | cp 大段的中文段落</h2>
+<p>是<code>string</code>的子集
+拥有额外参数<code>content_type</code>标记内容类型，目前可选为：<code>html</code>、<code>markdown</code>。<code>html</code>输出带有html标记标签<code>&lt;p&gt;</code>的内容段落；<code>markdown</code>输出带有<code>\n\n</code>作为换行分隔的内容段落，默认是<code>markdown</code></p>
+<pre><code class="language-.language-json5">{name: "大段的中文段落", type: "cparagraph"},
 // 随机返回 长度在300到1600长度的英文段落
-</code></pre><h2>name 英文人名</h2><p>是<code>string</code>的子集， 随机返回一个英文人名<pre><code class=".language-json5">{name: &quot;人名&quot;, type: &quot;name&quot;},
+</code></pre>
+<h2>name 英文人名</h2>
+<p>是<code>string</code>的子集，
+随机返回一个英文人名</p>
+<pre><code class="language-.language-json5">{name: "人名", type: "name"},
 // 随机返回英文人名：Cynthia Kenneth Wilson
-</code></pre></p><p>返回的英文人名随机输出含有middle name 或者不含有middle name的英文名</p><h2>cname 中文人名</h2><p>是<code>string</code>的子集， 随机返回一个中文名<pre><code class=".language-json5">{name: &quot;人名&quot;, type: &quot;cname&quot;},
+</code></pre>
+<p>返回的英文人名随机输出含有middle name 或者不含有middle name的英文名</p>
+<h2>cname 中文人名</h2>
+<p>是<code>string</code>的子集，
+随机返回一个中文名</p>
+<pre><code class="language-.language-json5">{name: "人名", type: "cname"},
 // 随机返回中文人名：黎梦
-</code></pre></p><p>随机返回的中文名，有可能有是两个字，也有可能是三个字的</p><h2>uuid</h2><p>是<code>string</code>的子集， 随机返回一个uuid<pre><code class=".language-json5">{name: &quot;UUID&quot;, type: &quot;uuid&quot;},
+</code></pre>
+<p>随机返回的中文名，有可能有是两个字，也有可能是三个字的</p>
+<h2>uuid</h2>
+<p>是<code>string</code>的子集，
+随机返回一个uuid</p>
+<pre><code class="language-.language-json5">{name: "UUID", type: "uuid"},
 // 随机返回网址：1fc3e7ec-b30c-4774-8aeb-61b8eecaf440
-</code></pre></p><h2>url 网址</h2><p>是<code>string</code>的子集，随机返回一个网址<pre><code class=".language-json5">{name: &quot;网址&quot;, type: &quot;url&quot;},
+</code></pre>
+<h2>url 网址</h2>
+<p>是<code>string</code>的子集，随机返回一个网址</p>
+<pre><code class="language-.language-json5">{name: "网址", type: "url"},
 // 随机返回网址：https://www.debugmyself.com/aa/
-</code></pre></p><h2>domain 域名</h2><p>是<code>string</code>的子集，随机返回一个域名<pre><code class=".language-json5">{name: &quot;域名&quot;, type: &quot;domain&quot;},
+</code></pre>
+<h2>domain 域名</h2>
+<p>是<code>string</code>的子集，随机返回一个域名</p>
+<pre><code class="language-.language-json5">{name: "域名", type: "domain"},
 // 随机返回域名：debugmyself.com
-</code></pre></p><h2>ip IP地址</h2><p>是<code>string</code>的子集，随机返回一个ip地址<pre><code class=".language-json5">{name: &quot;ip地址&quot;, type: &quot;ip&quot;},
+</code></pre>
+<h2>ip IP地址</h2>
+<p>是<code>string</code>的子集，随机返回一个ip地址</p>
+<pre><code class="language-.language-json5">{name: "ip地址", type: "ip"},
 // 随机返回ip地址：192.168.5.12
-</code></pre></p><h2>email 邮箱</h2><p>是<code>string</code>的子集，随机返回一个邮箱地址<pre><code class=".language-json5">{name: &quot;邮箱地址&quot;, type: &quot;email&quot;},
+</code></pre>
+<h2>email 邮箱</h2>
+<p>是<code>string</code>的子集，随机返回一个邮箱地址</p>
+<pre><code class="language-.language-json5">{name: "邮箱地址", type: "email"},
 // 随机返回邮箱地址：fdsalf2@qq.com
-</code></pre></p><h2>image 图像</h2><p>是<code>string</code>的子集，image字段随机返回一个可访问的图像的地址，image拥有额外属性参数：</p><ul><li><code>size</code> 图像尺寸，例如"200x100", "300x250", 如果没有设置，默认就随机返回一个尺寸。注意数字中间的符号是小写的x</li><li><code>foreground</code> 图像上的文字颜色，例如:"#868e96"，"#000000", 默认随机一个颜色</li><li><code>background</code> 图像上的背景色，例如:"#ffffff"，"#007bff", 默认随机一个颜色</li><li><code>accept</code> 限制允许的图片类型，默认支持所有图片格式。或自己定义accept:".png, .jpg, .jpeg"；accept="*" — 接受任何文件类型。</li><li><code>text</code> 需要显示在图像上的文字,默认为空</li></ul><p>例如：使用默认随机，生成一个图像<pre><code class=".language-json5">{name: &quot;头像&quot;, type: &quot;image&quot;},
+</code></pre>
+<h2>image 图像</h2>
+<p>是<code>string</code>的子集，image字段随机返回一个可访问的图像的地址，image拥有额外属性参数：</p>
+<ul>
+<li><code>size</code> 图像尺寸，例如"200x100", "300x250", 如果没有设置，默认就随机返回一个尺寸。注意数字中间的符号是小写的x</li>
+<li><code>foreground</code> 图像上的文字颜色，例如:"#868e96"，"#000000", 默认随机一个颜色</li>
+<li><code>background</code> 图像上的背景色，例如:"#ffffff"，"#007bff", 默认随机一个颜色</li>
+<li><code>accept</code> 限制允许的图片类型，默认支持所有图片格式。或自己定义accept:".png, .jpg, .jpeg"；accept="*" — 接受任何文件类型。</li>
+<li><code>text</code> 需要显示在图像上的文字,默认为空</li>
+</ul>
+<p>例如：使用默认随机，生成一个图像</p>
+<pre><code class="language-.language-json5">{name: "头像", type: "image"},
 // 随机返回一个尺寸、颜色的图像地址：https://dummyimage.com/720x300/ffc107/fff/?text=
-</code></pre></p><p>使用指定的尺寸和颜色生成图像<pre><code class=".language-json5">{name: &quot;头像&quot;, type: &quot;image&quot;, size:&quot;300x300&quot;, foreground:&quot;#fff&quot;, background:&quot;#ff3e00&quot;, format:&quot;png&quot;, text:&quot;Panda Api&quot;},
+</code></pre>
+<p>使用指定的尺寸和颜色生成图像</p>
+<pre><code class="language-.language-json5">{name: "头像", type: "image", size:"300x300", foreground:"#fff", background:"#ff3e00", format:"png", text:"Panda Api"},
 // 返回 https://dummyimage.com/300x300/ff3e00/fff/?text=Panda Api
-</code></pre></p><h2>object 对象</h2><p>对象字段表示这个字段存储的是一个对象，里面还有属性字段，例如：</p><pre><code class=".language-json5">category: {
-    id: {name:&quot;分类id&quot;, type:&quot;PosInt&quot;},
-    name: {name:&quot;分类名称&quot;, type:&quot;cword&quot;, min&#95;length:4, max&#95;length:10}
+</code></pre>
+<h2>object 对象</h2>
+<p>对象字段表示这个字段存储的是一个对象，里面还有属性字段，例如：</p>
+<pre><code class="language-.language-json5">category: {
+    id: {name:"分类id", type:"PosInt"},
+    name: {name:"分类名称", type:"cword", min_length:4, max_length:10}
 }
 // 将会输出mock数据
-&quot;category&quot;: {
-    &quot;id&quot;: 3408247458278907748,
-    &quot;name&quot;: &quot;因没国众北去题养化&quot;
+"category": {
+    "id": 3408247458278907748,
+    "name": "因没国众北去题养化"
 }
-</code></pre><p>这里<code>category</code>就是一个对象字段，系统已经知道category是一个object了，可以不需要单独写，但是因为对象的属性可能会和原始的字段描述<code>type</code>、<code>name</code>、<code>desc</code>等的属性发生命名冲突，因此这里如果需要是用这些属性，前面需要加一个英文的<code>$</code>(美元符号)。例如：<pre><code class=".language-json5">category: {
-    $name:&quot;文章分类&quot;,
-    $desc:&quot;文章分类描述&quot;,
-    id: {name:&quot;分类id&quot;, type:&quot;PosInt&quot;},
-    name: {name:&quot;分类名称&quot;, type:&quot;cword&quot;, min&#95;length:4, max&#95;length:10}
+</code></pre>
+<p>这里<code>category</code>就是一个对象字段，系统已经知道category是一个object了，可以不需要单独写，但是因为对象的属性可能会和原始的字段描述<code>type</code>、<code>name</code>、<code>desc</code>等的属性发生命名冲突，因此这里如果需要是用这些属性，前面需要加一个英文的<code>$</code>(美元符号)。例如：</p>
+<pre><code class="language-.language-json5">category: {
+    $name:"文章分类",
+    $desc:"文章分类描述",
+    id: {name:"分类id", type:"PosInt"},
+    name: {name:"分类名称", type:"cword", min_length:4, max_length:10}
 }
 // 将会输出mock数据
-&quot;category&quot;: {
-    &quot;id&quot;: 5528385245714244033,
-    &quot;name&quot;: &quot;价农自江响规领&quot;
+"category": {
+    "id": 5528385245714244033,
+    "name": "价农自江响规领"
 }
-</code></pre></p><h2>array 数组</h2><p>数组字段标书数据是一个列表，列表里面的元素可以是单独一个元素如，整数、字符串，也可以是一个对象。数组字段可以通过属性限定数组的长度：<code>$length</code> 固定长度的数组；<code>$min&#95;length</code> 最小数组长度， <code>$max&#95;length</code> 最大数组长度。设定了<code>$min&#95;length</code>和<code>$max&#95;length</code>后，数组会在这个范围内随机返回一个长度；默认返回3到10范围长度的数组。写法如下：<pre><code class=".language-json5">// 分类列表, 列表里面的元素是一个分类对象
-items: &#91;{
-    id: {name:&quot;分类id&quot;, type:&quot;PosInt&quot;},
-    name: {name:&quot;分类名称&quot;, type:&quot;cword&quot;, min&#95;length:4, max&#95;length:10}
-}&#93;
+</code></pre>
+<h2>array 数组</h2>
+<p>数组字段标书数据是一个列表，列表里面的元素可以是单独一个元素如，整数、字符串，也可以是一个对象。数组字段可以通过属性限定数组的长度：<code>$length</code> 固定长度的数组；<code>$min_length</code> 最小数组长度， <code>$max_length</code> 最大数组长度。设定了<code>$min_length</code>和<code>$max_length</code>后，数组会在这个范围内随机返回一个长度；默认返回3到10范围长度的数组。写法如下：</p>
+<pre><code class="language-.language-json5">// 分类列表, 列表里面的元素是一个分类对象
+items: [{
+    id: {name:"分类id", type:"PosInt"},
+    name: {name:"分类名称", type:"cword", min_length:4, max_length:10}
+}]
 // 将会输出mock数据
-&quot;items&quot;: &#91;
+"items": [
     {
-        &quot;id&quot;: 4866056297678518960,
-        &quot;name&quot;: &quot;连地织地阶&quot;
+        "id": 4866056297678518960,
+        "name": "连地织地阶"
     },
     {
-        &quot;id&quot;: 5312498283148111047,
-        &quot;name&quot;: &quot;目下西却列&quot;
+        "id": 5312498283148111047,
+        "name": "目下西却列"
     },
     {
-        &quot;id&quot;: 5674167607527511114,
-        &quot;name&quot;: &quot;约反况条权然究&quot;
+        "id": 5674167607527511114,
+        "name": "约反况条权然究"
     }
-&#93;,
-</code></pre></p><p>默认随机返回3到10条数组元素，不需要标记类型，系统会自动知道这个类型就是一个数组。也可以手动进行标记：</p><pre><code class=".language-json5">// 分类列表，列表里面的元素是一个分类对象
-items: &#91;{
-    $name:&quot;分类列表&quot;,
-    $desc:&quot;按分类的添加时间进行排序输出&quot;,
+],
+</code></pre>
+<p>默认随机返回3到10条数组元素，不需要标记类型，系统会自动知道这个类型就是一个数组。也可以手动进行标记：</p>
+<pre><code class="language-.language-json5">// 分类列表，列表里面的元素是一个分类对象
+items: [{
+    $name:"分类列表",
+    $desc:"按分类的添加时间进行排序输出",
     $length:5, // 每次数组固定返回5条数据
-    id: {name:&quot;分类id&quot;, type:&quot;PosInt&quot;},
-    name: {name:&quot;分类名称&quot;, type:&quot;cword&quot;, min&#95;length:3, max&#95;length:10}
-}&#93;
+    id: {name:"分类id", type:"PosInt"},
+    name: {name:"分类名称", type:"cword", min_length:3, max_length:10}
+}]
 // 将会输出mock数据
 
-&quot;items&quot;: &#91;
+"items": [
     {
-        &quot;id&quot;: 523127155952452383,
-        &quot;name&quot;: &quot;两照精名七消水管其&quot;
+        "id": 523127155952452383,
+        "name": "两照精名七消水管其"
     },
     {
-        &quot;id&quot;: 5217556273572555303,
-        &quot;name&quot;: &quot;本最毛何劳个南&quot;
+        "id": 5217556273572555303,
+        "name": "本最毛何劳个南"
     },
     {
-        &quot;id&quot;: 861716532598225950,
-        &quot;name&quot;: &quot;记青亲十风于热管&quot;
+        "id": 861716532598225950,
+        "name": "记青亲十风于热管"
     },
     {
-        &quot;id&quot;: 7493601546937027951,
-        &quot;name&quot;: &quot;写光府那是太运&quot;
+        "id": 7493601546937027951,
+        "name": "写光府那是太运"
     },
     {
-        &quot;id&quot;: 3356699170396899346,
-        &quot;name&quot;: &quot;气育位还克团高关&quot;
+        "id": 3356699170396899346,
+        "name": "气育位还克团高关"
     }
-&#93;,
+],
 
-</code></pre><p>设定一个返回id列表的数组</p><pre><code class=".language-json5">// id列表，列表里面的元素是一个数字
-items: &#91;{
-    $name:&quot;分类id列表&quot;,
-    $desc:&quot;分类id列表描述&quot;,
+</code></pre>
+<p>设定一个返回id列表的数组</p>
+<pre><code class="language-.language-json5">// id列表，列表里面的元素是一个数字
+items: [{
+    $name:"分类id列表",
+    $desc:"分类id列表描述",
     $length:3,
-    name: &quot;分类id&quot;,
-    type: &quot;PosInt&quot;
-}&#93;
+    name: "分类id",
+    type: "PosInt"
+}]
 // 将会输出mock数据
-&quot;items&quot;: &#91;
+"items": [
     1953408354386511745,
     476051422826867276,
     8882528644658661510
-&#93;,
-</code></pre><p><code>注意：</code> <code>$name</code>和<code>$desc</code>是用来描述<code>items</code>的，<code>name</code>是用来描述数组元素的</p><p>设定一个返回人名列表的数组</p><pre><code class=".language-json5">items: &#91;{
-    $name:&quot;人名列表&quot;,
-    $desc:&quot;人员姓名列表描述&quot;,
-    $min&#95;length:5,
-    $max&#95;length:8,
-    name: &quot;人员姓名&quot;,
-    type: &quot;cname&quot;
-}&#93;
+],
+</code></pre>
+<p><code>注意：</code> <code>$name</code>和<code>$desc</code>是用来描述<code>items</code>的，<code>name</code>是用来描述数组元素的</p>
+<p>设定一个返回人名列表的数组</p>
+<pre><code class="language-.language-json5">items: [{
+    $name:"人名列表",
+    $desc:"人员姓名列表描述",
+    $min_length:5,
+    $max_length:8,
+    name: "人员姓名",
+    type: "cname"
+}]
 // 将会输出mock数据
-&quot;items&quot;: &#91;
-    &quot;谢敏&quot;,
-    &quot;汪芳&quot;,
-    &quot;苏勇&quot;,
-    &quot;乔丽&quot;,
-    &quot;苏娜&quot;,
-    &quot;谭娟&quot;
-&#93;
-</code></pre><p>这里要注意数组是单个元素和数组中是对象的不同写法。</p><h2>map</h2><p><code>map</code>字段表示这是一个<code>map</code>，有对应的<code>key</code>和<code>value</code>，<pre><code class=".language-json5">menu:{
-    $type:&quot;map&quot;,
-    $name:&quot;菜单&quot;,
-    $key:{name:&quot;菜单访问地址&quot;},
+"items": [
+    "谢敏",
+    "汪芳",
+    "苏勇",
+    "乔丽",
+    "苏娜",
+    "谭娟"
+]
+</code></pre>
+<p>这里要注意数组是单个元素和数组中是对象的不同写法。</p>
+<h2>map</h2>
+<p><code>map</code>字段表示这是一个<code>map</code>，有对应的<code>key</code>和<code>value</code>，</p>
+<pre><code class="language-.language-json5">menu:{
+    $type:"map",
+    $name:"菜单",
+    $key:{name:"菜单访问地址"},
     $value:{
-        name:{name:&quot;菜单名称&quot;, type:&quot;csentence&quot;},
-        order:{name:&quot;菜单排序&quot;, type:&quot;int&quot;},
+        name:{name:"菜单名称", type:"csentence"},
+        order:{name:"菜单排序", type:"int"},
     },
-    $min&#95;length:0, // 选填
-    $max&#95;length:10 // 选填
+    $min_length:0, // 选填
+    $max_length:10 // 选填
 }
 // 将会输出mock数据，如下
 menu:{
-    &quot;jfdsakf&quot;:{
-        name:&quot;见覅单独&quot;,
+    "jfdsakf":{
+        name:"见覅单独",
         order:1
     },
-    &quot;jfljkjj&quot;:{
-        name:&quot;放口袋里设计费拉丝机&quot;,
+    "jfljkjj":{
+        name:"放口袋里设计费拉丝机",
         order:2
     },
 }
-</code></pre></p><p><code>map</code> 类型有以下属性：</p><ul><li><code>$type</code>: <code>map</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;map&quot;</code></li><li><code>$name</code>: 字段的名称或说明</li><li><code>$key</code> 的字段类型可以为 <code>string</code>, <code>bool</code>, <code>number</code> 以及他们的子类型。不可以为<code>object</code>和<code>array</code></li><li><code>$value</code> 字段可以为任意的类型</li><li><code>$length</code> 输出<code>map</code>的长度，<code>$length</code>默认为0（选填）</li><li><code>$min&#95;length</code> 输出<code>map</code>的最小长度，<code>$min&#95;length</code>默认为0（选填）</li><li><code>$max&#95;length</code> 输出<code>map</code>的最大长度，<code>$max&#95;length</code>默认为6（选填）</li></ul><p><code>map</code>类型必须有<code>$key</code>和<code>$value</code>这两个字段，否则<code>mock</code>数据的时候回返回空，默认情况下<code>map</code>随机返回<code>$min&#95;length</code>到<code>$max&#95;length</code>个随机值（map的长度）。如果指定了<code>$length</code>，那么就会返回固定<code>$length</code>个随机值（map的长度）。</p><h2><code>rec</code> 递归类型</h2><p>在做接口设计的时候，会遇到像分类树、菜单树、节点树等树形结构，这种结构是一层套一层的递归结构，而且又多超层是未知的，是动态的。我们没有办法直接写出整个结构再来生成mock数据。所以我们引入了<code>rec</code>递归结构</p><h3><code>array</code>数组递归</h3><p>这是一个返回菜单树的递归的设计例子：<pre><code class=".language-json5">response:{
-    menus:&#91;
+</code></pre>
+<p><code>map</code> 类型有以下属性：</p>
+<ul>
+<li><code>$type</code>: <code>map</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:"map"</code></li>
+<li><code>$name</code>: 字段的名称或说明</li>
+<li><code>$key</code> 的字段类型可以为 <code>string</code>, <code>bool</code>, <code>number</code> 以及他们的子类型。不可以为<code>object</code>和<code>array</code></li>
+<li><code>$value</code> 字段可以为任意的类型</li>
+<li><code>$length</code> 输出<code>map</code>的长度，<code>$length</code>默认为0（选填）</li>
+<li><code>$min_length</code> 输出<code>map</code>的最小长度，<code>$min_length</code>默认为0（选填）</li>
+<li><code>$max_length</code> 输出<code>map</code>的最大长度，<code>$max_length</code>默认为6（选填）</li>
+</ul>
+<p><code>map</code>类型必须有<code>$key</code>和<code>$value</code>这两个字段，否则<code>mock</code>数据的时候回返回空，默认情况下<code>map</code>随机返回<code>$min_length</code>到<code>$max_length</code>个随机值（map的长度）。如果指定了<code>$length</code>，那么就会返回固定<code>$length</code>个随机值（map的长度）。</p>
+<h2><code>rec</code> 递归类型</h2>
+<p>在做接口设计的时候，会遇到像分类树、菜单树、节点树等树形结构，这种结构是一层套一层的递归结构，而且又多超层是未知的，是动态的。我们没有办法直接写出整个结构再来生成mock数据。所以我们引入了<code>rec</code>递归结构</p>
+<h3><code>array</code>数组递归</h3>
+<p>这是一个返回菜单树的递归的设计例子：</p>
+<pre><code class="language-.language-json5">response:{
+    menus:[
         {
-            $min&#95;length:0,
-            $max&#95;length:3,
-            id:{name:&quot;菜单id&quot;, type:&quot;PosInt&quot;},
-            name:{name:&quot;菜单名称&quot;, type:&quot;Cword&quot;, min&#95;length:4, max&#95;length:6},
+            $min_length:0,
+            $max_length:3,
+            id:{name:"菜单id", type:"PosInt"},
+            name:{name:"菜单名称", type:"Cword", min_length:4, max_length:6},
             children:{
-                $type:&quot;rec&quot;,
-                $ref:&quot;/menus&quot;,
-                $name:&quot;菜单的下一级&quot;,
-                $min&#95;length:0, // 数组的最小长度
-                $max&#95;length:3, // 数组的最大长度
+                $type:"rec",
+                $ref:"/menus",
+                $name:"菜单的下一级",
+                $min_length:0, // 数组的最小长度
+                $max_length:3, // 数组的最大长度
                 // 还可以指定固定长度的$length
-                $min&#95;count:0, // 递归生成的最小层数
-                $max&#95;count:3, // 递归生成的最大层数
+                $min_count:0, // 递归生成的最小层数
+                $max_count:3, // 递归生成的最大层数
                 // 还可以指定固定长度的$count
             }
         }
-    &#93;
+    ]
 }
-</code></pre></p><p><code>$ref&quot;/menus&quot;</code>中<code>$ref</code>的值表示要从<code>response</code>的什么部分开始形成递归。<code>$ref</code>只允许在<code>response</code>自身形成递归，字段路径必须以<code>/</code>开头，表示<code>response</code>根节点,没进入一个属性就要用<code>/</code>分隔。</p><p><code>menus</code>从<code>children</code>开始又是一个菜单列表，每一个菜单里面又有<code>children</code>，如此循环下去，Panda Api会生成类似这样的<code>mock</code>数据: (这里<code>children</code>只是我个人惯用，你可以设定你想要的字段名称)</p><pre><code class=".language-json5">{
-    &quot;menus&quot;: &#91;
+</code></pre>
+<p><code>$ref"/menus"</code>中<code>$ref</code>的值表示要从<code>response</code>的什么部分开始形成递归。<code>$ref</code>只允许在<code>response</code>自身形成递归，字段路径必须以<code>/</code>开头，表示<code>response</code>根节点,没进入一个属性就要用<code>/</code>分隔。</p>
+<p><code>menus</code>从<code>children</code>开始又是一个菜单列表，每一个菜单里面又有<code>children</code>，如此循环下去，Panda Api会生成类似这样的<code>mock</code>数据:
+(这里<code>children</code>只是我个人惯用，你可以设定你想要的字段名称)</p>
+<pre><code class="language-.language-json5">{
+    "menus": [
         {
-            &quot;children&quot;: &#91;&#93;,
-            &quot;id&quot;: 2114741604123049731,
-            &quot;name&quot;: &quot;多己工计&quot;
+            "children": [],
+            "id": 2114741604123049731,
+            "name": "多己工计"
         },
         {
-            &quot;children&quot;: &#91;
+            "children": [
                 {
-                    &quot;children&quot;: &#91;
+                    "children": [
                         {
-                            &quot;children&quot;: &#91;
+                            "children": [
                                 {
-                                    &quot;children&quot;: &#91;
+                                    "children": [
                                         {
-                                            &quot;id&quot;: 2628566709375304554,
-                                            &quot;name&quot;: &quot;只自体第&quot;
+                                            "id": 2628566709375304554,
+                                            "name": "只自体第"
                                         }
-                                    &#93;,
-                                    &quot;id&quot;: 9061608643768166383,
-                                    &quot;name&quot;: &quot;装七美同约&quot;
+                                    ],
+                                    "id": 9061608643768166383,
+                                    "name": "装七美同约"
                                 },
                                 {
-                                    &quot;children&quot;: &#91;
+                                    "children": [
                                         {
-                                            &quot;id&quot;: 2376723186703681109,
-                                            &quot;name&quot;: &quot;民交验感&quot;
+                                            "id": 2376723186703681109,
+                                            "name": "民交验感"
                                         }
-                                    &#93;,
-                                    &quot;id&quot;: 1885852586445721494,
-                                    &quot;name&quot;: &quot;家同海人&quot;
+                                    ],
+                                    "id": 1885852586445721494,
+                                    "name": "家同海人"
                                 },
                                 {
-                                    &quot;children&quot;: &#91;
+                                    "children": [
                                         {
-                                            &quot;id&quot;: 8966318858611323899,
-                                            &quot;name&quot;: &quot;水真复增&quot;
+                                            "id": 8966318858611323899,
+                                            "name": "水真复增"
                                         },
                                         {
-                                            &quot;id&quot;: 1961010107398671810,
-                                            &quot;name&quot;: &quot;两明力矿&quot;
+                                            "id": 1961010107398671810,
+                                            "name": "两明力矿"
                                         },
                                         {
-                                            &quot;id&quot;: 3054760830845351094,
-                                            &quot;name&quot;: &quot;较公要团&quot;
+                                            "id": 3054760830845351094,
+                                            "name": "较公要团"
                                         }
-                                    &#93;,
-                                    &quot;id&quot;: 2522859844921578381,
-                                    &quot;name&quot;: &quot;交主此江时&quot;
+                                    ],
+                                    "id": 2522859844921578381,
+                                    "name": "交主此江时"
                                 }
-                            &#93;,
-                            &quot;id&quot;: 5791275467325817489,
-                            &quot;name&quot;: &quot;识验石维&quot;
+                            ],
+                            "id": 5791275467325817489,
+                            "name": "识验石维"
                         }
-                    &#93;,
-                    &quot;id&quot;: 3402947262219311875,
-                    &quot;name&quot;: &quot;算拉果当道&quot;
+                    ],
+                    "id": 3402947262219311875,
+                    "name": "算拉果当道"
                 },
                 {
-                    &quot;children&quot;: &#91;&#93;,
-                    &quot;id&quot;: 8828917565546610551,
-                    &quot;name&quot;: &quot;低音每安&quot;
+                    "children": [],
+                    "id": 8828917565546610551,
+                    "name": "低音每安"
                 }
-            &#93;,
-            &quot;id&quot;: 3796488759971353684,
-            &quot;name&quot;: &quot;度山热白认&quot;
+            ],
+            "id": 3796488759971353684,
+            "name": "度山热白认"
         }
-    &#93;
+    ]
 }
 
-</code></pre><p>默认情况下，数组类型的递归，同一层的数组默认返回随机的0到10个，递归的层数是随机的0到3层。</p><p><code>rec</code>类型有以下属性：</p><ul><li><code>$type</code>: <code>rec</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:&quot;rec&quot;</code></li><li><code>$ref</code>: <code>$ref</code>的值表示从哪一个节点开始递归,使用<code>/</code>表示<code>response</code>模型的根节点，然后往下，属性之间用<code>/</code>分隔</li><li><code>$name</code>: <code>rec</code> 的名称</li><li><code>$desc</code>: <code>rec</code> 的说明</li><li><code>$length</code> 输出数组的长度，<code>$length</code>默认为0（选填）</li><li><code>$min&#95;length</code> 输出数组的最小长度，<code>$min&#95;length</code>默认为0（选填）</li><li><code>$max&#95;length</code> 输出数组的最大长度，<code>$max&#95;length</code>默认为6（选填）</li><li><code>$count</code> 递归多少次，默认为0（选填）</li><li><code>$min&#95;count</code> 递归最少次数，默认为0（选填）</li><li><code>$mac&#95;count</code> 递归最大次数，默认为3（选填）</li><li><code>$empty&#95;value</code> 自定义尾节点的空值，默认按类型：array的空值是:[]，object默认空值是:null，map默认空值是{}，其它类型默认空值会连整个字段删除。（选填）</li></ul><p>这是一个<code>array</code>递归的另一个例子，一个节点树，最开始只有一个根节点:<pre><code class=".language-json5">response:{
+</code></pre>
+<p>默认情况下，数组类型的递归，同一层的数组默认返回随机的0到10个，递归的层数是随机的0到3层。</p>
+<p><code>rec</code>类型有以下属性：</p>
+<ul>
+<li><code>$type</code>: <code>rec</code>类型用的结构和<code>object</code>很像，所以需要标注类型，使用<code>$type:"rec"</code></li>
+<li><code>$ref</code>: <code>$ref</code>的值表示从哪一个节点开始递归,使用<code>/</code>表示<code>response</code>模型的根节点，然后往下，属性之间用<code>/</code>分隔</li>
+<li><code>$name</code>: <code>rec</code> 的名称</li>
+<li><code>$desc</code>: <code>rec</code> 的说明</li>
+<li><code>$length</code> 输出数组的长度，<code>$length</code>默认为0（选填）</li>
+<li><code>$min_length</code> 输出数组的最小长度，<code>$min_length</code>默认为0（选填）</li>
+<li><code>$max_length</code> 输出数组的最大长度，<code>$max_length</code>默认为6（选填）</li>
+<li><code>$count</code> 递归多少次，默认为0（选填）</li>
+<li><code>$min_count</code> 递归最少次数，默认为0（选填）</li>
+<li><code>$mac_count</code> 递归最大次数，默认为3（选填）</li>
+<li><code>$empty_value</code> 自定义尾节点的空值，默认按类型：array的空值是:[]，object默认空值是:null，map默认空值是{}，其它类型默认空值会连整个字段删除。（选填）</li>
+</ul>
+<p>这是一个<code>array</code>递归的另一个例子，一个节点树，最开始只有一个根节点:</p>
+<pre><code class="language-.language-json5">response:{
     node:{
-        $name:&quot;一个棵节点树&quot;,
-        name:{name:&quot;名称&quot;},
-        score:{name:&quot;节点权重&quot;, type:&quot;int&quot;},
-        children:&#91;
+        $name:"一个棵节点树",
+        name:{name:"名称"},
+        score:{name:"节点权重", type:"int"},
+        children:[
             {
-                $type:&quot;rec&quot;,
-                $ref:&quot;/node&quot;
+                $type:"rec",
+                $ref:"/node"
             }
-        &#93;
+        ]
     }
 }
-</code></pre></p><p>从<code>children</code>里面的子节点，调用<code>node</code>节点，形成递归结构</p><h3><code>map</code>递归：</h3><p>这是一个使用<code>map</code>递归的例子:<pre><code class=".language-json5">response:{
+</code></pre>
+<p>从<code>children</code>里面的子节点，调用<code>node</code>节点，形成递归结构</p>
+<h3><code>map</code>递归：</h3>
+<p>这是一个使用<code>map</code>递归的例子:</p>
+<pre><code class="language-.language-json5">response:{
     menus:{
-        $type:&quot;map&quot;,
-        $name:&quot;map类型的菜单树&quot;,
-        $key:{name:&quot;菜单访问地址&quot;},
+        $type:"map",
+        $name:"map类型的菜单树",
+        $key:{name:"菜单访问地址"},
         $value:{
-            name:{name:&quot;菜单名称&quot;},
-            order:{name:&quot;显示顺序&quot;, type:&quot;int&quot;},
+            name:{name:"菜单名称"},
+            order:{name:"显示顺序", type:"int"},
             children:{
-                $type:&quot;rec&quot;,
-                $ref:&quot;/menus&quot;
+                $type:"rec",
+                $ref:"/menus"
             }
         }
     }
 }
-</code></pre></p><h3><code>object</code>对象递归</h3><p>这是一个使用<code>object</code>递归的例子，一个棵单向链表树，每层只有一个节点:<pre><code class=".language-json5">response:{
+</code></pre>
+<h3><code>object</code>对象递归</h3>
+<p>这是一个使用<code>object</code>递归的例子，一个棵单向链表树，每层只有一个节点:</p>
+<pre><code class="language-.language-json5">response:{
     node:{
-        $name:&quot;一个棵分类树&quot;,
-        name:{name:&quot;分类名称&quot;},
-        score:{name:&quot;分类权重&quot;, type:&quot;int&quot;},
-        next&#95;node:{
-            $type:&quot;rec&quot;,
-            $ref:&quot;/node&quot;
+        $name:"一个棵分类树",
+        name:{name:"分类名称"},
+        score:{name:"分类权重", type:"int"},
+        next_node:{
+            $type:"rec",
+            $ref:"/node"
         }
     }
 }
-</code></pre></p><p>生成的mock数据像这样：<pre><code class=".language-json5">{
-    &quot;node&quot;: {
-        &quot;name&quot;: &quot;6BB!9pLLCvH&#94;&quot;,
-        &quot;next&#95;node&quot;: {
-            &quot;name&quot;: &quot;DSUd&#42;0IviFEE%Ol&quot;,
-            &quot;next&#95;node&quot;: {
-                &quot;name&quot;: &quot;p5KhwcVHBuTUtVKybS&quot;,
-                &quot;score&quot;: -666870791861541566
+</code></pre>
+<p>生成的mock数据像这样：</p>
+<pre><code class="language-.language-json5">{
+    "node": {
+        "name": "6BB!9pLLCvH^",
+        "next_node": {
+            "name": "DSUd*0IviFEE%Ol",
+            "next_node": {
+                "name": "p5KhwcVHBuTUtVKybS",
+                "score": -666870791861541566
             },
-            &quot;score&quot;: -2462908145395534478
+            "score": -2462908145395534478
         },
-        &quot;score&quot;: 965981022476574150
+        "score": 965981022476574150
     }
 }
-</code></pre></p><h3>路径中遇到数组</h3><p>如果路径中遇到数组结构，那么就使用使用数组的索引作为属性：</p><pre><code class=".language-json5">response:{
-    nodes:&#91;{
+</code></pre>
+<h3>路径中遇到数组</h3>
+<p>如果路径中遇到数组结构，那么就使用使用数组的索引作为属性：</p>
+<pre><code class="language-.language-json5">response:{
+    nodes:[{
         node:{
-            $name:&quot;一个棵分类树&quot;,
-            name:{name:&quot;分类名称&quot;},
-            score:{name:&quot;分类权重&quot;, type:&quot;int&quot;},
-            next&#95;node:{
-                $type:&quot;rec&quot;,
-                $ref:&quot;/nodes/0/node&quot;
+            $name:"一个棵分类树",
+            name:{name:"分类名称"},
+            score:{name:"分类权重", type:"int"},
+            next_node:{
+                $type:"rec",
+                $ref:"/nodes/0/node"
             }
         }
-    }&#93;
+    }]
 }
-</code></pre><p>所有这些例子，为了让大家容易看清楚和明白，所以把递归字段都设置为<code>response</code>中的字段，你也可以直接从<code>response</code>开始，就开始递归。上面的例子经过改写为直接从<code>response</code>开始递归，会变成这样：</p><p>数组递归1<pre><code class=".language-json5">response:&#91;{
-    id:{name:&quot;菜单id&quot;, type:&quot;PosInt&quot;},
-    name:{name:&quot;菜单名称&quot;, type:&quot;Cword&quot;, min&#95;length:4, max&#95;length:6},
+</code></pre>
+<p>所有这些例子，为了让大家容易看清楚和明白，所以把递归字段都设置为<code>response</code>中的字段，你也可以直接从<code>response</code>开始，就开始递归。上面的例子经过改写为直接从<code>response</code>开始递归，会变成这样：</p>
+<p>数组递归1</p>
+<pre><code class="language-.language-json5">response:[{
+    id:{name:"菜单id", type:"PosInt"},
+    name:{name:"菜单名称", type:"Cword", min_length:4, max_length:6},
     children:{
-        $type:&quot;rec&quot;,
-        $ref:&quot;/&quot;,
-        name:&quot;菜单的下一级&quot;,
-        $min&#95;length:0, // 数组的最小长度
-        $max&#95;length:10, // 数组的最大长度
+        $type:"rec",
+        $ref:"/",
+        name:"菜单的下一级",
+        $min_length:0, // 数组的最小长度
+        $max_length:10, // 数组的最大长度
         // 还可以指定固定长度的$length
-        $min&#95;count:0, // 递归生成的最小层数
-        $max&#95;count:3, // 递归生成的最大层数
+        $min_count:0, // 递归生成的最小层数
+        $max_count:3, // 递归生成的最大层数
         // 还可以指定固定长度的$count
     }
-}&#93;
-</code></pre></p><p>输出<code>mock</code>数据<pre><code class=".language-json5">{
-    &quot;children&quot;: {
-        &quot;children&quot;: {
-            &quot;children&quot;: {
-                &quot;id&quot;: 1871930241063333556,
-                &quot;name&quot;: &quot;红强近八活&quot;
+}]
+</code></pre>
+<p>输出<code>mock</code>数据</p>
+<pre><code class="language-.language-json5">{
+    "children": {
+        "children": {
+            "children": {
+                "id": 1871930241063333556,
+                "name": "红强近八活"
             },
-            &quot;id&quot;: 5879124066670883770,
-            &quot;name&quot;: &quot;查器气算外&quot;
+            "id": 5879124066670883770,
+            "name": "查器气算外"
         },
-        &quot;id&quot;: 4800547273192686311,
-        &quot;name&quot;: &quot;油总及员多&quot;
+        "id": 4800547273192686311,
+        "name": "油总及员多"
     },
-    &quot;id&quot;: 7529127207311356580,
-    &quot;name&quot;: &quot;想正第中该&quot;
+    "id": 7529127207311356580,
+    "name": "想正第中该"
 }
-</code></pre></p><p>数组递归2<pre><code class=".language-json5">response:{
-    $name:&quot;一个棵节点树&quot;,
-    name:{name:&quot;名称&quot;},
-    score:{name:&quot;节点权重&quot;, type:&quot;int&quot;},
-    children:&#91;
+</code></pre>
+<p>数组递归2</p>
+<pre><code class="language-.language-json5">response:{
+    $name:"一个棵节点树",
+    name:{name:"名称"},
+    score:{name:"节点权重", type:"int"},
+    children:[
         {
-            $type:&quot;rec&quot;,
-            $ref:&quot;/&quot;
+            $type:"rec",
+            $ref:"/"
         }
-    &#93;
+    ]
 }
-</code></pre></p><p>生成<code>mock</code>数据<pre><code class=".language-json5">{
-    &quot;children&quot;: &#91;
+</code></pre>
+<p>生成<code>mock</code>数据</p>
+<pre><code class="language-.language-json5">{
+    "children": [
         {
-            &quot;children&quot;: &#91;&#93;,
-            &quot;name&quot;: &quot;3GvF4y%jzLTKJ#B&#40;&quot;,
-            &quot;score&quot;: -2658177777725672468
+            "children": [],
+            "name": "3GvF4y%jzLTKJ#B(",
+            "score": -2658177777725672468
         },
         {
-            &quot;children&quot;: &#91;&#93;,
-            &quot;name&quot;: &quot;EV&#94;&amp;whgz#LRVCwLHFF%pRH&quot;,
-            &quot;score&quot;: -2505644547855075013
+            "children": [],
+            "name": "EV^&amp;whgz#LRVCwLHFF%pRH",
+            "score": -2505644547855075013
         },
         {
-            &quot;children&quot;: &#91;
+            "children": [
                 {
-                    &quot;children&quot;: &#91;&#93;,
-                    &quot;name&quot;: &quot;@yuKB8S%04HZFfyT8&quot;,
-                    &quot;score&quot;: -8018263853608409579
+                    "children": [],
+                    "name": "@yuKB8S%04HZFfyT8",
+                    "score": -8018263853608409579
                 },
                 {
-                    &quot;children&quot;: &#91;&#93;,
-                    &quot;name&quot;: &quot;q!Wa2FXIZ%uT&#126;N&quot;,
-                    &quot;score&quot;: -1398830444893409480
+                    "children": [],
+                    "name": "q!Wa2FXIZ%uT~N",
+                    "score": -1398830444893409480
                 },
-            &#93;,
-            &quot;name&quot;: &quot;YY#8@V&quot;,
-            &quot;score&quot;: 2433269522325167205
+            ],
+            "name": "YY#8@V",
+            "score": 2433269522325167205
         }
-    &#93;,
-    &quot;name&quot;: &quot;LFMIaMQVeX9N&#94;L@jhi&#41;Rq&quot;,
-    &quot;score&quot;: 773048924729775541
+    ],
+    "name": "LFMIaMQVeX9N^L@jhi)Rq",
+    "score": 773048924729775541
 }
-</code></pre></p><p>map递归<pre><code class=".language-json5">response:{
-    $type:&quot;map&quot;,
-    $name:&quot;map类型的菜单树&quot;,
-    $key:{name:&quot;菜单访问地址&quot;},
+</code></pre>
+<p>map递归</p>
+<pre><code class="language-.language-json5">response:{
+    $type:"map",
+    $name:"map类型的菜单树",
+    $key:{name:"菜单访问地址"},
     $value:{
-        name:{name:&quot;菜单名称&quot;},
-        order:{name:&quot;显示顺序&quot;, type:&quot;int&quot;},
+        name:{name:"菜单名称"},
+        order:{name:"显示顺序", type:"int"},
         children:{
-            $type:&quot;rec&quot;,
-            $ref:&quot;/&quot;
+            $type:"rec",
+            $ref:"/"
         }
     }
 }
-</code></pre></p><p>object递归<pre><code class=".language-json5">response:{
-    $name:&quot;一个棵分类树&quot;,
-    name:{name:&quot;分类名称&quot;},
-    score:{name:&quot;分类权重&quot;, type:&quot;int&quot;},
-    next&#95;node:{
-        $type:&quot;rec&quot;,
-        $ref:&quot;/&quot;
+</code></pre>
+<p>object递归</p>
+<pre><code class="language-.language-json5">response:{
+    $name:"一个棵分类树",
+    name:{name:"分类名称"},
+    score:{name:"分类权重", type:"int"},
+    next_node:{
+        $type:"rec",
+        $ref:"/"
     }
 }
-</code></pre></p>
-            <p class="text-left text-muted">2020-03-01 03:22</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2020/2/2/Panda-api-auth/">上一篇: Panda-api接口权限Auth配置说明</a></div>
-                <div class="col-6 text-right"><a href="/p/2020/1/27/panda-api-test_data/">下一篇:Panda-api test_data匹配说明</a></div>
-            </div>
-        </div>
+</code></pre>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2020-01-29</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2020/2/2/Panda-api-auth/">上一篇: Panda-api接口权限Auth配置说明</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2020/1/27/panda-api-test_data/">下一篇: Panda-api test_data匹配说明</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2020/1/29/panda-api-field/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

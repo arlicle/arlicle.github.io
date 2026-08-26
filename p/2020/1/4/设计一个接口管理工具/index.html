@@ -3,159 +3,171 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>设计一个方便前后端分离项目开发的接口管理工具 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">设计一个方便前后端分离项目开发的接口管理工具</h1>
-
-
-
-
-            <h3>接口文档是前后端开发的契约</h3><p>现在的随着js和js的相关前端框架，越来越强大网站，软件系统，越来越使用前后端分离的方式进行开发。前端和后端被分离为了两个不同的工种。</p><p>传统的API 文档虽然满足了阅读者对接接口的需求，但是通常需要等待后端开发完成才能调用接口，从而真正开始接口调试工作。</p><p>如果要让两个工种同时并发的进行开发，就需要前端后端达成接口的约定，也就是接口文档。如果我们提前编写出接口文档，用接口文档就可以分别对前后端进行服务，通过接口文档分隔前后端，那么前后端就可以按照这个接口文档的约定进行开发，开发效率就会大大提升，同时在开发过程中保留了宝贵的接口文档。</p><p>我想做的是这个接口文档的工具需要满足以下几个特性：</p><ol><li>可以作为前后端的接口文档</li><li>后端还未开发，工具就可以为前端开发提供api接口</li><li>可以使用这个工具进行前后端测试</li><li>写的时候规则足够简单，写一个接口写起来很快</li></ol><p>最早曾使用过阿里的rap,  后面又同事介绍了yapi和json-server，到公司一直在用的postman，都不能完美的达到我想要的效果，所以自己用业余时间来设计造一个轮子吧。</p><h3>像写接口一样写接口文档</h3><pre><code class=".language-json">{
-    &quot;name&quot;:&quot;用户操作&quot;,
-    &quot;desc&quot;:&quot;&quot;,
-    &quot;apis&quot;:
-    &#91;{
-        &quot;name&quot;:&quot;用户登录&quot;,
-        &quot;desc&quot;:&quot;&quot;,
-        &quot;request&quot;:{
-            &quot;method&quot;: &quot;POST&quot;,
-            &quot;authorization&quot;:true,
-            &quot;url&quot;:&quot;/login/&quot;,
-            &quot;body&quot;:{
-                &quot;mode&quot;:&quot;json&quot;,
-                &quot;data&quot;:{
-                    &quot;username&quot;:{&quot;name&quot;:&quot;用户名&quot;, &quot;desc&quot;:&quot;&quot;, &quot;type&quot;:&quot;string&quot;, &quot;max&#95;length&quot;:30, &quot;error&#95;messages&quot;:{
-                        &quot;code&quot;:-1,
-                        &quot;max&#95;length&quot;:&quot;length must less than 30&quot;, 
-                        &quot;required&quot;:&quot;username name is required&quot;}},
-                    &quot;password&quot;:{&quot;name&quot;:&quot;用户登录密码&quot;, &quot;desc&quot;:&quot;&quot;, &quot;type&quot;:&quot;string&quot;, &quot;max&#95;length&quot;:30, &quot;min&#95;length&quot;:3}
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">设计一个方便前后端分离项目开发的接口管理工具</h1>
+  <h3>接口文档是前后端开发的契约</h3>
+<p>现在的随着js和js的相关前端框架，越来越强大网站，软件系统，越来越使用前后端分离的方式进行开发。前端和后端被分离为了两个不同的工种。</p>
+<p>传统的API 文档虽然满足了阅读者对接接口的需求，但是通常需要等待后端开发完成才能调用接口，从而真正开始接口调试工作。</p>
+<p>如果要让两个工种同时并发的进行开发，就需要前端后端达成接口的约定，也就是接口文档。如果我们提前编写出接口文档，用接口文档就可以分别对前后端进行服务，通过接口文档分隔前后端，那么前后端就可以按照这个接口文档的约定进行开发，开发效率就会大大提升，同时在开发过程中保留了宝贵的接口文档。</p>
+<p>我想做的是这个接口文档的工具需要满足以下几个特性：</p>
+<ol>
+<li>可以作为前后端的接口文档</li>
+<li>后端还未开发，工具就可以为前端开发提供api接口</li>
+<li>可以使用这个工具进行前后端测试</li>
+<li>写的时候规则足够简单，写一个接口写起来很快</li>
+</ol>
+<p>最早曾使用过阿里的rap,  后面又同事介绍了yapi和json-server，到公司一直在用的postman，都不能完美的达到我想要的效果，所以自己用业余时间来设计造一个轮子吧。</p>
+<h3>像写接口一样写接口文档</h3>
+<pre><code class="language-.language-json">{
+    "name":"用户操作",
+    "desc":"",
+    "apis":
+    [{
+        "name":"用户登录",
+        "desc":"",
+        "request":{
+            "method": "POST",
+            "authorization":true,
+            "url":"/login/",
+            "body":{
+                "mode":"json",
+                "data":{
+                    "username":{"name":"用户名", "desc":"", "type":"string", "max_length":30, "error_messages":{
+                        "code":-1,
+                        "max_length":"length must less than 30", 
+                        "required":"username name is required"}},
+                    "password":{"name":"用户登录密码", "desc":"", "type":"string", "max_length":30, "min_length":3}
                 }
             }
         },
-        &quot;response&quot;:{
-            &quot;code&quot;:{&quot;name&quot;:&quot;返回结果的代码&quot;, &quot;type&quot;:&quot;int&quot;, &quot;desc&quot;:&quot;登录成功只返回1&quot;},
-            &quot;msg&quot;:{&quot;name&quot;:&quot;登录成功返回消息&quot;, &quot;type&quot;:&quot;string&quot;, &quot;desc&quot;:&quot;通常返回都是空&quot;},
-            &quot;token&quot;:{&quot;name&quot;:&quot;登录成功返回的用户token&quot;, &quot;type&quot;:&quot;string&quot;, &quot;length&quot;:&quot;43&quot;}
+        "response":{
+            "code":{"name":"返回结果的代码", "type":"int", "desc":"登录成功只返回1"},
+            "msg":{"name":"登录成功返回消息", "type":"string", "desc":"通常返回都是空"},
+            "token":{"name":"登录成功返回的用户token", "type":"string", "length":"43"}
         },
-        &quot;test&#95;data&quot;:&#91;
+        "test_data":[
             {
-                &quot;request&quot;:{&quot;username&quot;:&quot;edison&quot;, &quot;password&quot;:&quot;123&quot;},
-                &quot;response&quot;:{&quot;code&quot;:-1, &quot;msg&quot;:&quot;密码输入不正确&quot;}
+                "request":{"username":"edison", "password":"123"},
+                "response":{"code":-1, "msg":"密码输入不正确"}
             },
             {
-                &quot;request&quot;:{&quot;username&quot;:&quot;lily&quot;, &quot;password&quot;:&quot;123&quot;},
-                &quot;response&quot;:{&quot;code&quot;:-2, &quot;msg&quot;:&quot;用户名不存在&quot;}
+                "request":{"username":"lily", "password":"123"},
+                "response":{"code":-2, "msg":"用户名不存在"}
             },
             {
-                &quot;request&quot;:{&quot;username&quot;:&quot;root&quot;, &quot;password&quot;:&quot;123&quot;},
-                &quot;response&quot;:{&quot;code&quot;:1, &quot;msg&quot;:&quot;登录成功&quot;, &quot;token&quot;:&quot;fjdlkfjlafjdlaj3jk2l4j&quot;}
+                "request":{"username":"root", "password":"123"},
+                "response":{"code":1, "msg":"登录成功", "token":"fjdlkfjlafjdlaj3jk2l4j"}
             },
             {
-                &quot;request&quot;:{&quot;username&quot;:&quot;lily&quot;},
-                &quot;response&quot;:{&quot;code&quot;:-1, &quot;msg&quot;:&quot;密码是必填的&quot;}
+                "request":{"username":"lily"},
+                "response":{"code":-1, "msg":"密码是必填的"}
             },
             {
-                &quot;request&quot;:{&quot;password&quot;:&quot;123&quot;},
-                &quot;response&quot;:{&quot;code&quot;:-1, &quot;msg&quot;:&quot;用户名是必填的&quot;}
+                "request":{"password":"123"},
+                "response":{"code":-1, "msg":"用户名是必填的"}
             }
-        &#93;
+        ]
     },
     {
-        &quot;name&quot;:&quot;用户退出登录&quot;,
-        &quot;desc&quot;:&quot;&quot;,
-        &quot;request&quot;:{
-            &quot;method&quot;:&quot;GET&quot;,
-            &quot;url&quot;:&quot;/logout/&quot;
+        "name":"用户退出登录",
+        "desc":"",
+        "request":{
+            "method":"GET",
+            "url":"/logout/"
         },
-        &quot;response&quot;:{
-            &quot;code&quot;:{&quot;name&quot;:&quot;返回结果的代码&quot;, &quot;type&quot;:&quot;int&quot;, &quot;desc&quot;:&quot;退出成功只返回1&quot;},
-            &quot;msg&quot;:{&quot;name&quot;:&quot;退出操作返回消息&quot;, &quot;type&quot;:&quot;string&quot;, &quot;desc&quot;:&quot;通常返回都是空&quot;}
+        "response":{
+            "code":{"name":"返回结果的代码", "type":"int", "desc":"退出成功只返回1"},
+            "msg":{"name":"退出操作返回消息", "type":"string", "desc":"通常返回都是空"}
         },
-        &quot;test&#95;data&quot;:&#91;
+        "test_data":[
             {
-                &quot;request&quot;:null,
-                &quot;response&quot;:{&quot;code&quot;:1, &quot;msg&quot;:&quot;退出成功&quot;}
+                "request":null,
+                "response":{"code":1, "msg":"退出成功"}
             }
-        &#93;
+        ]
     }
-&#93;}
+]}
 
-</code></pre><p>那用Rust来写吧，编译为Mac、Windows、Linux的直接可运行文件，用户无需再安装任何环境</p>
-            <p class="text-left text-muted">2020-02-05 05:57</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2020/1/15/Panda-api-how-to-use/">上一篇: Panda api 接口文档工具使用说明</a></div>
-                <div class="col-6 text-right"><a href="/p/2019/12/15/fearless-concurrency/">下一篇:无畏并发</a></div>
-            </div>
-        </div>
+</code></pre>
+<p>那用Rust来写吧，编译为Mac、Windows、Linux的直接可运行文件，用户无需再安装任何环境</p>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2020-01-04</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2020/1/15/Panda-api-how-to-use2/">上一篇: Panda api 高级使用说明</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2019/12/15/fearless-concurrency/">下一篇: 无畏并发</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2020/1/4/设计一个接口管理工具/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

@@ -3,84 +3,96 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>344. 反转字符串 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">344. 反转字符串</h1>
+  <p>###题目</p>
+<p>不使用任何内建的哈希表库设计一个哈希映射</p>
+<p>具体地说，你的设计应该包含以下的功能</p>
+<ol>
+<li>put(key, value)：向哈希映射中插入(键,值)的数值对。如果键对应的值已经存在，更新这个值。</li>
+<li>get(key)：返回给定的键所对应的值，如果映射中不包含这个键，返回-1。</li>
+<li>remove(key)：如果映射中存在这个键，删除这个数值对。</li>
+</ol>
+<p>示例：</p>
+<pre><code class="language-.lang-rust">MyHashMap hashMap = new MyHashMap();
+hashMap.put(1, 1);          
+hashMap.put(2, 2);         
+hashMap.get(1);            // 返回 1
+hashMap.get(3);            // 返回 -1 (未找到)
+hashMap.put(2, 1);         // 更新已有的值
+hashMap.get(2);            // 返回 1 
+hashMap.remove(2);         // 删除键为2的数据
+hashMap.get(2);            // 返回 -1 (未找到) 
 
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">344. 反转字符串</h1>
+</code></pre>
+<p>注意：<br />
+所有的值都在 [1, 1000000]的范围内。<br />
+操作的总数目在[1, 10000]范围内。<br />
+不要使用内建的哈希库。</p>
+<p><code>题型归类:  vec</code></p>
+<p>###思路一
+用vec来进行存储，因为涉及key和val，有可能会key和val不是一个类型，那么就用stuct来进行存储单个的key,val键值对。然后通过循环查询查看是否有这个key，有就更新val，如果没有，就插入这个strut。</p>
+<pre><code class="language-.lang-rust">// 代码实现
 
-
-
-
-            <h3>题目</h3><p>不使用任何内建的哈希表库设计一个哈希映射</p><p>具体地说，你的设计应该包含以下的功能</p><ol><li>put(key, value)：向哈希映射中插入(键,值)的数值对。如果键对应的值已经存在，更新这个值。</li><li>get(key)：返回给定的键所对应的值，如果映射中不包含这个键，返回-1。</li><li>remove(key)：如果映射中存在这个键，删除这个数值对。</li></ol><p>示例：</p><pre><code class=".lang-rust">MyHashMap hashMap = new MyHashMap&#40;&#41;;
-hashMap.put&#40;1, 1&#41;;          
-hashMap.put&#40;2, 2&#41;;         
-hashMap.get&#40;1&#41;;            // 返回 1
-hashMap.get&#40;3&#41;;            // 返回 -1 &#40;未找到&#41;
-hashMap.put&#40;2, 1&#41;;         // 更新已有的值
-hashMap.get&#40;2&#41;;            // 返回 1 
-hashMap.remove&#40;2&#41;;         // 删除键为2的数据
-hashMap.get&#40;2&#41;;            // 返回 -1 &#40;未找到&#41; 
-
-</code></pre><p>注意：<br /> 所有的值都在 [1, 1000000]的范围内。<br /> 操作的总数目在[1, 10000]范围内。<br /> 不要使用内建的哈希库。<br /></p><p><code>题型归类:  vec</code></p><h3>思路一</h3><p>用vec来进行存储，因为涉及key和val，有可能会key和val不是一个类型，那么就用stuct来进行存储单个的key,val键值对。然后通过循环查询查看是否有这个key，有就更新val，如果没有，就插入这个strut。</p><pre><code class=".lang-rust">// 代码实现
-
-#&#91;derive&#40;Debug&#41;&#93;
+#[derive(Debug)]
 struct KeyVal {
     key:i32,
     value:i32
 }
 
-#&#91;derive&#40;Debug&#41;&#93;
+#[derive(Debug)]
 struct MyHashMap {
     data: Vec&lt;KeyVal&gt;,
 }
 
 
 //
-// &#42; `&amp;self` means the method takes an immutable reference.
-// &#42; If you need a mutable reference, change it to `&amp;mut self` instead.
-// &#42;/
+// * `&amp;self` means the method takes an immutable reference.
+// * If you need a mutable reference, change it to `&amp;mut self` instead.
+// */
 
 impl MyHashMap {
-    /&#42;&#42; Initialize your data structure here. &#42;/
-    fn new&#40;&#41; -&gt; Self {
+    /** Initialize your data structure here. */
+    fn new() -&gt; Self {
         MyHashMap {
-            data: vec!&#91;&#93;
+            data: vec![]
         }
     }
 
-    /&#42;&#42; value will always be non-negative. &#42;/
-    fn put&#40;&amp;mut self, key: i32, value: i32&#41; {
-        for key&#95;val in self.data.iter&#95;mut&#40;&#41; {
-            if key == key&#95;val.key {
-                key&#95;val.value = value;
+    /** value will always be non-negative. */
+    fn put(&amp;mut self, key: i32, value: i32) {
+        for key_val in self.data.iter_mut() {
+            if key == key_val.key {
+                key_val.value = value;
                 return;
             }
         }
-        self.data.push&#40;KeyVal{key, value}&#41;;
+        self.data.push(KeyVal{key, value});
     }
 
-    /&#42;&#42; Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key &#42;/
-    fn get&#40;&amp;self, key: i32&#41; -&gt; i32 {
-        for key&#95;val in self.data.iter&#40;&#41; {
-            if key == key&#95;val.key {
-                return key&#95;val.value;
+    /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+    fn get(&amp;self, key: i32) -&gt; i32 {
+        for key_val in self.data.iter() {
+            if key == key_val.key {
+                return key_val.value;
             }
         }
         -1
     }
 
-    /&#42;&#42; Removes the mapping of the specified value key if this map contains a mapping for the key &#42;/
-    fn remove&#40;&amp;mut self, key: i32&#41; {
-        for &#40;i, key&#95;val&#41; in self.data.iter&#40;&#41;.enumerate&#40;&#41; {
-            if key == key&#95;val.key {
-                self.data.remove&#40;i&#41;;
+    /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+    fn remove(&amp;mut self, key: i32) {
+        for (i, key_val) in self.data.iter().enumerate() {
+            if key == key_val.key {
+                self.data.remove(i);
                 break;
             }
         }
@@ -88,74 +100,84 @@ impl MyHashMap {
 }
 
 
-#&#91;cfg&#40;test&#41;&#93;
+#[cfg(test)]
 mod test {
     use super::MyHashMap;
 
-    #&#91;test&#93;
-    fn test&#40;&#41; {
-        let mut hashMap = MyHashMap::new&#40;&#41;;
-        hashMap.put&#40;1,1&#41;;
-        hashMap.put&#40;2, 2&#41;;
+    #[test]
+    fn test() {
+        let mut hashMap = MyHashMap::new();
+        hashMap.put(1,1);
+        hashMap.put(2, 2);
 
-        assert&#95;eq!&#40;1, hashMap.get&#40;1&#41;&#41;;
-        assert&#95;eq!&#40;2, hashMap.get&#40;2&#41;&#41;;
-        assert&#95;eq!&#40;-1, hashMap.get&#40;3&#41;&#41;;
-        hashMap.put&#40;2, 1&#41;;         // 更新已有的值
-        assert&#95;eq!&#40;1, hashMap.get&#40;2&#41;&#41;;
-        hashMap.remove&#40;2&#41;;         // 删除键为2的数据
-        assert&#95;eq!&#40;-1, hashMap.get&#40;2&#41;&#41;;
+        assert_eq!(1, hashMap.get(1));
+        assert_eq!(2, hashMap.get(2));
+        assert_eq!(-1, hashMap.get(3));
+        hashMap.put(2, 1);         // 更新已有的值
+        assert_eq!(1, hashMap.get(2));
+        hashMap.remove(2);         // 删除键为2的数据
+        assert_eq!(-1, hashMap.get(2));
     }
 }
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 60 ms , 在所有 Rust 提交中击败了 100.00% 的用户  <br /> 内存消耗 : 4.4 MB , 在所有 Rust 提交中击败了 100.00% 的用户<br /></p></blockquote><h4>存疑</h4><p>要怎么做才可以更快呢？</p><h3>思路二</h3><p>思路一中，因为为了做数据更新，所以每次插入数据都去循环检查了有没有这个key，有就更新，没有就插入。为了提升速度，我们可以只管插入，每次都是从0插入，不管更新。获取的时候都从开始往后找。要remove我们就标记最近一个单元的状态为delete，这样可以减少很多循环。</p><pre><code class=".lang-rust">#&#91;derive&#40;Debug&#41;&#93;
+</code></pre>
+<h4>leetcode执行结果</h4>
+<blockquote>
+<p>执行用时 : 60 ms , 在所有 Rust 提交中击败了 100.00% 的用户<br />
+内存消耗 : 4.4 MB , 在所有 Rust 提交中击败了 100.00% 的用户</p>
+</blockquote>
+<h4>存疑</h4>
+<p>要怎么做才可以更快呢？</p>
+<p>###思路二
+思路一中，因为为了做数据更新，所以每次插入数据都去循环检查了有没有这个key，有就更新，没有就插入。为了提升速度，我们可以只管插入，每次都是从0插入，不管更新。获取的时候都从开始往后找。要remove我们就标记最近一个单元的状态为delete，这样可以减少很多循环。</p>
+<pre><code class="language-.lang-rust">#[derive(Debug)]
 struct KeyVal {
     key:i32,
     value:i32,
     del:bool,
 }
 
-#&#91;derive&#40;Debug&#41;&#93;
+#[derive(Debug)]
 struct MyHashMap {
     data: Vec&lt;KeyVal&gt;,
 }
 
 
 //
-// &#42; `&amp;self` means the method takes an immutable reference.
-// &#42; If you need a mutable reference, change it to `&amp;mut self` instead.
-// &#42;/
+// * `&amp;self` means the method takes an immutable reference.
+// * If you need a mutable reference, change it to `&amp;mut self` instead.
+// */
 
 impl MyHashMap {
-    /&#42;&#42; Initialize your data structure here. &#42;/
-    fn new&#40;&#41; -&gt; Self {
+    /** Initialize your data structure here. */
+    fn new() -&gt; Self {
         MyHashMap {
-            data: vec!&#91;&#93;
+            data: vec![]
         }
     }
 
-    /&#42;&#42; value will always be non-negative. &#42;/
-    fn put&#40;&amp;mut self, key: i32, value: i32&#41; {
-        self.data.insert&#40;0, KeyVal{key, value, del:false}&#41;;
+    /** value will always be non-negative. */
+    fn put(&amp;mut self, key: i32, value: i32) {
+        self.data.insert(0, KeyVal{key, value, del:false});
     }
 
-    /&#42;&#42; Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key &#42;/
-    fn get&#40;&amp;self, key: i32&#41; -&gt; i32 {
-        for key&#95;val in self.data.iter&#40;&#41; {
-            if key == key&#95;val.key {
-                if key&#95;val.del {
+    /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+    fn get(&amp;self, key: i32) -&gt; i32 {
+        for key_val in self.data.iter() {
+            if key == key_val.key {
+                if key_val.del {
                     return -1;
                 }
-                return key&#95;val.value;
+                return key_val.value;
             }
         }
         -1
     }
 
-    /&#42;&#42; Removes the mapping of the specified value key if this map contains a mapping for the key &#42;/
-    fn remove&#40;&amp;mut self, key: i32&#41; {
-        for key&#95;val in self.data.iter&#95;mut&#40;&#41; {
-            if key == key&#95;val.key {
-                key&#95;val.del = true;
+    /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+    fn remove(&amp;mut self, key: i32) {
+        for key_val in self.data.iter_mut() {
+            if key == key_val.key {
+                key_val.del = true;
                 break;
             }
         }
@@ -163,131 +185,149 @@ impl MyHashMap {
 }
 
 
-#&#91;cfg&#40;test&#41;&#93;
+#[cfg(test)]
 mod test {
     use super::MyHashMap;
 
-    #&#91;test&#93;
-    fn test&#40;&#41; {
-        let mut hashMap = MyHashMap::new&#40;&#41;;
-        hashMap.put&#40;1,1&#41;;
-        hashMap.put&#40;2, 2&#41;;
+    #[test]
+    fn test() {
+        let mut hashMap = MyHashMap::new();
+        hashMap.put(1,1);
+        hashMap.put(2, 2);
 
-        assert&#95;eq!&#40;1, hashMap.get&#40;1&#41;&#41;;
-        assert&#95;eq!&#40;2, hashMap.get&#40;2&#41;&#41;;
-        assert&#95;eq!&#40;-1, hashMap.get&#40;3&#41;&#41;;
-        hashMap.put&#40;2, 1&#41;;         // 更新已有的值
-        assert&#95;eq!&#40;1, hashMap.get&#40;2&#41;&#41;;
-        hashMap.remove&#40;2&#41;;         // 删除键为2的数据
-        assert&#95;eq!&#40;-1, hashMap.get&#40;2&#41;&#41;;
+        assert_eq!(1, hashMap.get(1));
+        assert_eq!(2, hashMap.get(2));
+        assert_eq!(-1, hashMap.get(3));
+        hashMap.put(2, 1);         // 更新已有的值
+        assert_eq!(1, hashMap.get(2));
+        hashMap.remove(2);         // 删除键为2的数据
+        assert_eq!(-1, hashMap.get(2));
     }
 }
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 44 ms , 在所有 Rust 提交中击败了 100.00% 的用户  <br /> 内存消耗 : 4.4 MB , 在所有 Rust 提交中击败了 100.00% </p></blockquote><h4>思路三</h4><p>感谢Lewis的提醒，又有了思路三。因为题目中，HashMap的key范围是有限的为0到100000，那么我们直接初始化一个确定大小范围内的vec，初始值都为-1，这样hashmap的key就可以是vec的index，设置值就可以用下标进行，删除值就可以重新赋值为-1。<pre><code class=".lang-rust">// 代码实现
+</code></pre>
+<h4>leetcode执行结果</h4>
+<blockquote>
+<p>执行用时 : 44 ms , 在所有 Rust 提交中击败了 100.00% 的用户<br />
+内存消耗 : 4.4 MB , 在所有 Rust 提交中击败了 100.00%</p>
+</blockquote>
+<h4>思路三</h4>
+<p>感谢Lewis的提醒，又有了思路三。因为题目中，HashMap的key范围是有限的为0到100000，那么我们直接初始化一个确定大小范围内的vec，初始值都为-1，这样hashmap的key就可以是vec的index，设置值就可以用下标进行，删除值就可以重新赋值为-1。</p>
+<pre><code class="language-.lang-rust">// 代码实现
 struct MyHashMap {
     data: Vec&lt;i32&gt;,
 }
 
 //
-// &#42; `&amp;self` means the method takes an immutable reference.
-// &#42; If you need a mutable reference, change it to `&amp;mut self` instead.
-// &#42;/
+// * `&amp;self` means the method takes an immutable reference.
+// * If you need a mutable reference, change it to `&amp;mut self` instead.
+// */
 
 impl MyHashMap {
-    /&#42;&#42; Initialize your data structure here. &#42;/
-    fn new&#40;&#41; -&gt; Self {
-        let mut v = Vec::with&#95;capacity&#40;100000&#41;;
-        v.resize&#40;100000, -1&#41;;
+    /** Initialize your data structure here. */
+    fn new() -&gt; Self {
+        let mut v = Vec::with_capacity(100000);
+        v.resize(100000, -1);
         MyHashMap {
             data:v
         }
     }
 
-    /&#42;&#42; value will always be non-negative. &#42;/
-    fn put&#40;&amp;mut self, key: i32, value: i32&#41; {
-        self.data&#91;key as usize&#93; = value;
+    /** value will always be non-negative. */
+    fn put(&amp;mut self, key: i32, value: i32) {
+        self.data[key as usize] = value;
     }
 
-    /&#42;&#42; Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key &#42;/
-    fn get&#40;&amp;self, key: i32&#41; -&gt; i32 {
-        match self.data.get&#40;key as usize&#41; {
-            Some&#40;i&#41; =&gt; &#42;i,
+    /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+    fn get(&amp;self, key: i32) -&gt; i32 {
+        match self.data.get(key as usize) {
+            Some(i) =&gt; *i,
             None =&gt; -1,
         }
     }
 
-    /&#42;&#42; Removes the mapping of the specified value key if this map contains a mapping for the key &#42;/
-    fn remove&#40;&amp;mut self, key: i32&#41; {
-        self.data&#91;key as usize&#93; = -1;
+    /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+    fn remove(&amp;mut self, key: i32) {
+        self.data[key as usize] = -1;
     }
 }
-</code></pre></p><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 28 ms , 在所有 Rust 提交中击败了 100.00% 的用户  <br /> 内存消耗 : 4.8 MB , 在所有 Rust 提交中击败了 25.00% 的用户 </p></blockquote><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/design-hashset/'>705. 设计哈希集合</a><br /></p>
-            <p class="text-left text-muted">2019-09-26 01:08</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2019/12/15/fearless-concurrency/">上一篇: 无畏并发</a></div>
-                <div class="col-6 text-right"><a href="/p/2019/9/25/reverse-string/">下一篇:344. 反转字符串</a></div>
-            </div>
-        </div>
+</code></pre>
+<h4>leetcode执行结果</h4>
+<blockquote>
+<p>执行用时 : 28 ms , 在所有 Rust 提交中击败了 100.00% 的用户<br />
+内存消耗 : 4.8 MB , 在所有 Rust 提交中击败了 25.00% 的用户</p>
+</blockquote>
+<h3>leetcode相似题型</h3>
+<p><a href="https://leetcode-cn.com/problems/design-hashset/">705. 设计哈希集合</a></p>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2019-09-25</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2019/9/25/reverse-string/">上一篇: 344. 反转字符串</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2019/9/10/all-paths-from-source-to-target/">下一篇: 797. 所有可能的路径</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2019/9/25/design-hashmap/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

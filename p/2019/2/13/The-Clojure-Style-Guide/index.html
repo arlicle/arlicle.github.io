@@ -3,770 +3,1709 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>The Clojure Style Guide - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">The Clojure Style Guide</h1>
+  <h1>Clojure 风格指南</h1>
+<blockquote>
+<p>榜样很重要。 <br/>
+-- 《机械战警》 Alex J. Murphy 警官</p>
+</blockquote>
+<p>这份 Clojure 旨在为 Clojure 程序员编写简洁易懂，易于维护的高质量 Clojure 代码提供一份最佳实践。无论多么好的风格或指南，但是过于理想化的结果导致大家拒绝使用或者可能根本没人用，毫无意义。</p>
+<p>本指南分为几个小节，每一小节由几条相关的规则构成。我尽力在每条规则后面说明理由（如果省略了说明，那是因为其理由显而易见）。</p>
+<p>这些规则不是我凭空想象出来的 --- 它们中的绝大部分来自我多年以来作为职业软件工程师的经验，来自 Clojure 社区成员的反馈和建议，以及许多备受推崇的 Clojure 编程资源，例如 <a href="http://www.clojurebook.com/">"Clojure Programming"</a>
+和 <a href="http://joyofclojure.com/">"The Joy of Clojure"</a>。</p>
+<p>这份指南还处于不断完善中，可能有一些部分是缺失的，可能有一些是不完善的，可能有一些规则缺少例子，可能有一些规例没有用例子阐述的足够清晰。要记住的是，随着时间的推移这些问题都会被解决。</p>
+<p>请注意，Clojure 开发者社区同样维护了一份 <a href="http://dev.clojure.org/display/community/Library+Coding+Standards">coding standards for libraries</a> 列表。</p>
+<h2>组织</h2>
+<blockquote>
+<p>所有风格都又丑又难读，自己的除外。几乎人人都这样想。把 “自己的除外” 拿掉，<br>
+他们或许是对的... <br>
+-- Jerry Coffin（论缩排）</p>
+</blockquote>
+<ul>
+<li>
+<p>使用 <strong>空格</strong> 进行缩进， 不要使用制表符。</p>
+</li>
+<li>
+<p>使用两个空格缩进含有参数的 <code>form</code> 的内容。
+包括所有的 <code>def</code> <code>form</code>， 特殊 <code>form</code> (<code>special form</code>)，以及引入局域绑定的宏
+(例如 <code>loop</code>， <code>let</code>， <code>when-let</code>) 和例如 <code>when</code> ，
+<code>cond</code>， <code>as-&gt;</code>，<code>cond-&gt;</code>，<code>case</code>，<code>with-*</code> 的宏。
+<sup>[<a href="#body-indentation">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(when something
+  (something-else))
 
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">The Clojure Style Guide</h1>
+(with-out-str
+  (println "Hello, ")
+  (println "world!"))
 
+;; bad - four spaces
+(when something
+    (something-else))
 
-
-
-            <h1>Clojure 风格指南</h1><blockquote><p> 榜样很重要。 <br/>  &ndash; 《机械战警》 Alex J. Murphy 警官 </p></blockquote><p>这份 Clojure 旨在为 Clojure 程序员编写简洁易懂，易于维护的高质量 Clojure 代码提供一份最佳实践。无论多么好的风格或指南，但是过于理想化的结果导致大家拒绝使用或者可能根本没人用，毫无意义。</p><p>本指南分为几个小节，每一小节由几条相关的规则构成。我尽力在每条规则后面说明理由（如果省略了说明，那是因为其理由显而易见）。</p><p>这些规则不是我凭空想象出来的 &mdash; 它们中的绝大部分来自我多年以来作为职业软件工程师的经验，来自 Clojure 社区成员的反馈和建议，以及许多备受推崇的 Clojure 编程资源，例如 <a href='http://www.clojurebook.com/'>"Clojure Programming"</a> 和 <a href='http://joyofclojure.com/'>"The Joy of Clojure"</a>。</p><p>这份指南还处于不断完善中，可能有一些部分是缺失的，可能有一些是不完善的，可能有一些规则缺少例子，可能有一些规例没有用例子阐述的足够清晰。要记住的是，随着时间的推移这些问题都会被解决。</p><p>请注意，Clojure 开发者社区同样维护了一份 <a href='http://dev.clojure.org/display/community/Library+Coding+Standards'>coding standards for libraries</a> 列表。</p><h2>组织</h2><blockquote><p> 所有风格都又丑又难读，自己的除外。几乎人人都这样想。把 “自己的除外” 拿掉，<br>  他们或许是对的... <br>  &ndash; Jerry Coffin（论缩排） </p></blockquote><ul><li>使用 <strong>空格</strong> 进行缩进， 不要使用制表符。  </li></ul><ul><li>使用两个空格缩进含有参数的 <code>form</code> 的内容。  包括所有的 <code>def</code> <code>form</code>， 特殊 <code>form</code> (<code>special form</code>)，以及引入局域绑定的宏  (例如 <code>loop</code>， <code>let</code>， <code>when-let</code>) 和例如 <code>when</code> ，  <code>cond</code>， <code>as-&gt;</code>，<code>cond-&gt;</code>，<code>case</code>，<code>with-&#42;</code> 的宏。  <sup><a href='#body-indentation'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;when something
-      &#40;something-else&#41;&#41;
-
-    &#40;with-out-str
-      &#40;println &quot;Hello, &quot;&#41;
-      &#40;println &quot;world!&quot;&#41;&#41;
-
-    ;; bad - four spaces
-    &#40;when something
-        &#40;something-else&#41;&#41;
-
-    ;; bad - one space
-    &#40;with-out-str
-     &#40;println &quot;Hello, &quot;&#41;
-     &#40;println &quot;world!&quot;&#41;&#41;
-    </code></pre></li><li><a name="vertically-align-fn-args"></a>  函数/宏的多行参数缩排在同一层级。  <sup><a href='#vertically-align-fn-args'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;filter even?
-            &#40;range 1 10&#41;&#41;
-
-    ;; bad
-    &#40;filter even?
-      &#40;range 1 10&#41;&#41;
-    </code></pre></li><li><a name="one-space-indent"></a>  如果没有参数和函数名称在同一行，函数/宏的参数保持一个空格缩进。  <sup><a href='#one-space-indent'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;filter
-     even?
-     &#40;range 1 10&#41;&#41;
-
-    &#40;or
-     ala
-     bala
-     portokala&#41;
-
-    ;; bad - two-space indent
-    &#40;filter
-      even?
-      &#40;range 1 10&#41;&#41;
-
-    &#40;or
-      ala
-      bala
-      portokala&#41;
-    </code></pre></li><li><a name="vertically-align-let-and-map"></a>  <code>let</code> 绑定以及 <code>map</code> 关键字缩排在同一层级。  <sup><a href='#vertically-align-let-and-map'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;let &#91;thing1 &quot;some stuff&quot;
-          thing2 &quot;other stuff&quot;&#93;
-      {:thing1 thing1
-       :thing2 thing2}&#41;
-
-    ;; bad
-    &#40;let &#91;thing1 &quot;some stuff&quot;
-      thing2 &quot;other stuff&quot;&#93;
-      {:thing1 thing1
-      :thing2 thing2}&#41;
-    </code></pre></li><li><a name="optional-new-line-after-fn-name"></a>  当 <code>defn</code> 没有 <code>docstring</code> 时，函数名称和参数列表可以选择性的分布在同一行。  <sup><a href='#optional-new-line-after-fn-name'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;defn foo
-      &#91;x&#93;
-      &#40;bar x&#41;&#41;
-
-    ;; good
-    &#40;defn foo &#91;x&#93;
-      &#40;bar x&#41;&#41;
-
-    ;; bad
-    &#40;defn foo
-      &#91;x&#93; &#40;bar x&#41;&#41;
-    </code></pre></li><li><a name="multimethod-dispatch-val-placement"></a>  <code>multimethod</code> 的 <code>dispatch-val</code> 要和函数名称保持在同一行。  <sup><a href='#multimethod-dispatch-val-placement'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;defmethod foo :bar &#91;x&#93; &#40;baz x&#41;&#41;
-
-    &#40;defmethod foo :bar
-      &#91;x&#93;
-      &#40;baz x&#41;&#41;
-
-    ;; bad
-    &#40;defmethod foo
-      :bar
-      &#91;x&#93;
-      &#40;baz x&#41;&#41;
-
-    &#40;defmethod foo
-      :bar &#91;x&#93;
-      &#40;baz x&#41;&#41;
-    </code></pre></li><li><a name="docstring-after-fn-name"></a>    当增加一个 <code>docstring</code> 的时候，尤其是对于使用这个 <code>docstring</code> 的函数，    注意正确的位置应当是函数名称之后，而不是参数列表之后。    后者没有语法错误并且不会引发异常，    但是并没有作为文档绑定到函数名称对应的 <code>var</code>，    仅仅是成为了函数内容的一部分。    <sup><a href='#docstring-after-fn-name'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;defn foo
-      &quot;docstring&quot;
-      &#91;x&#93;
-      &#40;bar x&#41;&#41;
-
-    ;; bad
-    &#40;defn foo &#91;x&#93;
-      &quot;docstring&quot;
-      &#40;bar x&#41;&#41;
-    </code></pre></li><li><a name="oneline-short-fn"></a>    对于内容较短的函数，可以选择单行定义。    <sup><a href='#oneline-short-fn'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;defn foo &#91;x&#93;
-      &#40;bar x&#41;&#41;
-
-    ;; good for a small function body
-    &#40;defn foo &#91;x&#93; &#40;bar x&#41;&#41;
-
-    ;; good for multi-arity functions
-    &#40;defn foo
-      &#40;&#91;x&#93; &#40;bar x&#41;&#41;
-      &#40;&#91;x y&#93;
-       &#40;if &#40;predicate? x&#41;
-         &#40;bar x&#41;
-         &#40;baz x&#41;&#41;&#41;&#41;
-
-    ;; bad
-    &#40;defn foo
-      &#91;x&#93; &#40;if &#40;predicate? x&#41;
-            &#40;bar x&#41;
-            &#40;baz x&#41;&#41;&#41;
-    </code></pre></li><li><a name="multiple-arity-indentation"></a>    函数的多组定义要和对应的参数列表保持同层缩进。    <sup><a href='#multiple-arity-indentation'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;defn foo
-      &quot;I have two arities.&quot;
-      &#40;&#91;x&#93;
-       &#40;foo x 1&#41;&#41;
-      &#40;&#91;x y&#93;
-       &#40;+ x y&#41;&#41;&#41;
-
-    ;; bad - extra indentation
-    &#40;defn foo
-      &quot;I have two arities.&quot;
-      &#40;&#91;x&#93;
-        &#40;foo x 1&#41;&#41;
-      &#40;&#91;x y&#93;
-        &#40;+ x y&#41;&#41;&#41;
-    </code></pre></li><li><a name="multiple-arity-order"></a>    函数的多组定义要按照参数的个数由少到多的顺序。    通常的情况是，多元数函数的 K 个参数定义完整实现了函数的功能，    N < K 的 N 个参数定义会部分应用 N 个参数去调用 K 个参数的实现，    N > K 的 N 个参数定义会通过变长参数，提供一种 <code>fold</code> 实现。    <sup><a href='#multiple-arity-order'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good - it's easy to scan for the nth arity
-    &#40;defn foo
-      &quot;I have two arities.&quot;
-      &#40;&#91;x&#93;
-       &#40;foo x 1&#41;&#41;
-      &#40;&#91;x y&#93;
-       &#40;+ x y&#41;&#41;&#41;
-
-    ;; okay - the other arities are applications of the two-arity
-    &#40;defn foo
-      &quot;I have two arities.&quot;
-      &#40;&#91;x y&#93;
-       &#40;+ x y&#41;&#41;
-      &#40;&#91;x&#93;
-       &#40;foo x 1&#41;&#41;
-      &#40;&#91;x y z &amp; more&#93;
-       &#40;reduce foo &#40;foo x &#40;foo y z&#41;&#41; more&#41;&#41;&#41;
-
-    ;; bad - unordered for no apparent reason
-    &#40;defn foo
-      &#40;&#91;x&#93; 1&#41;
-      &#40;&#91;x y z&#93; &#40;foo x &#40;foo y z&#41;&#41;&#41;
-      &#40;&#91;x y&#93; &#40;+ x y&#41;&#41;
-      &#40;&#91;w x y z &amp; more&#93; &#40;reduce foo &#40;foo w &#40;foo x &#40;foo y z&#41;&#41;&#41; more&#41;&#41;&#41;
-    </code></pre></li><li><a name="align-docstring-lines"></a>    缩进多行 <code>docstring</code> 的每一行。    <sup><a href='#align-docstring-lines'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;defn foo
-      &quot;Hello there. This is
-      a multi-line docstring.&quot;
-      &#91;&#93;
-      &#40;bar&#41;&#41;
-
-    ;; bad
-    &#40;defn foo
-      &quot;Hello there. This is
-    a multi-line docstring.&quot;
-      &#91;&#93;
-      &#40;bar&#41;&#41;
-    </code></pre></li><li><a name="crlf"></a>    使用 Unix 风格的换行符。    （*BSD/Solaris/Linux/OS X 系统的用户不需担心，Windows 用户则要格外小心。）    <sup><a href='#crlf'>[link</a>]</sup><ul><li>如果你使用 Git，可用下面这个配置来保护你的项目不被 Windows 的换行符干扰：<pre><code class="bash">    bash$ git config --global core.autocrlf true
-    </code></pre></li></ul></li><li><a name="bracket-spacing"></a>    如果段落后边紧跟着左括号 (<code>&#40;</code>, <code>{</code> 和    <code>&#91;</code>) 或者前面紧跟着右括号 (<code>&#41;</code>, <code>}</code> and <code>&#93;</code>),    使用空格进行分隔。 相反地, 左括号的右边和右括号的左边忽略空格。    <sup><a href='#bracket-spacing'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;foo &#40;bar baz&#41; quux&#41;
-
-    ;; bad
-    &#40;foo&#40;bar baz&#41;quux&#41;
-    &#40;foo &#40; bar baz &#41; quux&#41;
-</code></pre>&nbsp;<blockquote><p> 语法糖会导致分号癌。<br>  &ndash; Alan Perlis </li></ul></p></blockquote><ul><li><a name="no-commas-for-seq-literals"></a>  集合字面量的元素之间，不要使用逗号。  <sup><a href='#no-commas-for-seq-literals'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#91;1 2 3&#93;
-    &#40;1 2 3&#41;
-
-    ;; bad
-    &#91;1, 2, 3&#93;
-    &#40;1, 2, 3&#41;
-    </code></pre></li><li><a name="opt-commas-in-map-literals"></a>  在 <code>map</code> 字面量中适当的使用括号，可以提高 <code>map</code> 的可读性。  <sup><a href='#opt-commas-in-map-literals'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    {:name &quot;Bruce Wayne&quot; :alter-ego &quot;Batman&quot;}
-
-    ;; good and arguably a bit more readable
-    {:name &quot;Bruce Wayne&quot;
-     :alter-ego &quot;Batman&quot;}
-
-    ;; good and arguably more compact
-    {:name &quot;Bruce Wayne&quot;, :alter-ego &quot;Batman&quot;}
-    </code></pre></li><li><a name="gather-trailing-parens"></a>  尾部的括号保持在同一行。  <sup><a href='#gather-trailing-parens'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good; single line
-    &#40;when something
-      &#40;something-else&#41;&#41;
-
-    ;; bad; distinct lines
-    &#40;when something
-      &#40;something-else&#41;
-    &#41;
-    </code></pre></li><li><a name="empty-lines-between-top-level-forms"></a>  顶级 <code>form</code> 之间使用空行分隔。  <sup><a href='#empty-lines-between-top-level-forms'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;def x ...&#41;
-
-    &#40;defn foo ...&#41;
-
-    ;; bad
-    &#40;def x ...&#41;
-    &#40;defn foo ...&#41;
-    </code></pre></li></ul><p>这个规则的一个例外是，将相关的 <code>def</code> 放在一起。</p><pre><code class=".language-clojure">;; good
-&#40;def min-rows 10&#41;
-&#40;def max-rows 20&#41;
-&#40;def min-cols 15&#41;
-&#40;def max-cols 30&#41;
-</code></pre><ul><li><a name="no-blank-lines-within-def-forms"></a>  函数或者宏的定义中不要有空行，一个例外的情况是，  使用空行指示出成对结构的分组，例如 <code>let</code>, <code>cond</code>。  <sup><a href='#no-blank-lines-within-def-forms'>[link</a>]</sup></li><li><a name="80-character-limits"></a>  每行尽量避免超过80个字符。  <sup><a href='#80-character-limits'>[link</a>]</sup></li><li><a name="no-trailing-whitespace"></a>  避免尾部空白符。  <sup><a href='#no-trailing-whitespace'>[link</a>]</sup></li><li><a name="one-file-per-namespace"></a>  每一文件使用单独的命名空间。  <sup><a href='#one-file-per-namespace'>[link</a>]</sup></li><li><a name="comprehensive-ns-declaration"></a>  使用一个全面的 <code>ns</code> <code>form</code> 来定义命名空间，  包含 <code>refer</code>, <code>require</code>, <code>import</code>，并且按照前面的顺序。  <sup><a href='#comprehensive-ns-declaration'>[link</a>]</sup><pre><code class=".language-clojure">    &#40;ns examples.ns
-      &#40;:refer-clojure :exclude &#91;next replace remove&#93;&#41;
-      &#40;:require &#91;clojure.string :as s :refer &#91;blank?&#93;&#93;
-                &#91;clojure.set :as set&#93;
-                &#91;clojure.java.shell :as sh&#93;&#41;
-      &#40;:import java.util.Date
-               java.text.SimpleDateFormat
-               &#91;java.util.concurrent Executors
-                                     LinkedBlockingQueue&#93;&#41;&#41;
-    </code></pre></li><li><a name="prefer-require-over-use"></a>  在 <code>ns</code> <code>form</code> 中，使用 <code>:require :as</code> 优于 <code>:require :refer</code>，  <code>:require :refer</code> 优于 <code>:refer :all</code>，不建议使用 <code>:use</code>。  <sup><a href='#prefer-require-over-use'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;ns examples.ns
-      &#40;:require &#91;clojure.zip :as zip&#93;&#41;&#41;
-
-    ;; good
-    &#40;ns examples.ns
-      &#40;:require &#91;clojure.zip :refer &#91;lefts rights&#93;&#41;&#41;
-
-    ;; acceptable as warranted
-    &#40;ns examples.ns
-      &#40;:require &#91;clojure.zip :refer :all&#93;&#41;&#41;
-
-    ;; bad
-    &#40;ns examples.ns
-      &#40;:use clojure.zip&#41;&#41;
-    </code></pre></li><li><a name="no-single-segment-namespaces"></a>  避免单段命名空间。  <sup><a href='#no-single-segment-namespaces'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;ns example.ns&#41;
-
-    ;; bad
-    &#40;ns example&#41;
-    </code></pre></li><li><a name="namespaces-with-5-segments-max"></a>  避免使用过长的命名空间 (例如，超过5段的命名) 。  <sup><a href='#namespaces-with-5-segments-max'>[link</a>]</sup></li><li><a name="10-loc-per-fn-limit"></a>  函数的定义避免超过 10 行 (LOC)。大多数情况下，函数的定义应该少于 5 行 (LOC) 。  <sup><a href='#10-loc-per-fn-limit'>[link</a>]</sup></li><li><a name="4-positional-fn-params-limit"></a>  避免超过 3 个或者 4 个位置参数的参数列表。  <sup><a href='#4-positional-fn-params-limit'>[link</a>]</sup></li><li><a name="forward-references"></a>  避免向前引用。向前引用在某些情况下是必要的，但是这些情况在实践中微乎其微。  <sup><a href='#forward-references'>[link</a>]</sup></li></ul><h2>语法</h2><ul><li><a name="ns-fns-only-in-repl"></a>  避免使用 <code>require</code> 和 <code>refer</code> 等命名空间操作函数，  在 <code>REPL</code> 的环境之外，这些函数是完全没有必要的。  <sup><a href='#ns-fns-only-in-repl'>[link</a>]</sup></li><li><a name="declare"></a>  必要时使用 <code>declare</code> 声明向前引用。  <sup><a href='#declare'>[link</a>]</sup></li><li><a name="higher-order-fns"></a>  倾向于使用类似 <code>map</code> 和 <code>loop/recur</code> 等高阶函数。  <sup><a href='#higher-order-fns'>[link</a>]</sup></li><li><a name="pre-post-conditions"></a>  倾向于使用前置和后置条件进行函数的检查。  <sup><a href='#pre-post-conditions'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;defn foo &#91;x&#93;
-      {:pre &#91;&#40;pos? x&#41;&#93;}
-      &#40;bar x&#41;&#41;
-
-    ;; bad
-    &#40;defn foo &#91;x&#93;
-      &#40;if &#40;pos? x&#41;
-        &#40;bar x&#41;
-        &#40;throw &#40;IllegalArgumentException. &quot;x must be a positive number!&quot;&#41;&#41;&#41;
-    </code></pre></li><li><a name="dont-def-vars-inside-fns"></a>  不要在函数内定义 <code>var</code> 。  <sup><a href='#dont-def-vars-inside-fns'>[link</a>]</sup><pre><code class=".language-clojure">    ;; very bad
-    &#40;defn foo &#91;&#93;
-      &#40;def x 5&#41;
-      ...&#41;
-    </code></pre></li><li><a name="dont-shadow-clojure-core"></a>  避免局部绑定覆盖 <code>clojure.core</code> 中的命名。  <sup><a href='#dont-shadow-clojure-core'>[link</a>]</sup><pre><code class=".language-clojure">    ;; bad - you're forced to use clojure.core/map fully qualified inside
-    &#40;defn foo &#91;map&#93;
-      ...&#41;
-    </code></pre></li><li><a name="alter-var"></a>  使用 <code>alter-var-root</code> 代替 <code>def</code> 修改 <code>var</code> 的值。  <sup>[[link]](#alter-var)</sup><pre><code class=".language-clojure">    ;; good
-    &#40;def thing 1&#41; ; value of thing is now 1
-    ; do some stuff with thing
-    &#40;alter-var-root #'thing &#40;constantly nil&#41;&#41; ; value of thing is now nil
-
-    ;; bad
-    &#40;def thing 1&#41;
-    ; do some stuff with thing
-    &#40;def thing nil&#41;
-    ; value of thing is now nil
-    </code></pre></li><li><a name="nil-punning"></a>  使用 <code>seq</code> 作为终止条件去测试序列是否为空 (这种技术通常被称为 <em>nil punning</em>)。  <sup><a href='#nil-punning'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;defn print-seq &#91;s&#93;
-      &#40;when &#40;seq s&#41;
-        &#40;prn &#40;first s&#41;&#41;
-        &#40;recur &#40;rest s&#41;&#41;&#41;&#41;
-
-    ;; bad
-    &#40;defn print-seq &#91;s&#93;
-      &#40;when-not &#40;empty? s&#41;
-        &#40;prn &#40;first s&#41;&#41;
-        &#40;recur &#40;rest s&#41;&#41;&#41;&#41;
-    </code></pre></li><li><a name="to-vector"></a>  当你需要将序列 (<code>sequence</code>) 转换为矢量 (<code>vector</code>) 时，使用 <code>vec</code> 优于 <code>into</code>。  <sup><a href='#to-vector'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;vec some-seq&#41;
-
-    ;; bad
-    &#40;into &#91;&#93; some-seq&#41;
-    </code></pre></li><li><a name="when-instead-of-single-branch-if"></a>  使用 <code>when</code> 代替 <code>&#40;if ... &#40;do ...&#41;&#41;</code>。  <sup><a href='#when-instead-of-single-branch-if'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;when pred
-      &#40;foo&#41;
-      &#40;bar&#41;&#41;
-
-    ;; bad
-    &#40;if pred
-      &#40;do
-        &#40;foo&#41;
-        &#40;bar&#41;&#41;&#41;
-    </code></pre></li><li><a name="if-let"></a>  使用 <code>if-let</code> 代替 <code>let</code> + <code>if</code>。  <sup><a href='#if-let'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;if-let &#91;result &#40;foo x&#41;&#93;
-      &#40;something-with result&#41;
-      &#40;something-else&#41;&#41;
-
-    ;; bad
-    &#40;let &#91;result &#40;foo x&#41;&#93;
-      &#40;if result
-        &#40;something-with result&#41;
-        &#40;something-else&#41;&#41;&#41;
-    </code></pre></li><li><a name="when-let"></a>  使用 <code>when-let</code> 代替 <code>let</code> + <code>when</code>。  <sup><a href='#when-let'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;when-let &#91;result &#40;foo x&#41;&#93;
-      &#40;do-something-with result&#41;
-      &#40;do-something-more-with result&#41;&#41;
-
-    ;; bad
-    &#40;let &#91;result &#40;foo x&#41;&#93;
-      &#40;when result
-        &#40;do-something-with result&#41;
-        &#40;do-something-more-with result&#41;&#41;&#41;
-    </code></pre></li><li><a name="if-not"></a>  使用 <code>if-not</code> 代替 <code>&#40;if &#40;not ...&#41; ...&#41;</code>。  <sup><a href='#if-not'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;if-not pred
-      &#40;foo&#41;&#41;
-
-    ;; bad
-    &#40;if &#40;not pred&#41;
-      &#40;foo&#41;&#41;
-    </code></pre></li><li><a name="when-not"></a>  使用 <code>when-not</code> 代替 <code>&#40;when &#40;not ...&#41; ...&#41;</code>。  <sup><a href='#when-not'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;when-not pred
-    &#40;foo&#41;
-    &#40;bar&#41;&#41;
+;; bad - one space
+(with-out-str
+ (println "Hello, ")
+ (println "world!"))
+</code></pre>
+</li>
+<li>
+<p><a name="vertically-align-fn-args"></a>
+函数/宏的多行参数缩排在同一层级。
+<sup>[<a href="#vertically-align-fn-args">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(filter even?
+        (range 1 10))
 
 ;; bad
-&#40;when &#40;not pred&#41;
-    &#40;foo&#41;
-    &#40;bar&#41;&#41;
-</code></pre></li><li><a name="when-not-instead-of-single-branch-if-not"></a>  使用 <code>when-not</code> 代替 <code>&#40;if-not ... &#40;do ...&#41;&#41;</code>。  <sup><a href='#when-not-instead-of-single-branch-if-not'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;when-not pred
-    &#40;foo&#41;
-    &#40;bar&#41;&#41;
+(filter even?
+  (range 1 10))
+</code></pre>
+</li>
+<li>
+<p><a name="one-space-indent"></a>
+如果没有参数和函数名称在同一行，函数/宏的参数保持一个空格缩进。
+<sup>[<a href="#one-space-indent">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(filter
+ even?
+ (range 1 10))
+
+(or
+ ala
+ bala
+ portokala)
+
+;; bad - two-space indent
+(filter
+  even?
+  (range 1 10))
+
+(or
+  ala
+  bala
+  portokala)
+</code></pre>
+</li>
+<li>
+<p><a name="vertically-align-let-and-map"></a>
+<code>let</code> 绑定以及 <code>map</code> 关键字缩排在同一层级。
+<sup>[<a href="#vertically-align-let-and-map">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(let [thing1 "some stuff"
+      thing2 "other stuff"]
+  {:thing1 thing1
+   :thing2 thing2})
 
 ;; bad
-&#40;if-not pred
-    &#40;do
-    &#40;foo&#41;
-    &#40;bar&#41;&#41;&#41;
-</code></pre></li><li><a name="not-equal"></a>  使用 <code>not=</code> 代替 <code>&#40;not &#40;= ...&#41;&#41;</code>。  <sup><a href='#not-equal'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;not= foo bar&#41;
+(let [thing1 "some stuff"
+  thing2 "other stuff"]
+  {:thing1 thing1
+  :thing2 thing2})
+</code></pre>
+</li>
+<li>
+<p><a name="optional-new-line-after-fn-name"></a>
+当 <code>defn</code> 没有 <code>docstring</code> 时，函数名称和参数列表可以选择性的分布在同一行。
+<sup>[<a href="#optional-new-line-after-fn-name">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(defn foo
+  [x]
+  (bar x))
+
+;; good
+(defn foo [x]
+  (bar x))
 
 ;; bad
-&#40;not &#40;= foo bar&#41;&#41;
-</code></pre></li><li><a name="printf"></a>  使用 <code>printf</code> 代替 <code>&#40;print &#40;format&#41; ...&#41;</code>。  <sup><a href='#printf'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;printf &quot;Hello, %s!\n&quot; name&#41;
+(defn foo
+  [x] (bar x))
+</code></pre>
+</li>
+<li>
+<p><a name="multimethod-dispatch-val-placement"></a>
+<code>multimethod</code> 的 <code>dispatch-val</code> 要和函数名称保持在同一行。
+<sup>[<a href="#multimethod-dispatch-val-placement">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(defmethod foo :bar [x] (baz x))
+
+(defmethod foo :bar
+  [x]
+  (baz x))
+
+;; bad
+(defmethod foo
+  :bar
+  [x]
+  (baz x))
+
+(defmethod foo
+  :bar [x]
+  (baz x))
+</code></pre>
+</li>
+<li>
+<p><a name="docstring-after-fn-name"></a>
+当增加一个 <code>docstring</code> 的时候，尤其是对于使用这个 <code>docstring</code> 的函数，
+注意正确的位置应当是函数名称之后，而不是参数列表之后。
+后者没有语法错误并且不会引发异常，
+但是并没有作为文档绑定到函数名称对应的 <code>var</code>，
+仅仅是成为了函数内容的一部分。
+<sup>[<a href="#docstring-after-fn-name">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(defn foo
+  "docstring"
+  [x]
+  (bar x))
+
+;; bad
+(defn foo [x]
+  "docstring"
+  (bar x))
+</code></pre>
+</li>
+<li>
+<p><a name="oneline-short-fn"></a>
+对于内容较短的函数，可以选择单行定义。
+<sup>[<a href="#oneline-short-fn">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(defn foo [x]
+  (bar x))
+
+;; good for a small function body
+(defn foo [x] (bar x))
+
+;; good for multi-arity functions
+(defn foo
+  ([x] (bar x))
+  ([x y]
+   (if (predicate? x)
+     (bar x)
+     (baz x))))
+
+;; bad
+(defn foo
+  [x] (if (predicate? x)
+        (bar x)
+        (baz x)))
+</code></pre>
+</li>
+<li>
+<p><a name="multiple-arity-indentation"></a>
+函数的多组定义要和对应的参数列表保持同层缩进。
+<sup>[<a href="#multiple-arity-indentation">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(defn foo
+  "I have two arities."
+  ([x]
+   (foo x 1))
+  ([x y]
+   (+ x y)))
+
+;; bad - extra indentation
+(defn foo
+  "I have two arities."
+  ([x]
+    (foo x 1))
+  ([x y]
+    (+ x y)))
+</code></pre>
+</li>
+<li>
+<p><a name="multiple-arity-order"></a>
+函数的多组定义要按照参数的个数由少到多的顺序。
+通常的情况是，多元数函数的 K 个参数定义完整实现了函数的功能，
+N &lt; K 的 N 个参数定义会部分应用 N 个参数去调用 K 个参数的实现，
+N &gt; K 的 N 个参数定义会通过变长参数，提供一种 <code>fold</code> 实现。
+<sup>[<a href="#multiple-arity-order">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good - it's easy to scan for the nth arity
+(defn foo
+  "I have two arities."
+  ([x]
+   (foo x 1))
+  ([x y]
+   (+ x y)))
+
+;; okay - the other arities are applications of the two-arity
+(defn foo
+  "I have two arities."
+  ([x y]
+   (+ x y))
+  ([x]
+   (foo x 1))
+  ([x y z &amp; more]
+   (reduce foo (foo x (foo y z)) more)))
+
+;; bad - unordered for no apparent reason
+(defn foo
+  ([x] 1)
+  ([x y z] (foo x (foo y z)))
+  ([x y] (+ x y))
+  ([w x y z &amp; more] (reduce foo (foo w (foo x (foo y z))) more)))
+</code></pre>
+</li>
+<li>
+<p><a name="align-docstring-lines"></a>
+缩进多行 <code>docstring</code> 的每一行。
+<sup>[<a href="#align-docstring-lines">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(defn foo
+  "Hello there. This is
+  a multi-line docstring."
+  []
+  (bar))
+
+;; bad
+(defn foo
+  "Hello there. This is
+a multi-line docstring."
+  []
+  (bar))
+</code></pre>
+</li>
+<li>
+<p><a name="crlf"></a>
+使用 Unix 风格的换行符。
+（*BSD/Solaris/Linux/OS X 系统的用户不需担心，Windows 用户则要格外小心。）
+<sup>[<a href="#crlf">link</a>]</sup></p>
+<ul>
+<li>如果你使用 Git，可用下面这个配置来保护你的项目不被 Windows 的换行符干扰：</li>
+</ul>
+<pre><code class="language-bash">bash$ git config --global core.autocrlf true
+</code></pre>
+</li>
+<li>
+<p><a name="bracket-spacing"></a>
+如果段落后边紧跟着左括号 (<code>(</code>, <code>{</code> 和
+<code>[</code>) 或者前面紧跟着右括号 (<code>)</code>, <code>}</code> and <code>]</code>),
+使用空格进行分隔。 相反地, 左括号的右边和右括号的左边忽略空格。
+<sup>[<a href="#bracket-spacing">link</a>]</sup></p>
+</li>
+</ul>
+<pre><code class="language-.language-clojure">    ;; good
+    (foo (bar baz) quux)
+
+    ;; bad
+    (foo(bar baz)quux)
+    (foo ( bar baz ) quux)
+</code></pre>
+<p> </p>
+<blockquote>
+<p>语法糖会导致分号癌。<br>
+-- Alan Perlis</p>
+</blockquote>
+<ul>
+<li>
+<p><a name="no-commas-for-seq-literals"></a>
+集合字面量的元素之间，不要使用逗号。
+<sup>[<a href="#no-commas-for-seq-literals">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+[1 2 3]
+(1 2 3)
+
+;; bad
+[1, 2, 3]
+(1, 2, 3)
+</code></pre>
+</li>
+<li>
+<p><a name="opt-commas-in-map-literals"></a>
+在 <code>map</code> 字面量中适当的使用括号，可以提高 <code>map</code> 的可读性。
+<sup>[<a href="#opt-commas-in-map-literals">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+{:name "Bruce Wayne" :alter-ego "Batman"}
+
+;; good and arguably a bit more readable
+{:name "Bruce Wayne"
+ :alter-ego "Batman"}
+
+;; good and arguably more compact
+{:name "Bruce Wayne", :alter-ego "Batman"}
+</code></pre>
+</li>
+<li>
+<p><a name="gather-trailing-parens"></a>
+尾部的括号保持在同一行。
+<sup>[<a href="#gather-trailing-parens">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good; single line
+(when something
+  (something-else))
+
+;; bad; distinct lines
+(when something
+  (something-else)
+)
+</code></pre>
+</li>
+<li>
+<p><a name="empty-lines-between-top-level-forms"></a>
+顶级 <code>form</code> 之间使用空行分隔。
+<sup>[<a href="#empty-lines-between-top-level-forms">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(def x ...)
+
+(defn foo ...)
+
+;; bad
+(def x ...)
+(defn foo ...)
+</code></pre>
+</li>
+</ul>
+<p>这个规则的一个例外是，将相关的 <code>def</code> 放在一起。</p>
+<pre><code class="language-.language-clojure">;; good
+(def min-rows 10)
+(def max-rows 20)
+(def min-cols 15)
+(def max-cols 30)
+</code></pre>
+<ul>
+<li>
+<p><a name="no-blank-lines-within-def-forms"></a>
+函数或者宏的定义中不要有空行，一个例外的情况是，
+使用空行指示出成对结构的分组，例如 <code>let</code>, <code>cond</code>。
+<sup>[<a href="#no-blank-lines-within-def-forms">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="80-character-limits"></a>
+每行尽量避免超过80个字符。
+<sup>[<a href="#80-character-limits">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="no-trailing-whitespace"></a>
+避免尾部空白符。
+<sup>[<a href="#no-trailing-whitespace">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="one-file-per-namespace"></a>
+每一文件使用单独的命名空间。
+<sup>[<a href="#one-file-per-namespace">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="comprehensive-ns-declaration"></a>
+使用一个全面的 <code>ns</code> <code>form</code> 来定义命名空间，
+包含 <code>refer</code>, <code>require</code>, <code>import</code>，并且按照前面的顺序。
+<sup>[<a href="#comprehensive-ns-declaration">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">(ns examples.ns
+  (:refer-clojure :exclude [next replace remove])
+  (:require [clojure.string :as s :refer [blank?]]
+            [clojure.set :as set]
+            [clojure.java.shell :as sh])
+  (:import java.util.Date
+           java.text.SimpleDateFormat
+           [java.util.concurrent Executors
+                                 LinkedBlockingQueue]))
+</code></pre>
+</li>
+<li>
+<p><a name="prefer-require-over-use"></a>
+在 <code>ns</code> <code>form</code> 中，使用 <code>:require :as</code> 优于 <code>:require :refer</code>，
+<code>:require :refer</code> 优于 <code>:refer :all</code>，不建议使用 <code>:use</code>。
+<sup>[<a href="#prefer-require-over-use">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(ns examples.ns
+  (:require [clojure.zip :as zip]))
+
+;; good
+(ns examples.ns
+  (:require [clojure.zip :refer [lefts rights]))
+
+;; acceptable as warranted
+(ns examples.ns
+  (:require [clojure.zip :refer :all]))
+
+;; bad
+(ns examples.ns
+  (:use clojure.zip))
+</code></pre>
+</li>
+<li>
+<p><a name="no-single-segment-namespaces"></a>
+避免单段命名空间。
+<sup>[<a href="#no-single-segment-namespaces">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(ns example.ns)
+
+;; bad
+(ns example)
+</code></pre>
+</li>
+<li>
+<p><a name="namespaces-with-5-segments-max"></a>
+避免使用过长的命名空间 (例如，超过5段的命名) 。
+<sup>[<a href="#namespaces-with-5-segments-max">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="10-loc-per-fn-limit"></a>
+函数的定义避免超过 10 行 (LOC)。大多数情况下，函数的定义应该少于 5 行 (LOC) 。
+<sup>[<a href="#10-loc-per-fn-limit">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="4-positional-fn-params-limit"></a>
+避免超过 3 个或者 4 个位置参数的参数列表。
+<sup>[<a href="#4-positional-fn-params-limit">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="forward-references"></a>
+避免向前引用。向前引用在某些情况下是必要的，但是这些情况在实践中微乎其微。
+<sup>[<a href="#forward-references">link</a>]</sup></p>
+</li>
+</ul>
+<h2>语法</h2>
+<ul>
+<li>
+<p><a name="ns-fns-only-in-repl"></a>
+避免使用 <code>require</code> 和 <code>refer</code> 等命名空间操作函数，
+在 <code>REPL</code> 的环境之外，这些函数是完全没有必要的。
+<sup>[<a href="#ns-fns-only-in-repl">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="declare"></a>
+必要时使用 <code>declare</code> 声明向前引用。
+<sup>[<a href="#declare">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="higher-order-fns"></a>
+倾向于使用类似 <code>map</code> 和 <code>loop/recur</code> 等高阶函数。
+<sup>[<a href="#higher-order-fns">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="pre-post-conditions"></a>
+倾向于使用前置和后置条件进行函数的检查。
+<sup>[<a href="#pre-post-conditions">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(defn foo [x]
+  {:pre [(pos? x)]}
+  (bar x))
+
+;; bad
+(defn foo [x]
+  (if (pos? x)
+    (bar x)
+    (throw (IllegalArgumentException. "x must be a positive number!")))
+</code></pre>
+</li>
+<li>
+<p><a name="dont-def-vars-inside-fns"></a>
+不要在函数内定义 <code>var</code> 。
+<sup>[<a href="#dont-def-vars-inside-fns">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; very bad
+(defn foo []
+  (def x 5)
+  ...)
+</code></pre>
+</li>
+<li>
+<p><a name="dont-shadow-clojure-core"></a>
+避免局部绑定覆盖 <code>clojure.core</code> 中的命名。
+<sup>[<a href="#dont-shadow-clojure-core">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; bad - you're forced to use clojure.core/map fully qualified inside
+(defn foo [map]
+  ...)
+</code></pre>
+</li>
+<li>
+<p><a name="alter-var"></a>
+使用 <code>alter-var-root</code> 代替 <code>def</code> 修改 <code>var</code> 的值。
+<sup><a href="#alter-var">[link]</a></sup></p>
+<pre><code class="language-.language-clojure">;; good
+(def thing 1) ; value of thing is now 1
+; do some stuff with thing
+(alter-var-root #'thing (constantly nil)) ; value of thing is now nil
+
+;; bad
+(def thing 1)
+; do some stuff with thing
+(def thing nil)
+; value of thing is now nil
+</code></pre>
+</li>
+<li>
+<p><a name="nil-punning"></a>
+使用 <code>seq</code> 作为终止条件去测试序列是否为空 (这种技术通常被称为 <em>nil punning</em>)。
+<sup>[<a href="#nil-punning">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(defn print-seq [s]
+  (when (seq s)
+    (prn (first s))
+    (recur (rest s))))
+
+;; bad
+(defn print-seq [s]
+  (when-not (empty? s)
+    (prn (first s))
+    (recur (rest s))))
+</code></pre>
+</li>
+<li>
+<p><a name="to-vector"></a>
+当你需要将序列 (<code>sequence</code>) 转换为矢量 (<code>vector</code>) 时，使用 <code>vec</code> 优于 <code>into</code>。
+<sup>[<a href="#to-vector">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(vec some-seq)
+
+;; bad
+(into [] some-seq)
+</code></pre>
+</li>
+<li>
+<p><a name="when-instead-of-single-branch-if"></a>
+使用 <code>when</code> 代替 <code>(if ... (do ...))</code>。
+<sup>[<a href="#when-instead-of-single-branch-if">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(when pred
+  (foo)
+  (bar))
+
+;; bad
+(if pred
+  (do
+    (foo)
+    (bar)))
+</code></pre>
+</li>
+<li>
+<p><a name="if-let"></a>
+使用 <code>if-let</code> 代替 <code>let</code> + <code>if</code>。
+<sup>[<a href="#if-let">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(if-let [result (foo x)]
+  (something-with result)
+  (something-else))
+
+;; bad
+(let [result (foo x)]
+  (if result
+    (something-with result)
+    (something-else)))
+</code></pre>
+</li>
+<li>
+<p><a name="when-let"></a>
+使用 <code>when-let</code> 代替 <code>let</code> + <code>when</code>。
+<sup>[<a href="#when-let">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(when-let [result (foo x)]
+  (do-something-with result)
+  (do-something-more-with result))
+
+;; bad
+(let [result (foo x)]
+  (when result
+    (do-something-with result)
+    (do-something-more-with result)))
+</code></pre>
+</li>
+<li>
+<p><a name="if-not"></a>
+使用 <code>if-not</code> 代替 <code>(if (not ...) ...)</code>。
+<sup>[<a href="#if-not">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(if-not pred
+  (foo))
+
+;; bad
+(if (not pred)
+  (foo))
+</code></pre>
+</li>
+<li>
+<p><a name="when-not"></a>
+使用 <code>when-not</code> 代替 <code>(when (not ...) ...)</code>。
+<sup>[<a href="#when-not">link</a>]</sup></p>
+</li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(when-not pred
+    (foo)
+    (bar))
+
+;; bad
+(when (not pred)
+    (foo)
+    (bar))
+</code></pre>
+<ul>
+<li><a name="when-not-instead-of-single-branch-if-not"></a>
+使用 <code>when-not</code> 代替 <code>(if-not ... (do ...))</code>。
+<sup>[<a href="#when-not-instead-of-single-branch-if-not">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(when-not pred
+    (foo)
+    (bar))
+
+;; bad
+(if-not pred
+    (do
+    (foo)
+    (bar)))
+</code></pre>
+<ul>
+<li><a name="not-equal"></a>
+使用 <code>not=</code> 代替 <code>(not (= ...))</code>。
+<sup>[<a href="#not-equal">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(not= foo bar)
+
+;; bad
+(not (= foo bar))
+</code></pre>
+<ul>
+<li><a name="printf"></a>
+使用 <code>printf</code> 代替 <code>(print (format) ...)</code>。
+<sup>[<a href="#printf">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(printf "Hello, %s!\n" name)
 
 ;; ok
-&#40;println &#40;format &quot;Hello, %s!&quot; name&#41;&#41;
-</code></pre></li><li><a name="multiple-arity-of-gt-and-ls-fns"></a>  当进行比较的时候，记住，Clojure 的函数，例如 <code>&lt;</code>, <code>&gt;</code> 等，可以接受多个参数。  <sup><a href='#multiple-arity-of-gt-and-ls-fns'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;&lt; 5 x 10&#41;
+(println (format "Hello, %s!" name))
+</code></pre>
+<ul>
+<li><a name="multiple-arity-of-gt-and-ls-fns"></a>
+当进行比较的时候，记住，Clojure 的函数，例如 <code>&lt;</code>, <code>&gt;</code> 等，可以接受多个参数。
+<sup>[<a href="#multiple-arity-of-gt-and-ls-fns">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(&lt; 5 x 10)
 
 ;; bad
-&#40;and &#40;&gt; x 5&#41; &#40;&lt; x 10&#41;&#41;
-</code></pre></li><li><a name="single-param-fn-literal"></a>  当函数字面量只有一个参数的时候，使用 <code>%</code> 优于 <code>%1</code>。  <sup><a href='#single-param-fn-literal'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-#&#40;Math/round %&#41;
+(and (&gt; x 5) (&lt; x 10))
+</code></pre>
+<ul>
+<li><a name="single-param-fn-literal"></a>
+当函数字面量只有一个参数的时候，使用 <code>%</code> 优于 <code>%1</code>。
+<sup>[<a href="#single-param-fn-literal">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+#(Math/round %)
 
 ;; bad
-#&#40;Math/round %1&#41;
-</code></pre></li><li><a name="multiple-params-fn-literal"></a>  当函数字面量多于一个参数的时候，使用 <code>%1</code> 优于 <code>%</code>。  <sup><a href='#multiple-params-fn-literal'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-#&#40;Math/pow %1 %2&#41;
+#(Math/round %1)
+</code></pre>
+<ul>
+<li><a name="multiple-params-fn-literal"></a>
+当函数字面量多于一个参数的时候，使用 <code>%1</code> 优于 <code>%</code>。
+<sup>[<a href="#multiple-params-fn-literal">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+#(Math/pow %1 %2)
 
 ;; bad
-#&#40;Math/pow % %2&#41;
-</code></pre></li><li><a name="no-useless-anonymous-fns"></a>  在非必要的情况下，不要把函数包裹在匿名函数中。  <sup><a href='#no-useless-anonymous-fns'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;filter even? &#40;range 1 10&#41;&#41;
+#(Math/pow % %2)
+</code></pre>
+<ul>
+<li><a name="no-useless-anonymous-fns"></a>
+在非必要的情况下，不要把函数包裹在匿名函数中。
+<sup>[<a href="#no-useless-anonymous-fns">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(filter even? (range 1 10))
 
 ;; bad
-&#40;filter #&#40;even? %&#41; &#40;range 1 10&#41;&#41;
-</code></pre></li><li><a name="no-multiple-forms-fn-literals"></a>  当函数的定义多于一个 <code>form</code> 时，不要使用函数字面量。  <sup><a href='#no-multiple-forms-fn-literals'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;fn &#91;x&#93;
-    &#40;println x&#41;
-    &#40;&#42; x 2&#41;&#41;
+(filter #(even? %) (range 1 10))
+</code></pre>
+<ul>
+<li><a name="no-multiple-forms-fn-literals"></a>
+当函数的定义多于一个 <code>form</code> 时，不要使用函数字面量。
+<sup>[<a href="#no-multiple-forms-fn-literals">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(fn [x]
+    (println x)
+    (* x 2))
 
-;; bad &#40;you need an explicit do form&#41;
-#&#40;do &#40;println %&#41;
-        &#40;&#42; % 2&#41;&#41;
-</code></pre></li><li><a name="complement"></a>  倾向使用 <code>complement</code> 而不是匿名函数。  <sup><a href='#complement'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;filter &#40;complement some-pred?&#41; coll&#41;
+;; bad (you need an explicit do form)
+#(do (println %)
+        (* % 2))
+</code></pre>
+<ul>
+<li><a name="complement"></a>
+倾向使用 <code>complement</code> 而不是匿名函数。
+<sup>[<a href="#complement">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(filter (complement some-pred?) coll)
 
 ;; bad
-&#40;filter #&#40;not &#40;some-pred? %&#41;&#41; coll&#41;
-</code></pre></li></ul><pre><code>如果反向谓词作为一个独立函数存在时（例如，&lt;code&gt;event?&lt;/code&gt; 和 &lt;code&gt;odd?&lt;/code&gt;），
-这条规则可以忽略。</code></pre><ul><li><a name="comp"></a>  利用 <code>comp</code> 让代码变得简洁。  <sup><a href='#comp'>[link</a>]</sup><pre><code class=".language-clojure">;; Assuming `&#40;:require &#91;clojure.string :as str&#93;&#41;`...
+(filter #(not (some-pred? %)) coll)
+</code></pre>
+<pre><code>如果反向谓词作为一个独立函数存在时（例如，`event?` 和 `odd?`），
+这条规则可以忽略。
+</code></pre>
+<ul>
+<li><a name="comp"></a>
+利用 <code>comp</code> 让代码变得简洁。
+<sup>[<a href="#comp">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; Assuming `(:require [clojure.string :as str])`...
 
 ;; good
-&#40;map #&#40;str/capitalize &#40;str/trim %&#41;&#41; &#91;&quot;top &quot; &quot; test &quot;&#93;&#41;
+(map #(str/capitalize (str/trim %)) ["top " " test "])
 
 ;; better
-&#40;map &#40;comp str/capitalize str/trim&#41; &#91;&quot;top &quot; &quot; test &quot;&#93;&#41;
-</code></pre></li><li><a name="partial"></a>  利用 <code>partial</code> 让代码变得简洁。  <sup><a href='#partial'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;map #&#40;+ 5 %&#41; &#40;range 1 10&#41;&#41;
+(map (comp str/capitalize str/trim) ["top " " test "])
+</code></pre>
+<ul>
+<li><a name="partial"></a>
+利用 <code>partial</code> 让代码变得简洁。
+<sup>[<a href="#partial">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(map #(+ 5 %) (range 1 10))
 
-;; &#40;arguably&#41; better
-&#40;map &#40;partial + 5&#41; &#40;range 1 10&#41;&#41;
-</code></pre></li><li><a name="threading-macros"></a>  当 <code>form</code> 深度嵌套式，使用 <code>threading</code>宏 <code>-&gt;</code> (<code>thread-first</code>)  和 <code>-&gt;&gt;</code> (<code>thread-last</code>)。  <sup><a href='#threading-macros'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;-&gt; &#91;1 2 3&#93;
+;; (arguably) better
+(map (partial + 5) (range 1 10))
+</code></pre>
+<ul>
+<li><a name="threading-macros"></a>
+当 <code>form</code> 深度嵌套式，使用 <code>threading</code>宏 <code>-&gt;</code> (<code>thread-first</code>)
+和 <code>-&gt;&gt;</code> (<code>thread-last</code>)。
+<sup>[<a href="#threading-macros">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(-&gt; [1 2 3]
     reverse
-    &#40;conj 4&#41;
-    prn&#41;
+    (conj 4)
+    prn)
 
 ;; not as good
-&#40;prn &#40;conj &#40;reverse &#91;1 2 3&#93;&#41;
-            4&#41;&#41;
+(prn (conj (reverse [1 2 3])
+            4))
 
 ;; good
-&#40;-&gt;&gt; &#40;range 1 10&#41;
-        &#40;filter even?&#41;
-        &#40;map &#40;partial &#42; 2&#41;&#41;&#41;
+(-&gt;&gt; (range 1 10)
+        (filter even?)
+        (map (partial * 2)))
 
 ;; not as good
-&#40;map &#40;partial &#42; 2&#41;
-        &#40;filter even? &#40;range 1 10&#41;&#41;&#41;
-</code></pre></li><li><a name="else-keyword-in-cond"></a>  在 <code>cond</code> 中使用 <code>:else</code> 捕获所有没有匹配的表达式。  <sup><a href='#else-keyword-in-cond'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;cond
-    &#40;&lt; n 0&#41; &quot;negative&quot;
-    &#40;&gt; n 0&#41; &quot;positive&quot;
-    :else &quot;zero&quot;&#41;&#41;
+(map (partial * 2)
+        (filter even? (range 1 10)))
+</code></pre>
+<ul>
+<li><a name="else-keyword-in-cond"></a>
+在 <code>cond</code> 中使用 <code>:else</code> 捕获所有没有匹配的表达式。
+<sup>[<a href="#else-keyword-in-cond">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(cond
+    (&lt; n 0) "negative"
+    (&gt; n 0) "positive"
+    :else "zero"))
 
 ;; bad
-&#40;cond
-    &#40;&lt; n 0&#41; &quot;negative&quot;
-    &#40;&gt; n 0&#41; &quot;positive&quot;
-    true &quot;zero&quot;&#41;&#41;
-</code></pre></li><li><a name="condp"></a>  当谓词或表达式没有变化时，使用 <code>condp</code> 优于 <code>cond</code>。  <sup><a href='#condp'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;cond
-    &#40;= x 10&#41; :ten
-    &#40;= x 20&#41; :twenty
-    &#40;= x 30&#41; :thirty
-    :else :dunno&#41;
+(cond
+    (&lt; n 0) "negative"
+    (&gt; n 0) "positive"
+    true "zero"))
+</code></pre>
+<ul>
+<li><a name="condp"></a>
+当谓词或表达式没有变化时，使用 <code>condp</code> 优于 <code>cond</code>。
+<sup>[<a href="#condp">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(cond
+    (= x 10) :ten
+    (= x 20) :twenty
+    (= x 30) :thirty
+    :else :dunno)
 
 ;; much better
-&#40;condp = x
+(condp = x
     10 :ten
     20 :twenty
     30 :thirty
-    :dunno&#41;
-</code></pre></li><li><a name="case"></a>  当测试表达式在编译时是常量时，使用 <code>case</code> 优于 <code>cond</code> 和 <code>condp</code>。  <sup><a href='#case'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;cond
-    &#40;= x 10&#41; :ten
-    &#40;= x 20&#41; :twenty
-    &#40;= x 30&#41; :forty
-    :else :dunno&#41;
+    :dunno)
+</code></pre>
+<ul>
+<li><a name="case"></a>
+当测试表达式在编译时是常量时，使用 <code>case</code> 优于 <code>cond</code> 和 <code>condp</code>。
+<sup>[<a href="#case">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(cond
+    (= x 10) :ten
+    (= x 20) :twenty
+    (= x 30) :forty
+    :else :dunno)
 
 ;; better
-&#40;condp = x
+(condp = x
     10 :ten
     20 :twenty
     30 :forty
-    :dunno&#41;
+    :dunno)
 
 ;; best
-&#40;case x
+(case x
     10 :ten
     20 :twenty
     30 :forty
-    :dunno&#41;
-</code></pre></li><li><a name="shor-forms-in-cond"></a>  在 <code>cond</code> 及相关的宏中，使用简短的 <code>form</code>，  否则应该使用注释或者空行进行分组来进行视觉上的提示。  <sup><a href='#shor-forms-in-cond'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;cond
-    &#40;test1&#41; &#40;action1&#41;
-    &#40;test2&#41; &#40;action2&#41;
-    :else   &#40;default-action&#41;&#41;
+    :dunno)
+</code></pre>
+<ul>
+<li><a name="shor-forms-in-cond"></a>
+在 <code>cond</code> 及相关的宏中，使用简短的 <code>form</code>，
+否则应该使用注释或者空行进行分组来进行视觉上的提示。
+<sup>[<a href="#shor-forms-in-cond">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(cond
+    (test1) (action1)
+    (test2) (action2)
+    :else   (default-action))
 
 ;; ok-ish
-&#40;cond
+(cond
     ;; test case 1
-    &#40;test1&#41;
-    &#40;long-function-name-which-requires-a-new-line
-    &#40;complicated-sub-form
-        &#40;-&gt; 'which-spans multiple-lines&#41;&#41;&#41;
+    (test1)
+    (long-function-name-which-requires-a-new-line
+    (complicated-sub-form
+        (-&gt; 'which-spans multiple-lines)))
 
     ;; test case 2
-    &#40;test2&#41;
-    &#40;another-very-long-function-name
-    &#40;yet-another-sub-form
-        &#40;-&gt; 'which-spans multiple-lines&#41;&#41;&#41;
+    (test2)
+    (another-very-long-function-name
+    (yet-another-sub-form
+        (-&gt; 'which-spans multiple-lines)))
 
     :else
-    &#40;the-fall-through-default-case
-    &#40;which-also-spans 'multiple
-                        'lines&#41;&#41;&#41;
-</code></pre></li><li><a name="set-as-predicate"></a>  适当使用 <code>set</code> 作为谓词。  <sup><a href='#set-as-predicate'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;remove #{1} &#91;0 1 2 3 4 5&#93;&#41;
+    (the-fall-through-default-case
+    (which-also-spans 'multiple
+                        'lines)))
+</code></pre>
+<ul>
+<li><a name="set-as-predicate"></a>
+适当使用 <code>set</code> 作为谓词。
+<sup>[<a href="#set-as-predicate">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(remove #{1} [0 1 2 3 4 5])
 
 ;; bad
-&#40;remove #&#40;= % 1&#41; &#91;0 1 2 3 4 5&#93;&#41;
+(remove #(= % 1) [0 1 2 3 4 5])
 
 ;; good
-&#40;count &#40;filter #{\a \e \i \o \u} &quot;mary had a little lamb&quot;&#41;&#41;
+(count (filter #{\a \e \i \o \u} "mary had a little lamb"))
 
 ;; bad
-&#40;count &#40;filter #&#40;or &#40;= % \a&#41;
-                    &#40;= % \e&#41;
-                    &#40;= % \i&#41;
-                    &#40;= % \o&#41;
-                    &#40;= % \u&#41;&#41;
-                &quot;mary had a little lamb&quot;&#41;&#41;
-</code></pre></li><li><a name="inc-and-dec"></a>  使用 <code>&#40;inc x&#41;</code> 和 <code>&#40;dec x&#41;</code> 代替 <code>&#40;+ x 1&#41;</code> 和 <code>&#40;- x 1&#41;</code>。  <sup><a href='#inc-and-dec'>[link</a>]</sup></li><li><a name="pos-and-neg"></a>  使用 <code>&#40;pos? x&#41;</code>, <code>&#40;neg? x&#41;</code> 和 <code>&#40;zero? x&#41;</code> 代替 <code>&#40;&gt; x 0&#41;</code>, <code>&#40;&lt; x 0&#41;</code> 和 <code>&#40;= x 0&#41;</code>。  <sup><a href='#pos-and-neg'>[link</a>]</sup></li><li><a name="list-star-instead-of-nested-cons"></a>  使用 <code>list&#42;</code> 代替一系列嵌套 <code>cons</code> 调用。  <sup><a href='#list-star-instead-of-nested-cons'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;list&#42; 1 2 3 &#91;4 5&#93;&#41;
+(count (filter #(or (= % \a)
+                    (= % \e)
+                    (= % \i)
+                    (= % \o)
+                    (= % \u))
+                "mary had a little lamb"))
+</code></pre>
+<ul>
+<li>
+<p><a name="inc-and-dec"></a>
+使用 <code>(inc x)</code> 和 <code>(dec x)</code> 代替 <code>(+ x 1)</code> 和 <code>(- x 1)</code>。
+<sup>[<a href="#inc-and-dec">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="pos-and-neg"></a>
+使用 <code>(pos? x)</code>, <code>(neg? x)</code> 和 <code>(zero? x)</code> 代替 <code>(&gt; x 0)</code>, <code>(&lt; x 0)</code> 和 <code>(= x 0)</code>。
+<sup>[<a href="#pos-and-neg">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="list-star-instead-of-nested-cons"></a>
+使用 <code>list*</code> 代替一系列嵌套 <code>cons</code> 调用。
+<sup>[<a href="#list-star-instead-of-nested-cons">link</a>]</sup></p>
+</li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(list* 1 2 3 [4 5])
 
 ;; bad
-&#40;cons 1 &#40;cons 2 &#40;cons 3 &#91;4 5&#93;&#41;&#41;&#41;
-</code></pre></li><li><a name="sugared-java-interop"></a>  使用 <code>java</code> 语法糖 <code>form</code>。  <sup><a href='#sugared-java-interop'>[link</a>]</sup><pre><code class=".language-clojure">;;; object creation
+(cons 1 (cons 2 (cons 3 [4 5])))
+</code></pre>
+<ul>
+<li><a name="sugared-java-interop"></a>
+使用 <code>java</code> 语法糖 <code>form</code>。
+<sup>[<a href="#sugared-java-interop">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;;; object creation
 ;; good
-&#40;java.util.ArrayList. 100&#41;
+(java.util.ArrayList. 100)
 
 ;; bad
-&#40;new java.util.ArrayList 100&#41;
+(new java.util.ArrayList 100)
 
 ;;; static method invocation
 ;; good
-&#40;Math/pow 2 10&#41;
+(Math/pow 2 10)
 
 ;; bad
-&#40;. Math pow 2 10&#41;
+(. Math pow 2 10)
 
 ;;; instance method invocation
 ;; good
-&#40;.substring &quot;hello&quot; 1 3&#41;
+(.substring "hello" 1 3)
 
 ;; bad
-&#40;. &quot;hello&quot; substring 1 3&#41;
+(. "hello" substring 1 3)
 
 ;;; static field access
 ;; good
-Integer/MAX&#95;VALUE
+Integer/MAX_VALUE
 
 ;; bad
-&#40;. Integer MAX&#95;VALUE&#41;
+(. Integer MAX_VALUE)
 
 ;;; instance field access
 ;; good
-&#40;.someField some-object&#41;
+(.someField some-object)
 
 ;; bad
-&#40;. some-object someField&#41;
-</code></pre></li><li><a name="compact-metadata-notation-for-true-flags"></a>  当 <code>metadata</code> 槽中的元素仅仅是键为 <code>keyword</code>，  值为布尔值 <code>true</code>的键值对时，使用 <code>metadata</code> 的简写形式。  <sup><a href='#compact-metadata-notation-for-true-flags'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;def &#94;:private a 5&#41;
+(. some-object someField)
+</code></pre>
+<ul>
+<li><a name="compact-metadata-notation-for-true-flags"></a>
+当 <code>metadata</code> 槽中的元素仅仅是键为 <code>keyword</code>，
+值为布尔值 <code>true</code>的键值对时，使用 <code>metadata</code> 的简写形式。
+<sup>[<a href="#compact-metadata-notation-for-true-flags">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(def ^:private a 5)
 
 ;; bad
-&#40;def &#94;{:private true} a 5&#41;
-</code></pre></li><li><a name="private"></a>  指明代码中的私有部分。  <sup><a href='#private'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;defn- private-fun &#91;&#93; ...&#41;
+(def ^{:private true} a 5)
+</code></pre>
+<ul>
+<li><a name="private"></a>
+指明代码中的私有部分。
+<sup>[<a href="#private">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(defn- private-fun [] ...)
 
-&#40;def &#94;:private private-var ...&#41;
+(def ^:private private-var ...)
 
 ;; bad
-&#40;defn private-fun &#91;&#93; ...&#41; ; not private at all
+(defn private-fun [] ...) ; not private at all
 
-&#40;defn &#94;:private private-fun &#91;&#93; ...&#41; ; overly verbose
+(defn ^:private private-fun [] ...) ; overly verbose
 
-&#40;def private-var ...&#41; ; not private at all
-</code></pre></li><li><a name="access-private-var"></a>  通过 <code>@#'some.ns/var</code> 形式的 <code>form</code> 访问私有 <code>var</code> (例如，进行测试) 。  <sup><a href='#access-private-var'>[link</a>]</sup></li><li><a name="attach-metadata-carefully"></a>  注意 <code>metadata</code> 的正确附加对象。  <sup><a href='#attach-metadata-carefully'>[link</a>]</sup><pre><code class=".language-clojure">;; we attach the metadata to the var referenced by `a`
-&#40;def &#94;:private a {}&#41;
-&#40;meta a&#41; ;=&gt; nil
-&#40;meta #'a&#41; ;=&gt; {:private true}
+(def private-var ...) ; not private at all
+</code></pre>
+<ul>
+<li>
+<p><a name="access-private-var"></a>
+通过 <code>@#'some.ns/var</code> 形式的 <code>form</code> 访问私有 <code>var</code> (例如，进行测试) 。
+<sup>[<a href="#access-private-var">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="attach-metadata-carefully"></a>
+注意 <code>metadata</code> 的正确附加对象。
+<sup>[<a href="#attach-metadata-carefully">link</a>]</sup></p>
+</li>
+</ul>
+<pre><code class="language-.language-clojure">;; we attach the metadata to the var referenced by `a`
+(def ^:private a {})
+(meta a) ;=&gt; nil
+(meta #'a) ;=&gt; {:private true}
 
 ;; we attach the metadata to the empty hash-map value
-&#40;def a &#94;:private {}&#41;
-&#40;meta a&#41; ;=&gt; {:private true}
-&#40;meta #'a&#41; ;=&gt; nil
-</code></pre></li></ul><h2>命名</h2><blockquote><p> 程序设计的真正难题是替事物命名以及缓存失效。<br/> </p><p> &ndash; Phil Karlton </p></blockquote><ul><li><a name="ns-naming-schemas"></a>    使用下面两种模式对命名空间进行命名:    <sup><a href='#ns-naming-schemas'>[link</a>]</sup><ul><li><code>project.module</code></li><li><code>organization.project.module</code></li></ul></li><li><a name="lisp-case-ns"></a>    命名空间片段使用 <code>Lisp</code> 小写 (<code>lisp-case</code>) (例如，<code>bruce.project-euler</code>)。    <sup><a href='#lisp-case-ns'>[link</a>]</sup></li><li><a name="lisp-case"></a>    函数，变量名使用 <code>Lisp</code> 小写 (<code>lisp-case</code>)。    <sup><a href='#lisp-case'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;def some-var ...&#41;
-&#40;defn some-fun ...&#41;
+(def a ^:private {})
+(meta a) ;=&gt; {:private true}
+(meta #'a) ;=&gt; nil
+</code></pre>
+<h2>命名</h2>
+<blockquote>
+<p>程序设计的真正难题是替事物命名以及缓存失效。<br/></p>
+<p>-- Phil Karlton</p>
+</blockquote>
+<ul>
+<li>
+<p><a name="ns-naming-schemas"></a>
+使用下面两种模式对命名空间进行命名:
+<sup>[<a href="#ns-naming-schemas">link</a>]</sup></p>
+<ul>
+<li><code>project.module</code></li>
+<li><code>organization.project.module</code></li>
+</ul>
+</li>
+<li>
+<p><a name="lisp-case-ns"></a>
+命名空间片段使用 <code>Lisp</code> 小写 (<code>lisp-case</code>) (例如，<code>bruce.project-euler</code>)。
+<sup>[<a href="#lisp-case-ns">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="lisp-case"></a>
+函数，变量名使用 <code>Lisp</code> 小写 (<code>lisp-case</code>)。
+<sup>[<a href="#lisp-case">link</a>]</sup></p>
+</li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(def some-var ...)
+(defn some-fun ...)
 
 ;; bad
-&#40;def someVar ...&#41;
-&#40;defn somefun ...&#41;
-&#40;def some&#95;fun ...&#41;
-</code></pre></li><li><a name="CamelCase-for-protocols-records-structs-and-types"></a>    协议 (<code>protocols</code>)，纪录 (<code>records</code>)，结构 (<code>structs</code>)，    和类型 (<code>types</code>)， 使用驼峰式大小写（<code>CamelCase</code>）    （HTTP、RFC、XML 等首字母缩写应该仍旧保持大写形式）。    <sup><a href='#CamelCase-for-protocols-records-structs-and-types'>[link</a>]</sup></li><li><a name="pred-with-question-mark"></a>    谓词方法的名称 (返回布尔值的方法) 应当以问号结尾 (例如，<code>even?</code>)。    <sup><a href='#pred-with-question-mark'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;defn palindrome? ...&#41;
+(def someVar ...)
+(defn somefun ...)
+(def some_fun ...)
+</code></pre>
+<ul>
+<li>
+<p><a name="CamelCase-for-protocols-records-structs-and-types"></a>
+协议 (<code>protocols</code>)，纪录 (<code>records</code>)，结构 (<code>structs</code>)，
+和类型 (<code>types</code>)， 使用驼峰式大小写（<code>CamelCase</code>）
+（HTTP、RFC、XML 等首字母缩写应该仍旧保持大写形式）。
+<sup>[<a href="#CamelCase-for-protocols-records-structs-and-types">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="pred-with-question-mark"></a>
+谓词方法的名称 (返回布尔值的方法) 应当以问号结尾 (例如，<code>even?</code>)。
+<sup>[<a href="#pred-with-question-mark">link</a>]</sup></p>
+</li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(defn palindrome? ...)
 
 ;; bad
-&#40;defn palindrome-p ...&#41; ; Common Lisp style
-&#40;defn is-palindrome ...&#41; ; Java style
-</code></pre></li><li><a name="changing-state-fns-with-exclamation-mark"></a>    <code>STM</code> 事务中非安全的方法或宏，名字以感叹号结尾 (例如，<code>reset!</code> ) 。    <sup><a href='#changing-state-fns-with-exclamation-mark'>[link</a>]</sup></li><li><a name="arrow-instead-of-to"></a>    转换方法的名称中，使用 <code>-&gt;</code> 代替 <code>to</code>。    <sup><a href='#arrow-instead-of-to'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;defn f-&gt;c ...&#41;
+(defn palindrome-p ...) ; Common Lisp style
+(defn is-palindrome ...) ; Java style
+</code></pre>
+<ul>
+<li>
+<p><a name="changing-state-fns-with-exclamation-mark"></a>
+<code>STM</code> 事务中非安全的方法或宏，名字以感叹号结尾 (例如，<code>reset!</code> ) 。
+<sup>[<a href="#changing-state-fns-with-exclamation-mark">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="arrow-instead-of-to"></a>
+转换方法的名称中，使用 <code>-&gt;</code> 代替 <code>to</code>。
+<sup>[<a href="#arrow-instead-of-to">link</a>]</sup></p>
+</li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(defn f-&gt;c ...)
 
 ;; not so good
-&#40;defn f-to-c ...&#41;
-</code></pre></li><li><a name="earmuffs-for-dynamic-vars"></a>    使用 <code>&#42;earmuffs&#42;</code> 为要重新绑定事物命名 (例如，动态全局变量)。    <sup><a href='#earmuffs-for-dynamic-vars'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;def &#94;:dynamic &#42;a&#42; 10&#41;
+(defn f-to-c ...)
+</code></pre>
+<ul>
+<li><a name="earmuffs-for-dynamic-vars"></a>
+使用 <code>*earmuffs*</code> 为要重新绑定事物命名 (例如，动态全局变量)。
+<sup>[<a href="#earmuffs-for-dynamic-vars">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(def ^:dynamic *a* 10)
 
 ;; bad
-&#40;def &#94;:dynamic a 10&#41;
-</code></pre></li><li><a name="dont-flag-constants"></a>    不要为常量使用特殊记号，除了特殊情况，所有的事物都应该假定为一个常量。    <sup><a href='#dont-flag-constants'>[link</a>]</sup></li><li><a name="underscore-for-unused-bindings"></a>    对于忽略没有被马上使用的解构对象 (<code>destructure targets</code>)    和形式参数 (<code>formal argument</code>)，使用 <code>&#95;</code> 进行命名。    <sup><a href='#underscore-for-unused-bindings'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-&#40;let &#91;&#91;a b &#95; c&#93; &#91;1 2 3 4&#93;&#93;
-    &#40;println a b c&#41;&#41;
+(def ^:dynamic a 10)
+</code></pre>
+<ul>
+<li>
+<p><a name="dont-flag-constants"></a>
+不要为常量使用特殊记号，除了特殊情况，所有的事物都应该假定为一个常量。
+<sup>[<a href="#dont-flag-constants">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="underscore-for-unused-bindings"></a>
+对于忽略没有被马上使用的解构对象 (<code>destructure targets</code>)
+和形式参数 (<code>formal argument</code>)，使用 <code>_</code> 进行命名。
+<sup>[<a href="#underscore-for-unused-bindings">link</a>]</sup></p>
+</li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+(let [[a b _ c] [1 2 3 4]]
+    (println a b c))
 
-&#40;dotimes &#91;&#95; 3&#93;
-    &#40;println &quot;Hello!&quot;&#41;&#41;
+(dotimes [_ 3]
+    (println "Hello!"))
 
 ;; bad
-&#40;let &#91;&#91;a b c d&#93; &#91;1 2 3 4&#93;&#93;
-    &#40;println a b d&#41;&#41;
+(let [[a b c d] [1 2 3 4]]
+    (println a b d))
 
-&#40;dotimes &#91;i 3&#93;
-    &#40;println &quot;Hello!&quot;&#41;&#41;
-</code></pre></li><li><a name="idiomatic-names"></a>    根据 <code>clojure.core</code> 中示例的惯例，例如，<code>pred</code> 和 <code>coll</code>，进行命名。    <sup><a href='#idiomatic-names'>[link</a>]</sup><ul><li>在函数中:<ul><li><code>f</code>, <code>g</code>, <code>h</code> - 函数输入</li><li><code>n</code> - 整数输入，通常代表大小</li><li><code>index</code>, <code>i</code> - 整数索引</li><li><code>x</code>, <code>y</code> - 数字</li><li><code>xs</code> - 序列</li><li><code>m</code> - 映射</li><li><code>s</code> - 字符串输入</li><li><code>re</code> - 正则表达式</li><li><code>coll</code> - 集合</li><li><code>pred</code> - 谓词闭包</li><li><code>&amp; more</code> - 变长参数</li><li><code>xf</code> - xform, a transducer</li></ul></li></ul></li></ul><pre><code>    在宏中:
-    &#42; `expr` - 表达式
-    &#42; `body` - 宏定义
-    &#42; `binding` - 宏绑定矢量</code></pre><h2>集合</h2><blockquote><p> 一百个函数去操作一个数据结构要优于十个函数去操作十个数据结构。  <br/>  &ndash; Alan J. Perlis </p></blockquote><ul><li><a name="avoid-lists"></a>  避免使用列表 (<code>lists</code>) 保存常用数据结构 (除非真的需要列表) 。  <sup><a href='#avoid-lists'>[link</a>]</sup></li><li><a name="keywords-for-hash-keys"></a>  倾向于使用关键字类型 (<code>keywords</code>) 作为哈希键。  <sup><a href='#keywords-for-hash-keys'>[link</a>]</sup><pre><code class=".language-clojure">;; good
-{:name &quot;Bruce&quot; :age 30}
+(dotimes [i 3]
+    (println "Hello!"))
+</code></pre>
+<ul>
+<li>
+<p><a name="idiomatic-names"></a>
+根据 <code>clojure.core</code> 中示例的惯例，例如，<code>pred</code> 和 <code>coll</code>，进行命名。
+<sup>[<a href="#idiomatic-names">link</a>]</sup></p>
+<ul>
+<li>
+<p>在函数中:</p>
+<ul>
+<li><code>f</code>, <code>g</code>, <code>h</code> - 函数输入</li>
+<li><code>n</code> - 整数输入，通常代表大小</li>
+<li><code>index</code>, <code>i</code> - 整数索引</li>
+<li><code>x</code>, <code>y</code> - 数字</li>
+<li><code>xs</code> - 序列</li>
+<li><code>m</code> - 映射</li>
+<li><code>s</code> - 字符串输入</li>
+<li><code>re</code> - 正则表达式</li>
+<li><code>coll</code> - 集合</li>
+<li><code>pred</code> - 谓词闭包</li>
+<li><code>&amp; more</code> - 变长参数</li>
+<li><code>xf</code> - xform, a transducer</li>
+</ul>
+<p>在宏中:</p>
+<ul>
+<li><code>expr</code> - 表达式</li>
+<li><code>body</code> - 宏定义</li>
+<li><code>binding</code> - 宏绑定矢量</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2>集合</h2>
+<blockquote>
+<p>一百个函数去操作一个数据结构要优于十个函数去操作十个数据结构。  <br/>
+-- Alan J. Perlis</p>
+</blockquote>
+<ul>
+<li>
+<p><a name="avoid-lists"></a>
+避免使用列表 (<code>lists</code>) 保存常用数据结构 (除非真的需要列表) 。
+<sup>[<a href="#avoid-lists">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="keywords-for-hash-keys"></a>
+倾向于使用关键字类型 (<code>keywords</code>) 作为哈希键。
+<sup>[<a href="#keywords-for-hash-keys">link</a>]</sup></p>
+</li>
+</ul>
+<pre><code class="language-.language-clojure">;; good
+{:name "Bruce" :age 30}
 
 ;; bad
-{&quot;name&quot; &quot;Bruce&quot; &quot;age&quot; 30}
-</code></pre></li><li><a name="literal-col-syntax"></a>  倾向于恰当的使用字面量集合语法，然而，定义集合 (<code>set</code>) 的时候，  如果值是编译时常量，只使用字面量语法。  <sup><a href='#literal-col-syntax'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#91;1 2 3&#93;
+{"name" "Bruce" "age" 30}
+</code></pre>
+<ul>
+<li><a name="literal-col-syntax"></a>
+倾向于恰当的使用字面量集合语法，然而，定义集合 (<code>set</code>) 的时候，
+如果值是编译时常量，只使用字面量语法。
+<sup>[<a href="#literal-col-syntax">link</a>]</sup></li>
+</ul>
+<pre><code class="language-.language-clojure">    ;; good
+    [1 2 3]
     #{1 2 3}
-    &#40;hash-set &#40;func1&#41; &#40;func2&#41;&#41; ; values determined at runtime
+    (hash-set (func1) (func2)) ; values determined at runtime
 
     ;; bad
-    &#40;vector 1 2 3&#41;
-    &#40;hash-set 1 2 3&#41;
-    #{&#40;func1&#41; &#40;func2&#41;} ; will throw runtime exception if &#40;func1&#41; = &#40;func2&#41;
-</code></pre></li><li><a name="avoid-index-based-coll-access"></a>  尽可能避免通过索引 (<code>index</code>) 获取集合 (<code>collection</code>) 的元素。  <sup><a href='#avoid-index-based-coll-access'>[link</a>]</sup></li><li><a name="keywords-as-fn-to-get-map-values"></a>  在适用的情况下，优先使用键作为函数，来获取映射 (<code>maps</code>) 的值。  <sup><a href='#keywords-as-fn-to-get-map-values'>[link</a>]</sup><pre><code class=".language-clojure">    &#40;def m {:name &quot;Bruce&quot; :age 30}&#41;
+    (vector 1 2 3)
+    (hash-set 1 2 3)
+    #{(func1) (func2)} ; will throw runtime exception if (func1) = (func2)
+</code></pre>
+<ul>
+<li>
+<p><a name="avoid-index-based-coll-access"></a>
+尽可能避免通过索引 (<code>index</code>) 获取集合 (<code>collection</code>) 的元素。
+<sup>[<a href="#avoid-index-based-coll-access">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="keywords-as-fn-to-get-map-values"></a>
+在适用的情况下，优先使用键作为函数，来获取映射 (<code>maps</code>) 的值。
+<sup>[<a href="#keywords-as-fn-to-get-map-values">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">(def m {:name "Bruce" :age 30})
 
-    ;; good
-    &#40;:name m&#41;
+;; good
+(:name m)
 
-    ;; more verbose than necessary
-    &#40;get m :name&#41;
+;; more verbose than necessary
+(get m :name)
 
-    ;; bad - susceptible to NullPointerException
-    &#40;m :name&#41;
-    </code></pre></li><li><a name="colls-as-fns"></a>  利用大多数集合是其元素的函数这一事实。  <sup><a href='#colls-as-fns'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;filter #{\a \e \o \i \u} &quot;this is a test&quot;&#41;
+;; bad - susceptible to NullPointerException
+(m :name)
+</code></pre>
+</li>
+<li>
+<p><a name="colls-as-fns"></a>
+利用大多数集合是其元素的函数这一事实。
+<sup>[<a href="#colls-as-fns">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(filter #{\a \e \o \i \u} "this is a test")
 
-    ;; bad - too ugly to share
-    </code></pre></li><li><a name="keywords-as-fns"></a>  利用关键字可以用作集合的函数这一事实。  <sup><a href='#keywords-as-fns'>[link</a>]</sup><pre><code class=".language-clojure">    &#40;&#40;juxt :a :b&#41; {:a &quot;ala&quot; :b &quot;bala&quot;}&#41;
-    </code></pre></li><li><a name="avoid-transient-colls"></a>  避免使用短暂集合 (<code>transient collections</code>)，除非代码对性能有要求。  <sup><a href='#avoid-transient-colls'>[link</a>]</sup></li><li><a name="avoid-java-colls"></a>  避免使用 <code>Java</code> 集合。  <sup><a href='#avoid-java-colls'>[link</a>]</sup></li><li><a name="avoid-java-arrays"></a>  避免使用 <code>Java</code> 数组，除了和 <code>Java</code> 互操作的场景，  或者大量原始类型 (<code>primitive types</code>) 操作的性能关键部分。  <sup><a href='#avoid-java-arrays'>[link</a>]</sup></li></ul><h2>可变性</h2><h3>Refs (引用)</h3><ul><li><a name="refs-io-macro"></a>  倾向于将所有的 <code>I/O</code> 操作包裹到 <code>io!</code> 宏 (<code>macro</code>) 中，  以防不小心在事务 (<code>transaction</code>) 中调用产生意外。  <sup><a href='#refs-io-macro'>[link</a>]</sup></li><li><a name="refs-avoid-ref-set"></a>  在任何情况下避免使用 <code>ref-set</code>。  <sup><a href='#refs-avoid-ref-set'>[link</a>]</sup><pre><code class=".language-clojure">    &#40;def r &#40;ref 0&#41;&#41;
+;; bad - too ugly to share
+</code></pre>
+</li>
+<li>
+<p><a name="keywords-as-fns"></a>
+利用关键字可以用作集合的函数这一事实。
+<sup>[<a href="#keywords-as-fns">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">((juxt :a :b) {:a "ala" :b "bala"})
+</code></pre>
+</li>
+<li>
+<p><a name="avoid-transient-colls"></a>
+避免使用短暂集合 (<code>transient collections</code>)，除非代码对性能有要求。
+<sup>[<a href="#avoid-transient-colls">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="avoid-java-colls"></a>
+避免使用 <code>Java</code> 集合。
+<sup>[<a href="#avoid-java-colls">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="avoid-java-arrays"></a>
+避免使用 <code>Java</code> 数组，除了和 <code>Java</code> 互操作的场景，
+或者大量原始类型 (<code>primitive types</code>) 操作的性能关键部分。
+<sup>[<a href="#avoid-java-arrays">link</a>]</sup></p>
+</li>
+</ul>
+<h2>可变性</h2>
+<h3>Refs (引用)</h3>
+<ul>
+<li>
+<p><a name="refs-io-macro"></a>
+倾向于将所有的 <code>I/O</code> 操作包裹到 <code>io!</code> 宏 (<code>macro</code>) 中，
+以防不小心在事务 (<code>transaction</code>) 中调用产生意外。
+<sup>[<a href="#refs-io-macro">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="refs-avoid-ref-set"></a>
+在任何情况下避免使用 <code>ref-set</code>。
+<sup>[<a href="#refs-avoid-ref-set">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">(def r (ref 0))
 
-    ;; good
-    &#40;dosync &#40;alter r + 5&#41;&#41;
+;; good
+(dosync (alter r + 5))
 
-    ;; bad
-    &#40;dosync &#40;ref-set r 5&#41;&#41;
-    </code></pre></li><li><a name="refs-small-transactions"></a>  尽量保持事务 (<code>transactions</code>) 小而紧凑 (事务中的逻辑) 。  <sup><a href='#refs-small-transactions'>[link</a>]</sup></li><li><a name="refs-avoid-short-long-transactions-with-same-ref"></a>  避免在同时在短时间事务和长时间事务中操作相同的 <code>Ref</code>。  <sup><a href='#refs-avoid-short-long-transactions-with-same-ref'>[link</a>]</sup></li></ul><h3>Agents (代理)</h3><ul><li><a name="agents-send"></a>  只在 <code>CPU</code> 绑定 (<code>CPU bound</code>)，  或者没有 <code>I/O</code> 阻塞 (<code>block on I/O</code>) 的时候使用 <code>send</code>。  <sup><a href='#agents-send'>[link</a>]</sup></li><li><a name="agents-send-off"></a>  对于可能阻塞，睡眠的操作，使用 <code>send-off</code>，或者以其它的方式配合线程。  <sup><a href='#agents-send-off'>[link</a>]</sup></li></ul><h3>Atoms (原子)</h3><ul><li><a name="atoms-no-update-within-transactions"></a>  避免在 <code>STM</code> 事务 (<code>STM transactions</code>) 中更新原子 (<code>atom</code>)。  <sup><a href='#atoms-no-update-within-transactions'>[link</a>]</sup></li><li><a name="atoms-prefer-swap-over-reset"></a>  尽可能使用 <code>swap!</code> 而不是 <code>reset!</code>。  <sup><a href='#atoms-prefer-swap-over-reset'>[link</a>]</sup><pre><code class=".language-clojure">    &#40;def a &#40;atom 0&#41;&#41;
+;; bad
+(dosync (ref-set r 5))
+</code></pre>
+</li>
+<li>
+<p><a name="refs-small-transactions"></a>
+尽量保持事务 (<code>transactions</code>) 小而紧凑 (事务中的逻辑) 。
+<sup>[<a href="#refs-small-transactions">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="refs-avoid-short-long-transactions-with-same-ref"></a>
+避免在同时在短时间事务和长时间事务中操作相同的 <code>Ref</code>。
+<sup>[<a href="#refs-avoid-short-long-transactions-with-same-ref">link</a>]</sup></p>
+</li>
+</ul>
+<h3>Agents (代理)</h3>
+<ul>
+<li>
+<p><a name="agents-send"></a>
+只在 <code>CPU</code> 绑定 (<code>CPU bound</code>)，
+或者没有 <code>I/O</code> 阻塞 (<code>block on I/O</code>) 的时候使用 <code>send</code>。
+<sup>[<a href="#agents-send">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="agents-send-off"></a>
+对于可能阻塞，睡眠的操作，使用 <code>send-off</code>，或者以其它的方式配合线程。
+<sup>[<a href="#agents-send-off">link</a>]</sup></p>
+</li>
+</ul>
+<h3>Atoms (原子)</h3>
+<ul>
+<li>
+<p><a name="atoms-no-update-within-transactions"></a>
+避免在 <code>STM</code> 事务 (<code>STM transactions</code>) 中更新原子 (<code>atom</code>)。
+<sup>[<a href="#atoms-no-update-within-transactions">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="atoms-prefer-swap-over-reset"></a>
+尽可能使用 <code>swap!</code> 而不是 <code>reset!</code>。
+<sup>[<a href="#atoms-prefer-swap-over-reset">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">(def a (atom 0))
 
-    ;; good
-    &#40;swap! a + 5&#41;
+;; good
+(swap! a + 5)
 
-    ;; not as good
-    &#40;reset! a 5&#41;
-    </code></pre></li></ul><h2>字符串</h2><ul><li><a name="prefer-clojure-string-over-interop"></a>  使用 <code>clojure.string</code> 中的函数操作字符串，优于 <code>Java</code> 互操作  (<code>Java interop</code>) 或者自定义函数。  <sup><a href='#prefer-clojure-string-over-interop'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;clojure.string/upper-case &quot;bruce&quot;&#41;
+;; not as good
+(reset! a 5)
+</code></pre>
+</li>
+</ul>
+<h2>字符串</h2>
+<ul>
+<li>
+<p><a name="prefer-clojure-string-over-interop"></a>
+使用 <code>clojure.string</code> 中的函数操作字符串，优于 <code>Java</code> 互操作
+(<code>Java interop</code>) 或者自定义函数。
+<sup>[<a href="#prefer-clojure-string-over-interop">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(clojure.string/upper-case "bruce")
 
-    ;; bad
-    &#40;.toUpperCase &quot;bruce&quot;&#41;
-    </code></pre></li></ul><h2>异常</h2><ul><li><a name="reuse-existing-exception-types"></a>  重用现有的异常类型。地道的 <code>Clojure</code> 代码 &mdash; 当抛出异常时 &mdash;  会抛出标准异常类型  (例如， <code>java.lang.IllegalArgumentException</code>,  <code>java.lang.UnsupportedOperationException</code>,  <code>java.lang.IllegalStateException</code>, <code>java.io.IOException</code>)。  <sup><a href='#reuse-existing-exception-types'>[link</a>]</sup></li><li><a name="prefer-with-open-over-finally"></a>  使用 <code>with-open</code> 优于 <code>finally</code>。  <sup><a href='#prefer-with-open-over-finally'>[link</a>]</sup></li></ul><h2>宏</h2><ul><li><a name="dont-write-macro-if-fn-will-do"></a>  在函数可以实现功能的情况下不要使用宏。  <sup><a href='#dont-write-macro-if-fn-will-do'>[link</a>]</sup></li><li><a name="write-macro-usage-before-writing-the-macro"></a>  编写宏之前首先编写宏的用例。  <sup><a href='#write-macro-usage-before-writing-the-macro'>[link</a>]</sup></li><li><a name="break-complicated-macros"></a>  尽可能将复杂的宏拆为较小的函数。  <sup><a href='#break-complicated-macros'>[link</a>]</sup></li><li><a name="macros-as-syntactic-sugar"></a>  宏的核心应该是一个纯函数，宏通常仅仅提供了语法糖。这样可以提高组合性。  <sup><a href='#macros-as-syntactic-sugar'>[link</a>]</sup></li><li><a name="syntax-quoted-forms"></a>  使用语法引用 <code>forms</code> (<code>syntax-quoted forms</code>) 优于自己手动构建列表。  <sup><a href='#syntax-quoted-forms'>[link</a>]</sup></li></ul><h2>注释</h2><blockquote><p> 良好的代码自身就是最佳的文档。当你要添加一个注释时，  扪心自问，“如何改善代码让它不需要注释？” 改善代码，再写相应文档使之更清楚。<br/>  &ndash; Steve McConnell </p></blockquote><ul><li><a name="self-documenting-code"></a>  努力让代码变得尽可能地自注释。  <sup><a href='#self-documenting-code'>[link</a>]</sup></li><li><a name="four-semicolons-for-heading-comments"></a>  头部注释至少保留四个分号。  <sup><a href='#four-semicolons-for-heading-comments'>[link</a>]</sup></li><li><a name="three-semicolons-for-top-level-comments"></a>  顶级注释至少保留三个分号。  <sup><a href='#three-semicolons-for-top-level-comments'>[link</a>]</sup></li><li><a name="two-semicolons-for-code-fragment"></a>  代码片段注释保留两个分号，并且和代码片段对齐。  <sup><a href='#two-semicolons-for-code-fragment'>[link</a>]</sup></li><li><a name="one-semicolon-for-margin-comments"></a>  单行尾部注释保留一个分号。  <sup><a href='#one-semicolon-for-margin-comments'>[link</a>]</sup></li><li><a name="semicolon-space"></a>  分号和注释正文之间总是至少保留一个空格。  <sup><a href='#semicolon-space'>[link</a>]</sup><pre><code class=".language-clojure">    ;;;; Frob Grovel
+;; bad
+(.toUpperCase "bruce")
+</code></pre>
+</li>
+</ul>
+<h2>异常</h2>
+<ul>
+<li>
+<p><a name="reuse-existing-exception-types"></a>
+重用现有的异常类型。地道的 <code>Clojure</code> 代码 — 当抛出异常时 —
+会抛出标准异常类型
+(例如， <code>java.lang.IllegalArgumentException</code>,
+<code>java.lang.UnsupportedOperationException</code>,
+<code>java.lang.IllegalStateException</code>, <code>java.io.IOException</code>)。
+<sup>[<a href="#reuse-existing-exception-types">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="prefer-with-open-over-finally"></a>
+使用 <code>with-open</code> 优于 <code>finally</code>。
+<sup>[<a href="#prefer-with-open-over-finally">link</a>]</sup></p>
+</li>
+</ul>
+<h2>宏</h2>
+<ul>
+<li>
+<p><a name="dont-write-macro-if-fn-will-do"></a>
+在函数可以实现功能的情况下不要使用宏。
+<sup>[<a href="#dont-write-macro-if-fn-will-do">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="write-macro-usage-before-writing-the-macro"></a>
+编写宏之前首先编写宏的用例。
+<sup>[<a href="#write-macro-usage-before-writing-the-macro">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="break-complicated-macros"></a>
+尽可能将复杂的宏拆为较小的函数。
+<sup>[<a href="#break-complicated-macros">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="macros-as-syntactic-sugar"></a>
+宏的核心应该是一个纯函数，宏通常仅仅提供了语法糖。这样可以提高组合性。
+<sup>[<a href="#macros-as-syntactic-sugar">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="syntax-quoted-forms"></a>
+使用语法引用 <code>forms</code> (<code>syntax-quoted forms</code>) 优于自己手动构建列表。
+<sup>[<a href="#syntax-quoted-forms">link</a>]</sup></p>
+</li>
+</ul>
+<h2>注释</h2>
+<blockquote>
+<p>良好的代码自身就是最佳的文档。当你要添加一个注释时，
+扪心自问，“如何改善代码让它不需要注释？” 改善代码，再写相应文档使之更清楚。<br/>
+-- Steve McConnell</p>
+</blockquote>
+<ul>
+<li>
+<p><a name="self-documenting-code"></a>
+努力让代码变得尽可能地自注释。
+<sup>[<a href="#self-documenting-code">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="four-semicolons-for-heading-comments"></a>
+头部注释至少保留四个分号。
+<sup>[<a href="#four-semicolons-for-heading-comments">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="three-semicolons-for-top-level-comments"></a>
+顶级注释至少保留三个分号。
+<sup>[<a href="#three-semicolons-for-top-level-comments">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="two-semicolons-for-code-fragment"></a>
+代码片段注释保留两个分号，并且和代码片段对齐。
+<sup>[<a href="#two-semicolons-for-code-fragment">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="one-semicolon-for-margin-comments"></a>
+单行尾部注释保留一个分号。
+<sup>[<a href="#one-semicolon-for-margin-comments">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="semicolon-space"></a>
+分号和注释正文之间总是至少保留一个空格。
+<sup>[<a href="#semicolon-space">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;;;; Frob Grovel
 
-    ;;; This section of code has some important implications:
-    ;;;   1. Foo.
-    ;;;   2. Bar.
-    ;;;   3. Baz.
+;;; This section of code has some important implications:
+;;;   1. Foo.
+;;;   2. Bar.
+;;;   3. Baz.
 
-    &#40;defn fnord &#91;zarquon&#93;
-      ;; If zob, then veeblefitz.
-      &#40;quux zot
-            mumble             ; Zibblefrotz.
-            frotz&#41;&#41;
-    </code></pre></li><li><a name="english-syntax"></a>  注释超过一个单词时，句首字母应当大写，并在语句停顿或结尾处使用标点符号。句号后添加  <a href='http://en.wikipedia.org/wiki/Sentence_spacing'>空格</a>。  <sup><a href='#english-syntax'>[link</a>]</sup></li><li><a name="no-superfluous-comments"></a>  避免无谓的注释。  <sup><a href='#no-superfluous-comments'>[link</a>]</sup><pre><code class=".language-clojure">    ;; bad
-    &#40;inc counter&#41; ; increments counter by one
-    </code></pre></li><li><a name="comment-upkeep"></a>  及时更新注释。过时的注释比没有注释还要糟糕。  <sup><a href='#comment-upkeep'>[link</a>]</sup></li><li><a name="dash-underscore-reader-macro"></a>  当需要注释掉一个特定的 <code>form</code> 的时候，使用读取宏 <code>#&#95;</code> 优于普通的注释。  <sup><a href='#dash-underscore-reader-macro'>[link</a>]</sup><pre><code class=".language-clojure">    ;; good
-    &#40;+ foo #&#95;&#40;bar x&#41; delta&#41;
+(defn fnord [zarquon]
+  ;; If zob, then veeblefitz.
+  (quux zot
+        mumble             ; Zibblefrotz.
+        frotz))
+</code></pre>
+</li>
+<li>
+<p><a name="english-syntax"></a>
+注释超过一个单词时，句首字母应当大写，并在语句停顿或结尾处使用标点符号。句号后添加
+<a href="http://en.wikipedia.org/wiki/Sentence_spacing">空格</a>。
+<sup>[<a href="#english-syntax">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="no-superfluous-comments"></a>
+避免无谓的注释。
+<sup>[<a href="#no-superfluous-comments">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; bad
+(inc counter) ; increments counter by one
+</code></pre>
+</li>
+<li>
+<p><a name="comment-upkeep"></a>
+及时更新注释。过时的注释比没有注释还要糟糕。
+<sup>[<a href="#comment-upkeep">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="dash-underscore-reader-macro"></a>
+当需要注释掉一个特定的 <code>form</code> 的时候，使用读取宏 <code>#_</code> 优于普通的注释。
+<sup>[<a href="#dash-underscore-reader-macro">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">;; good
+(+ foo #_(bar x) delta)
 
-    ;; bad
-    &#40;+ foo
-       ;; &#40;bar x&#41;
-       delta&#41;
-    </code></pre>&nbsp;<blockquote><p> 好的代码就像是好的笑话 —— 它不需要解释。<br/>  &ndash; Russ Olsen </li><li><a name="refactor-dont-comment"></a>  避免替烂代码编写注释。重构它们使其变得一目了然。  （要么做，要么不做，不要只是试试看。——Yoda）  <sup><a href='#refactor-dont-comment'>[link</a>]</sup></li></ul></p></blockquote><h3>注解</h3><ul><li><a name="annotate-above"></a>  注解通常应该直接写在相关代码之前那行。  <sup><a href='#annotate-above'>[link</a>]</sup></li><li><a name="annotate-keywords"></a>  注解关键字后面，跟着一个冒号及空格，接着是描述问题的文本。  <sup><a href='#annotate-keywords'>[link</a>]</sup></li><li><a name="indent-annotations"></a>  如果需要用多行来描述问题，后续行要和第一行保持相同的锁进。  <sup><a href='#indent-annotations'>[link</a>]</sup></li><li><a name="sing-and-date-annotations"></a>  为了注解的相关信息得到验证，应该使用名字的缩写和日期进行标注。  <sup><a href='#sing-and-date-annotations'>[link</a>]</sup><pre><code class=".language-clojure">    &#40;defn some-fun
-      &#91;&#93;
-      ;; FIXME: This has crashed occasionally since v1.2.3. It may
-      ;;        be related to the BarBazUtil upgrade. &#40;xz 13-1-31&#41;
-      &#40;baz&#41;&#41;
-    </code></pre></li><li><a name="rare-eol-annotations"></a>  当问题是显而易见时，任何文档都是多余的，  注解应当放在有问题的那行末尾且不带任何多余说明。这个用法应该算是例外而不是规则。  <sup><a href='#rare-eol-annotations'>[link</a>]</sup><pre><code class=".language-clojure">    &#40;defn bar
-      &#91;&#93;
-      &#40;sleep 100&#41;&#41; ; OPTIMIZE
-    </code></pre></li><li><a name="todo"></a>  使用 <code>TODO</code> 标记应当加入的特征与功能。  <sup><a href='#todo'>[link</a>]</sup></li><li><a name="fixme"></a>  使用 <code>FIXME</code> 标记需要修复的代码。  <sup><a href='#fixme'>[link</a>]</sup></li><li><a name="optimize"></a>  使用 <code>OPTIMIZE</code> 标记可能引发性能问题的低效代码。  performance problems.  <sup><a href='#optimize'>[link</a>]</sup></li><li><a name="hack"></a>  使用 <code>HACK</code> 标记代码异味，即那些应当被重构的可疑编码习惯。  <sup><a href='#hack'>[link</a>]</sup></li><li><a name="review"></a>  使用 <code>REVIEW</code> 标记需要确认与编码意图是否一致的可疑代码。  比如，<code>REVIEW: Are we sure this is how the client does X currently?</code>。  <sup><a href='#review'>[link</a>]</sup></li><li><a name="document-annotations"></a>  适当情况下，可以自行定制其他注解关键字，  但别忘记在项目的 <code>README</code> 或类似文档中予以说明。  <sup><a href='#document-annotations'>[link</a>]</sup></li></ul><h2>经验</h2><ul><li><a name="be-functional"></a>  用函数式的方式编码，只在显而易见的情况下使用可变性 (<code>mutation</code>) 。  <sup><a href='#be-functional'>[link</a>]</sup></li><li><a name="be-consistent"></a>  保持一致。在理想的情况下，和风格指南保持一致。  <sup><a href='#be-consistent'>[link</a>]</sup></li><li><a name="common-sense"></a>  利用常识。  <sup><a href='#common-sense'>[link</a>]</sup></li></ul><h2>工具</h2><p>下面是一些 Clojure 社区创建的工具，为你写出地道的 Clojure 助一臂之力。</p><ul><li><a href='https://github.com/technomancy/slamhound'>Slamhound</a>  是一个可以根据你现有代码，生成恰当的 <code>ns</code> 声明的工具。</li><li><a href='https://github.com/jonase/kibit'>kibit</a>  是一个 Clojure 静态分析器，  使用  <a href='https://github.com/clojure/core.logic'>core.logic</a> 通过搜索代码模式，  来发现现有代码中函数或宏的更好的实现。</li></ul><h2>测试</h2><ul><li><a name="test-directory-structure"></a>   测试位于独立的文件夹中， 通常是 <code>test/yourproject/</code> (而不是 <code>src/yourproject/</code>)。   构建工具保证了在需要它们的上下文中是可用的，   大多数模版会自动完成这些功能。   <sup><a href='#test-directory-structure'>[link</a>]</sup></li><li><a name="test-ns-naming"></a>   命名空间要命名为 <code>yourproject.something-test</code>， 对于的文件通常为   <code>test/yourproject/something&#95;test.clj</code> (或者 <code>.cljc</code>, <code>cljs</code>)。   <sup><a href='#test-ns-naming'>[link</a>]</sup></li><li><a name="test-naming"></a> 使用 <code>clojure.test</code> 时，   使用 <code>deftest</code> 定义测试，并且命名为 <code>something-test</code>，例如：<pre><code class=".language-clojure">   ;; good
-   &#40;deftest something-test ...&#41;
+;; bad
+(+ foo
+   ;; (bar x)
+   delta)
+</code></pre>
+</li>
+</ul>
+<p> </p>
+<blockquote>
+<p>好的代码就像是好的笑话 —— 它不需要解释。<br/>
+-- Russ Olsen</p>
+</blockquote>
+<ul>
+<li><a name="refactor-dont-comment"></a>
+避免替烂代码编写注释。重构它们使其变得一目了然。
+（要么做，要么不做，不要只是试试看。——Yoda）
+<sup>[<a href="#refactor-dont-comment">link</a>]</sup></li>
+</ul>
+<h3>注解</h3>
+<ul>
+<li>
+<p><a name="annotate-above"></a>
+注解通常应该直接写在相关代码之前那行。
+<sup>[<a href="#annotate-above">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="annotate-keywords"></a>
+注解关键字后面，跟着一个冒号及空格，接着是描述问题的文本。
+<sup>[<a href="#annotate-keywords">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="indent-annotations"></a>
+如果需要用多行来描述问题，后续行要和第一行保持相同的锁进。
+<sup>[<a href="#indent-annotations">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="sing-and-date-annotations"></a>
+为了注解的相关信息得到验证，应该使用名字的缩写和日期进行标注。
+<sup>[<a href="#sing-and-date-annotations">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">(defn some-fun
+  []
+  ;; FIXME: This has crashed occasionally since v1.2.3. It may
+  ;;        be related to the BarBazUtil upgrade. (xz 13-1-31)
+  (baz))
+</code></pre>
+</li>
+<li>
+<p><a name="rare-eol-annotations"></a>
+当问题是显而易见时，任何文档都是多余的，
+注解应当放在有问题的那行末尾且不带任何多余说明。这个用法应该算是例外而不是规则。
+<sup>[<a href="#rare-eol-annotations">link</a>]</sup></p>
+<pre><code class="language-.language-clojure">(defn bar
+  []
+  (sleep 100)) ; OPTIMIZE
+</code></pre>
+</li>
+<li>
+<p><a name="todo"></a>
+使用 <code>TODO</code> 标记应当加入的特征与功能。
+<sup>[<a href="#todo">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="fixme"></a>
+使用 <code>FIXME</code> 标记需要修复的代码。
+<sup>[<a href="#fixme">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="optimize"></a>
+使用 <code>OPTIMIZE</code> 标记可能引发性能问题的低效代码。
+performance problems.
+<sup>[<a href="#optimize">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="hack"></a>
+使用 <code>HACK</code> 标记代码异味，即那些应当被重构的可疑编码习惯。
+<sup>[<a href="#hack">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="review"></a>
+使用 <code>REVIEW</code> 标记需要确认与编码意图是否一致的可疑代码。
+比如，<code>REVIEW: Are we sure this is how the client does X currently?</code>。
+<sup>[<a href="#review">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="document-annotations"></a>
+适当情况下，可以自行定制其他注解关键字，
+但别忘记在项目的 <code>README</code> 或类似文档中予以说明。
+<sup>[<a href="#document-annotations">link</a>]</sup></p>
+</li>
+</ul>
+<h2>经验</h2>
+<ul>
+<li>
+<p><a name="be-functional"></a>
+用函数式的方式编码，只在显而易见的情况下使用可变性 (<code>mutation</code>) 。
+<sup>[<a href="#be-functional">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="be-consistent"></a>
+保持一致。在理想的情况下，和风格指南保持一致。
+<sup>[<a href="#be-consistent">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="common-sense"></a>
+利用常识。
+<sup>[<a href="#common-sense">link</a>]</sup></p>
+</li>
+</ul>
+<h2>工具</h2>
+<p>下面是一些 Clojure 社区创建的工具，为你写出地道的 Clojure 助一臂之力。</p>
+<ul>
+<li>
+<p><a href="https://github.com/technomancy/slamhound">Slamhound</a>
+是一个可以根据你现有代码，生成恰当的 <code>ns</code> 声明的工具。</p>
+</li>
+<li>
+<p><a href="https://github.com/jonase/kibit">kibit</a>
+是一个 Clojure 静态分析器，
+使用  <a href="https://github.com/clojure/core.logic">core.logic</a> 通过搜索代码模式，
+来发现现有代码中函数或宏的更好的实现。</p>
+</li>
+</ul>
+<h2>测试</h2>
+<ul>
+<li>
+<p><a name="test-directory-structure"></a>
+测试位于独立的文件夹中， 通常是 <code>test/yourproject/</code> (而不是 <code>src/yourproject/</code>)。
+构建工具保证了在需要它们的上下文中是可用的，
+大多数模版会自动完成这些功能。
+<sup>[<a href="#test-directory-structure">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="test-ns-naming"></a>
+命名空间要命名为 <code>yourproject.something-test</code>， 对于的文件通常为
+<code>test/yourproject/something_test.clj</code> (或者 <code>.cljc</code>, <code>cljs</code>)。
+<sup>[<a href="#test-ns-naming">link</a>]</sup></p>
+</li>
+<li>
+<p><a name="test-naming"></a> 使用 <code>clojure.test</code> 时，
+使用 <code>deftest</code> 定义测试，并且命名为 <code>something-test</code>，例如：</p>
+<pre><code class="language-.language-clojure">;; good
+(deftest something-test ...)
 
-   ;; bad
-   &#40;deftest something-tests ...&#41;
-   &#40;deftest test-something ...&#41;
-   &#40;deftest something ...&#41;
-   </code></pre></li></ul><p>   <sup><a href='#test-naming'>[link</a>]</sup></p><h1>贡献</h1><p>这份指南中的任何规则都不是一成不变的。 我渴望和任何一位对 Clojure 风格指南的伙伴一起工作， 最终创造一份对整个 Clojure 社区都大有裨益的资源。</p><p>欢迎发起讨论或提交一个带有改进性质的更新请求。在此提前感谢你的帮助！</p><p>你也可以通过 <a href='https://www.gittip.com/bbatsov'>gittip</a> 对此项目提供财务方面的支持。</p><p><a href='https://www.gittip.com/bbatsov'><img src="https://rawgithub.com/twolfson/gittip-badge/0.2.0/dist/gittip.png" alt="Support via Gittip" /></a></p><h1>授权</h1><p><img src="http://i.creativecommons.org/l/by/3.0/88x31.png" alt="Creative Commons License" /> 本指南基于 <a href='http://creativecommons.org/licenses/by/3.0/deed.en_US'>Creative Commons Attribution 3.0 Unported License</a> 授权许可。</p><h1>口耳相传</h1><p>一份社区驱动的风格指南，如果没多少人知道， 对一个社区来说就没有多少用处。微博转发这份指南， 分享给你的朋友或同事。我们得到的每个评价、建议或意见都可以让这份指南变得更好一点。 而我们想要拥有最好的指南，不是吗？</p><p>共勉之，<br/> <a href='https://twitter.com/bbatsov'>Bozhidar</a></p><h1>原文地址</h1><p><a href="https://github.com/geekerzp/clojure-style-guide/blob/master/README-zhCN.md">https://github.com/geekerzp/clojure-style-guide/blob/master/README-zhCN.md</a></p>
-            <p class="text-left text-muted">2019-02-14 00:44</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2019/2/16/Grow-up/">上一篇: 成长和晋升</a></div>
-                <div class="col-6 text-right"><a href="/p/2019/2/10/write-a-lein-command-or-plugin/">下一篇:写一个Lein的command/plugin/task</a></div>
-            </div>
-        </div>
+;; bad
+(deftest something-tests ...)
+(deftest test-something ...)
+(deftest something ...)
+</code></pre>
+<p><sup>[<a href="#test-naming">link</a>]</sup></p>
+</li>
+</ul>
+<h1>贡献</h1>
+<p>这份指南中的任何规则都不是一成不变的。
+我渴望和任何一位对 Clojure 风格指南的伙伴一起工作，
+最终创造一份对整个 Clojure 社区都大有裨益的资源。</p>
+<p>欢迎发起讨论或提交一个带有改进性质的更新请求。在此提前感谢你的帮助！</p>
+<p>你也可以通过 <a href="https://www.gittip.com/bbatsov">gittip</a> 对此项目提供财务方面的支持。</p>
+<p><a href="https://www.gittip.com/bbatsov"><img src="https://rawgithub.com/twolfson/gittip-badge/0.2.0/dist/gittip.png" alt="Support via Gittip" /></a></p>
+<h1>授权</h1>
+<p><img src="http://i.creativecommons.org/l/by/3.0/88x31.png" alt="Creative Commons License" />
+本指南基于
+<a href="http://creativecommons.org/licenses/by/3.0/deed.en_US">Creative Commons Attribution 3.0 Unported License</a> 授权许可。</p>
+<h1>口耳相传</h1>
+<p>一份社区驱动的风格指南，如果没多少人知道，
+对一个社区来说就没有多少用处。微博转发这份指南，
+分享给你的朋友或同事。我们得到的每个评价、建议或意见都可以让这份指南变得更好一点。
+而我们想要拥有最好的指南，不是吗？</p>
+<p>共勉之，<br/>
+<a href="https://twitter.com/bbatsov">Bozhidar</a></p>
+<h1>原文地址</h1>
+<p><a href="https://github.com/geekerzp/clojure-style-guide/blob/master/README-zhCN.md">https://github.com/geekerzp/clojure-style-guide/blob/master/README-zhCN.md</a></p>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2019-02-13</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2019/2/16/Grow-up/">上一篇: 成长和晋升</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2019/2/10/write-a-lein-command-or-plugin/">下一篇: 写一个Lein的command/plugin/task</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2019/2/13/The-Clojure-Style-Guide/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

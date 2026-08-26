@@ -3,32 +3,36 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>226. 翻转二叉树 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">226. 翻转二叉树</h1>
-
-
-
-
-            <h3>题目</h3><p>翻转一棵二叉树。</p><p>示例：</p><p>输入：</p><pre><code class=".lang-shell">     4
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">226. 翻转二叉树</h1>
+  <p>###题目</p>
+<p>翻转一棵二叉树。</p>
+<p>示例：</p>
+<p>输入：</p>
+<pre><code class="language-.lang-shell">     4
    /   \
   2     7
  / \   / \
 1   3 6   9
-</code></pre><p>输出：</p><pre><code class=".lang-rust">     4
+</code></pre>
+<p>输出：</p>
+<pre><code class="language-.lang-rust">     4
    /   \
   7     2
  / \   / \
 9   6 3   1
-</code></pre><p><code>题型归类: 二叉树</code></p><p>因为写代码需要进行本地测试，所以先构建一个本地环境，可以很方便的生成TreeNode, 把一个Vec，生成一颗树。</p><pre><code class=".lang-rust">#&#91;derive&#40;Debug, PartialEq, Eq&#41;&#93;
+</code></pre>
+<p><code>题型归类: 二叉树</code></p>
+<p>因为写代码需要进行本地测试，所以先构建一个本地环境，可以很方便的生成TreeNode, 把一个Vec，生成一颗树。</p>
+<pre><code class="language-.lang-rust">#[derive(Debug, PartialEq, Eq)]
 pub struct TreeNode {
     pub val: i32,
     pub left: Option&lt;Rc&lt;RefCell&lt;TreeNode&gt;&gt;&gt;,
@@ -36,8 +40,8 @@ pub struct TreeNode {
 }
 
 impl TreeNode {
-    #&#91;inline&#93;
-    pub fn new&#40;val: i32&#41; -&gt; Self {
+    #[inline]
+    pub fn new(val: i32) -&gt; Self {
         TreeNode {
             val,
             left: None,
@@ -48,82 +52,96 @@ impl TreeNode {
 
 impl TreeNode {
 
-    pub fn add&#95;left&#40;&amp;mut self, val: i32&#41; {
-        let node = TreeNode::new&#40;val&#41;;
-        self.left = Some&#40;Rc::new&#40;RefCell::new&#40;node&#41;&#41;&#41;;
+    pub fn add_left(&amp;mut self, val: i32) {
+        let node = TreeNode::new(val);
+        self.left = Some(Rc::new(RefCell::new(node)));
     }
 
-    pub fn add&#95;left&#95;node&#40;&amp;mut self, node: TreeNode&#41; {
-        self.left = Some&#40;Rc::new&#40;RefCell::new&#40;node&#41;&#41;&#41;;
+    pub fn add_left_node(&amp;mut self, node: TreeNode) {
+        self.left = Some(Rc::new(RefCell::new(node)));
     }
-    pub fn add&#95;right&#40;&amp;mut self, val: i32&#41; {
-        let node = TreeNode::new&#40;val&#41;;
-        self.right = Some&#40;Rc::new&#40;RefCell::new&#40;node&#41;&#41;&#41;;
+    pub fn add_right(&amp;mut self, val: i32) {
+        let node = TreeNode::new(val);
+        self.right = Some(Rc::new(RefCell::new(node)));
     }
 
-    pub fn add&#95;right&#95;node&#40;&amp;mut self, node: TreeNode&#41; {
-        self.right = Some&#40;Rc::new&#40;RefCell::new&#40;node&#41;&#41;&#41;;
+    pub fn add_right_node(&amp;mut self, node: TreeNode) {
+        self.right = Some(Rc::new(RefCell::new(node)));
     }
 }
-</code></pre> <h3>思路一</h3><p>从树的最顶端开始，一层一层往下，因为没法获取树的深度，所以只能使用递归来做了。</p><pre><code class=".lang-rust">// 代码实现
+</code></pre>
+<h3>思路一</h3>
+<p>从树的最顶端开始，一层一层往下，因为没法获取树的深度，所以只能使用递归来做了。</p>
+<pre><code class="language-.lang-rust">// 代码实现
 impl Solution {
-    pub fn invert&#95;tree&#40;root: Option&lt;Rc&lt;RefCell&lt;TreeNode&gt;&gt;&gt;&#41; -&gt; Option&lt;Rc&lt;RefCell&lt;TreeNode&gt;&gt;&gt; {
-        let mut tree&#95;node = root;
+    pub fn invert_tree(root: Option&lt;Rc&lt;RefCell&lt;TreeNode&gt;&gt;&gt;) -&gt; Option&lt;Rc&lt;RefCell&lt;TreeNode&gt;&gt;&gt; {
+        let mut tree_node = root;
 
-        match &amp;tree&#95;node {
-            Some&#40;ref n&#41; =&gt; {
-                let l = &#40;&#42;n.borrow&#40;&#41;&#41;.left.clone&#40;&#41;;
-                let r = &#40;&#42;n.borrow&#40;&#41;&#41;.right.clone&#40;&#41;;
-                &#40;&#42;n.borrow&#95;mut&#40;&#41;&#41;.left = Solution::invert&#95;tree&#40;r&#41;;
-                &#40;&#42;n.borrow&#95;mut&#40;&#41;&#41;.right = Solution::invert&#95;tree&#40;l&#41;;
+        match &amp;tree_node {
+            Some(ref n) =&gt; {
+                let l = (*n.borrow()).left.clone();
+                let r = (*n.borrow()).right.clone();
+                (*n.borrow_mut()).left = Solution::invert_tree(r);
+                (*n.borrow_mut()).right = Solution::invert_tree(l);
             }
-            None =&gt; &#40;&#41;
+            None =&gt; ()
         };
-        tree&#95;node
+        tree_node
     }
 }
 
 
-#&#91;cfg&#40;test&#41;&#93;
+#[cfg(test)]
 mod test {
     use crate::{Solution, TreeNode};
     use std::rc::Rc;
     use std::cell::RefCell;
 
-    #&#91;test&#93;
-    pub fn invert&#95;tree&#95;test&#40;&#41; {
-        let mut node2 = TreeNode::new&#40;2&#41;;
-        node2.add&#95;left&#40;1&#41;;
-        node2.add&#95;right&#40;3&#41;;
+    #[test]
+    pub fn invert_tree_test() {
+        let mut node2 = TreeNode::new(2);
+        node2.add_left(1);
+        node2.add_right(3);
 
-        let node = Rc::new&#40;RefCell::new&#40;node2&#41;&#41;;
+        let node = Rc::new(RefCell::new(node2));
 
-        let l = Some&#40;Rc::new&#40;RefCell::new&#40; TreeNode { val: 1, left: None, right: None } &#41;&#41;&#41;;
-        let r = Some&#40;Rc::new&#40;RefCell::new&#40; TreeNode { val: 3, left: None, right: None } &#41;&#41;&#41;;
-        let n = Some&#40;Rc::new&#40;RefCell::new&#40; TreeNode { val: 2, left: l.clone&#40;&#41;, right: r.clone&#40;&#41; } &#41;&#41;&#41;;
-        let n2 = Some&#40;Rc::new&#40;RefCell::new&#40; TreeNode { val: 2, left: r.clone&#40;&#41;, right: l.clone&#40;&#41; } &#41;&#41;&#41;;
+        let l = Some(Rc::new(RefCell::new( TreeNode { val: 1, left: None, right: None } )));
+        let r = Some(Rc::new(RefCell::new( TreeNode { val: 3, left: None, right: None } )));
+        let n = Some(Rc::new(RefCell::new( TreeNode { val: 2, left: l.clone(), right: r.clone() } )));
+        let n2 = Some(Rc::new(RefCell::new( TreeNode { val: 2, left: r.clone(), right: l.clone() } )));
 
-        assert&#95;eq!&#40;n, Some&#40;node.clone&#40;&#41;&#41;&#41;;
+        assert_eq!(n, Some(node.clone()));
 
-        let n = Solution::invert&#95;tree&#40;n&#41;;
-        assert&#95;eq!&#40;n2, n&#41;;
+        let n = Solution::invert_tree(n);
+        assert_eq!(n2, n);
 
-        let n = Solution::invert&#95;tree&#40;n&#41;;
+        let n = Solution::invert_tree(n);
 
-        assert&#95;ne!&#40;n2, n&#41;;
+        assert_ne!(n2, n);
 
     }
 }
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户  <br /> 内存消耗 : 2 MB , 在所有 Rust 提交中击败了 100.00% 的用户 <br /></p></blockquote><h3>遇到难点</h3><ol><li>如何用动态的tuple参数传入生成树？比如传入参数<code>&#40;1, &#40;2, 4, 5&#41;, &#40;6,7,8&#41;&#41;</code>  或者 <code>&#40;1,2,3&#41;</code> 就生成对应的树，但是tuple是不可变的，应该怎样用一个序列简单的表示一颗树，然后调用函数来生成呢？Json？</li><li>写测试用例时，直接用代码来表示结果数据，有大量的格式，不方便阅读和维护，比较麻烦，不知道有啥好办法来写结果。比如：<pre><code class=".lang-rust">Some&#40;
+</code></pre>
+<h4>leetcode执行结果</h4>
+<blockquote>
+<p>执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户<br />
+内存消耗 : 2 MB , 在所有 Rust 提交中击败了 100.00% 的用户</p>
+</blockquote>
+<h3>遇到难点</h3>
+<ol>
+<li>如何用动态的tuple参数传入生成树？比如传入参数<code>(1, (2, 4, 5), (6,7,8))</code>  或者 <code>(1,2,3)</code> 就生成对应的树，但是tuple是不可变的，应该怎样用一个序列简单的表示一颗树，然后调用函数来生成呢？Json？</li>
+<li>写测试用例时，直接用代码来表示结果数据，有大量的格式，不方便阅读和维护，比较麻烦，不知道有啥好办法来写结果。比如：</li>
+</ol>
+<pre><code class="language-.lang-rust">Some(
     RefCell {
         value: TreeNode {
             val: 4,
             left: None,
-            right: Some&#40;
+            right: Some(
                 RefCell {
                     value: TreeNode {
                         val: 7,
-                        left: Some&#40;
+                        left: Some(
                             RefCell {
                                 value: TreeNode {
                                     val: 9,
@@ -131,8 +149,8 @@ mod test {
                                     right: None,
                                 },
                             },
-                        &#41;,
-                        right: Some&#40;
+                        ),
+                        right: Some(
                             RefCell {
                                 value: TreeNode {
                                     val: 6,
@@ -140,82 +158,87 @@ mod test {
                                     right: None,
                                 },
                             },
-                        &#41;,
+                        ),
                     },
                 },
-            &#41;,
+            ),
         },
     },
-&#41;
+)
 
-</code></pre></li></ol><h3>leetcode相似题型</h3><p>无</p>
-            <p class="text-left text-muted">2019-09-07 11:04</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2019/9/10/all-paths-from-source-to-target/">上一篇: 797. 所有可能的路径</a></div>
-                <div class="col-6 text-right"><a href="/p/2019/9/3/implement-queue-using-stacks/">下一篇:232. 用栈实现队列</a></div>
-            </div>
-        </div>
+</code></pre>
+<h3>leetcode相似题型</h3>
+<p>无</p>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2019-09-07</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2019/9/10/all-paths-from-source-to-target/">上一篇: 797. 所有可能的路径</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2019/9/3/implement-queue-using-stacks/">下一篇: 232. 用栈实现队列</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2019/9/7/invert-binary-tree/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

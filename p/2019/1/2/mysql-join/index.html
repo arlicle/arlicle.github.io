@@ -3,99 +3,128 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>数据库连接的left join, right join, inner join - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">数据库连接的left join, right join, inner join</h1>
-
-
-
-
-            <p>说来很惭愧，一直在用数据库，用各种数据库，但是一直用的是 orm，却几乎从不了解具体的 sql 语句 😂。</p><p>直到自己需要造一个 orm 的轮子，才开始具体来看这些 sql 语句怎么写。</p><p>不过这样也好，因为用了很多年 orm，所以知道所有的查询需求，可以通过这样的需求来反查 sql 语句怎么写，这样学起来更快。</p><p>比如在Django中，查询orm对应的sql语句<pre><code class=".language-python">a = User.objects.filter&#40;id=1&#41;.query
-print&#40;a&#41;
-'SELECT &quot;auth&#95;user&quot;.&quot;id&quot;, &quot;auth&#95;user&quot;.&quot;nickname&quot;, &quot;auth&#95;user&quot;.&quot;avatar&quot; FROM &quot;auth&#95;user&quot; WHERE &quot;auth&#95;user&quot;.&quot;id&quot; = 1 ORDER BY &quot;auth&#95;user&quot;.&quot;id&quot; DESC'
-</code></pre></p><h2>inner join</h2><p>Inner Join 逻辑运算符返回满足第一个（顶端）输入与第二个（底端）输入联接的每一行。</p><h2>outer join</h2><p>Outer Join则会返回每个满足第一个（顶端）输入与第二个（底端）输入的联接的行。它还返回任何在第二个输入中没有匹配行的第一个输入中的行。</p><h2>left join</h2><p>left join 是left outer join的简写，left join默认是outer属性的。 它会返回满足第一个条件和第二个条件的每一行，同时它还返回任何在第二个输入中没有匹配行的第一个输入中的行。</p><h2>简单例子</h2><p>Table A</p><table><thead><tr><th>id</th><th>aname</th></tr></thead><tbody><tr><td>1</td><td>A记录1</td></tr><tr><td>2</td><td>A记录2</td></tr><tr><td>3</td><td>A记录3</td></tr></tbody></table><p>Table B</p><table><thead><tr><th>id</th><th>aid</th><th>bname</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>B记录1</td></tr><tr><td>2</td><td>2</td><td>B记录2</td></tr><tr><td>4</td><td>0</td><td>B记录3</td></tr></tbody></table><p><strong>查询1</strong> Table A 和 Table B以Table A的id和Table B的aid为关联，进行<code>inner join</code>查询<pre><code class=".language-sql">select &#42; from a inner join b on a.id = b.aid
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">数据库连接的left join, right join, inner join</h1>
+  <p>说来很惭愧，一直在用数据库，用各种数据库，但是一直用的是 orm，却几乎从不了解具体的 sql 语句 😂。</p>
+<p>直到自己需要造一个 orm 的轮子，才开始具体来看这些 sql 语句怎么写。</p>
+<p>不过这样也好，因为用了很多年 orm，所以知道所有的查询需求，可以通过这样的需求来反查 sql 语句怎么写，这样学起来更快。</p>
+<p>比如在Django中，查询orm对应的sql语句</p>
+<pre><code class="language-.language-python">a = User.objects.filter(id=1).query
+print(a)
+'SELECT "auth_user"."id", "auth_user"."nickname", "auth_user"."avatar" FROM "auth_user" WHERE "auth_user"."id" = 1 ORDER BY "auth_user"."id" DESC'
+</code></pre>
+<h2>inner join</h2>
+<p>Inner Join 逻辑运算符返回满足第一个（顶端）输入与第二个（底端）输入联接的每一行。</p>
+<h2>outer join</h2>
+<p>Outer Join则会返回每个满足第一个（顶端）输入与第二个（底端）输入的联接的行。它还返回任何在第二个输入中没有匹配行的第一个输入中的行。</p>
+<h2>left join</h2>
+<p>left join 是left outer join的简写，left join默认是outer属性的。 它会返回满足第一个条件和第二个条件的每一行，同时它还返回任何在第二个输入中没有匹配行的第一个输入中的行。</p>
+<h2>简单例子</h2>
+<p>Table A
+| id | aname |
+| ------ | ------ |
+| 1 | A记录1 |
+| 2 | A记录2 |
+| 3 | A记录3 |</p>
+<p>Table B
+| id | aid | bname |
+| ------ | ------ | ------ |
+| 1 | 1 | B记录1 |
+| 2 | 2 | B记录2 |
+| 4 | 0 | B记录3 |</p>
+<p><strong>查询1</strong> Table A 和 Table B以Table A的id和Table B的aid为关联，进行<code>inner join</code>查询</p>
+<pre><code class="language-.language-sql">select * from a inner join b on a.id = b.aid
 1 A记录1 B记录1 1
 2 A记录2 B记录2 2
-</code></pre></p><p><strong>查询2</strong> Table A 和 Table B以Table A的id和Table B的aid为关联，进行<code>left join</code>查询</p><pre><code class=".language-sql">select &#42; from a left join b on a.id = b.aid
+</code></pre>
+<p><strong>查询2</strong> Table A 和 Table B以Table A的id和Table B的aid为关联，进行<code>left join</code>查询</p>
+<pre><code class="language-.language-sql">select * from a left join b on a.id = b.aid
 1 A记录1 B记录1 1
 2 A记录2 B记录2 2
 3 A记录3 null   null
-</code></pre><p>它比查询1中还返回任何在第二个输入中没有匹配行的第一个输入中的行。</p><p>同样right join也是一样的，不同的是right join 额外返回第一个没有匹配，第二个匹配的数据</p><h2>查询性能及优化</h2><p>continuing...</p>
-            <p class="text-left text-muted">2019-01-02 06:53</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2019/1/3/The-road-not-taken/">上一篇: The road not taken</a></div>
-                <div class="col-6 text-right"><a href="/p/2018/12/31/极速成长/">下一篇:做对的事情还是容易的事情？</a></div>
-            </div>
-        </div>
+</code></pre>
+<p>它比查询1中还返回任何在第二个输入中没有匹配行的第一个输入中的行。</p>
+<p>同样right join也是一样的，不同的是right join 额外返回第一个没有匹配，第二个匹配的数据</p>
+<h2>查询性能及优化</h2>
+<p>continuing...</p>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2019-01-02</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2019/1/3/The-road-not-taken/">上一篇: The road not taken</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2018/12/31/极速成长/">下一篇: 做对的事情还是容易的事情？</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2019/1/2/mysql-join/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

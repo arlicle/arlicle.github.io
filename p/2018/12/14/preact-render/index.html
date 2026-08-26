@@ -3,84 +3,84 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>preact 虚拟dom学习 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">preact 虚拟dom学习</h1>
-
-
-
-
-            <p>创建一个虚拟节点vnode，然后渲染到目标节点上</p><pre><code class=".language-javascript">class Clock extends Component {
-    render&#40;&#41; {
-        let time = new Date&#40;&#41;.toLocaleTimeString&#40;&#41;;
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">preact 虚拟dom学习</h1>
+  <p>创建一个虚拟节点vnode，然后渲染到目标节点上</p>
+<pre><code class="language-.language-javascript">class Clock extends Component {
+    render() {
+        let time = new Date().toLocaleTimeString();
         return &lt;span&gt;{ time }&lt;/span&gt;;
     }
 }
 // 将一个时钟渲染到 &lt;body &gt; 标签:
-render&#40;&lt;Clock /&gt;, document.body&#41;;
-</code></pre><pre><code class=".language-javascript">export function render&#40;vnode, parent, merge&#41; {
-	return diff&#40;merge, vnode, {}, false, parent, false&#41;;
+render(&lt;Clock /&gt;, document.body);
+</code></pre>
+<pre><code class="language-.language-javascript">export function render(vnode, parent, merge) {
+	return diff(merge, vnode, {}, false, parent, false);
 }
-</code></pre><p>虚拟dom 的核心是比较虚拟结点和实际结点的差异，然后把差异的部分更新到实际dom中，所以先看<code>preact</code>的diff算法</p><pre><code class=".language-javascript">export function diff&#40;dom, vnode, context, mountAll, parent, componentRoot&#41; {
-	// diffLevel having been 0 here indicates initial entry into the diff &#40;not a subdiff&#41;
-	if &#40;!diffLevel++&#41; {
+</code></pre>
+<p>虚拟dom 的核心是比较虚拟结点和实际结点的差异，然后把差异的部分更新到实际dom中，所以先看<code>preact</code>的diff算法</p>
+<pre><code class="language-.language-javascript">export function diff(dom, vnode, context, mountAll, parent, componentRoot) {
+	// diffLevel having been 0 here indicates initial entry into the diff (not a subdiff)
+	if (!diffLevel++) {
 		// when first starting the diff, check if we're diffing an SVG or within an SVG
 		isSvgMode = parent!=null &amp;&amp; parent.ownerSVGElement!==undefined;
 
 		// hydration is indicated by the existing element to be diffed not having a prop cache
-		hydrating = dom!=null &amp;&amp; !&#40;ATTR&#95;KEY in dom&#41;;
+		hydrating = dom!=null &amp;&amp; !(ATTR_KEY in dom);
 	}
 
-	let ret = idiff&#40;dom, vnode, context, mountAll, componentRoot&#41;;
+	let ret = idiff(dom, vnode, context, mountAll, componentRoot);
 
 	// append the element if its a new parent
-	if &#40;parent &amp;&amp; ret.parentNode!==parent&#41; parent.appendChild&#40;ret&#41;;
+	if (parent &amp;&amp; ret.parentNode!==parent) parent.appendChild(ret);
 
 	// diffLevel being reduced to 0 means we're exiting the diff
-	if &#40;!--diffLevel&#41; {
+	if (!--diffLevel) {
 		hydrating = false;
 		// invoke queued componentDidMount lifecycle methods
-		if &#40;!componentRoot&#41; flushMounts&#40;&#41;;
+		if (!componentRoot) flushMounts();
 	}
 
 	return ret;
 }
-</code></pre><pre><code class=".language-javascript">function idiff&#40;dom, vnode, context, mountAll, componentRoot&#41; {
+</code></pre>
+<pre><code class="language-.language-javascript">function idiff(dom, vnode, context, mountAll, componentRoot) {
 	let out = dom,
 		prevSvgMode = isSvgMode;
 
-	// empty values &#40;null, undefined, booleans&#41; render as empty Text nodes
-	if &#40;vnode==null || typeof vnode==='boolean'&#41; vnode = '';
+	// empty values (null, undefined, booleans) render as empty Text nodes
+	if (vnode==null || typeof vnode==='boolean') vnode = '';
 
 
 	// Fast case: Strings &amp; Numbers create/update Text nodes.
-	if &#40;typeof vnode==='string' || typeof vnode==='number'&#41; {
+	if (typeof vnode==='string' || typeof vnode==='number') {
 
 		// update if it's already a Text node:
-		if &#40;dom &amp;&amp; dom.splitText!==undefined &amp;&amp; dom.parentNode &amp;&amp; &#40;!dom.&#95;component || componentRoot&#41;&#41; {
-			/&#42; istanbul ignore if &#42;/ /&#42; Browser quirk that can't be covered: https://github.com/developit/preact/commit/fd4f21f5c45dfd75151bd27b4c217d8003aa5eb9 &#42;/
-			if &#40;dom.nodeValue!=vnode&#41; {
+		if (dom &amp;&amp; dom.splitText!==undefined &amp;&amp; dom.parentNode &amp;&amp; (!dom._component || componentRoot)) {
+			/* istanbul ignore if */ /* Browser quirk that can't be covered: https://github.com/developit/preact/commit/fd4f21f5c45dfd75151bd27b4c217d8003aa5eb9 */
+			if (dom.nodeValue!=vnode) {
 				dom.nodeValue = vnode;
 			}
 		}
 		else {
 			// it wasn't a Text node: replace it with one and recycle the old Element
-			out = document.createTextNode&#40;vnode&#41;;
-			if &#40;dom&#41; {
-				if &#40;dom.parentNode&#41; dom.parentNode.replaceChild&#40;out, dom&#41;;
-				recollectNodeTree&#40;dom, true&#41;;
+			out = document.createTextNode(vnode);
+			if (dom) {
+				if (dom.parentNode) dom.parentNode.replaceChild(out, dom);
+				recollectNodeTree(dom, true);
 			}
 		}
 
-		out&#91;ATTR&#95;KEY&#93; = true;
+		out[ATTR_KEY] = true;
 
 		return out;
 	}
@@ -88,8 +88,8 @@ render&#40;&lt;Clock /&gt;, document.body&#41;;
 
 	// If the VNode represents a Component, perform a component diff:
 	let vnodeName = vnode.nodeName;
-	if &#40;typeof vnodeName==='function'&#41; {
-		return buildComponentFromVNode&#40;dom, vnode, context, mountAll&#41;;
+	if (typeof vnodeName==='function') {
+		return buildComponentFromVNode(dom, vnode, context, mountAll);
 	}
 
 
@@ -98,121 +98,124 @@ render&#40;&lt;Clock /&gt;, document.body&#41;;
 
 
 	// If there's no existing element or it's the wrong type, create a new one:
-	vnodeName = String&#40;vnodeName&#41;;
-	if &#40;!dom || !isNamedNode&#40;dom, vnodeName&#41;&#41; {
-		out = createNode&#40;vnodeName, isSvgMode&#41;;
+	vnodeName = String(vnodeName);
+	if (!dom || !isNamedNode(dom, vnodeName)) {
+		out = createNode(vnodeName, isSvgMode);
 
-		if &#40;dom&#41; {
+		if (dom) {
 			// move children into the replacement node
-			while &#40;dom.firstChild&#41; out.appendChild&#40;dom.firstChild&#41;;
+			while (dom.firstChild) out.appendChild(dom.firstChild);
 
 			// if the previous Element was mounted into the DOM, replace it inline
-			if &#40;dom.parentNode&#41; dom.parentNode.replaceChild&#40;out, dom&#41;;
+			if (dom.parentNode) dom.parentNode.replaceChild(out, dom);
 
-			// recycle the old element &#40;skips non-Element node types&#41;
-			recollectNodeTree&#40;dom, true&#41;;
+			// recycle the old element (skips non-Element node types)
+			recollectNodeTree(dom, true);
 		}
 	}
 
 
 	let fc = out.firstChild,
-		props = out&#91;ATTR&#95;KEY&#93;,
+		props = out[ATTR_KEY],
 		vchildren = vnode.children;
 
-	if &#40;props==null&#41; {
-		props = out&#91;ATTR&#95;KEY&#93; = {};
-		for &#40;let a=out.attributes, i=a.length; i--; &#41; props&#91;a&#91;i&#93;.name&#93; = a&#91;i&#93;.value;
+	if (props==null) {
+		props = out[ATTR_KEY] = {};
+		for (let a=out.attributes, i=a.length; i--; ) props[a[i].name] = a[i].value;
 	}
 
 	// Optimization: fast-path for elements containing a single TextNode:
-	if &#40;!hydrating &amp;&amp; vchildren &amp;&amp; vchildren.length===1 &amp;&amp; typeof vchildren&#91;0&#93;==='string' &amp;&amp; fc!=null &amp;&amp; fc.splitText!==undefined &amp;&amp; fc.nextSibling==null&#41; {
-		if &#40;fc.nodeValue!=vchildren&#91;0&#93;&#41; {
-			fc.nodeValue = vchildren&#91;0&#93;;
+	if (!hydrating &amp;&amp; vchildren &amp;&amp; vchildren.length===1 &amp;&amp; typeof vchildren[0]==='string' &amp;&amp; fc!=null &amp;&amp; fc.splitText!==undefined &amp;&amp; fc.nextSibling==null) {
+		if (fc.nodeValue!=vchildren[0]) {
+			fc.nodeValue = vchildren[0];
 		}
 	}
 	// otherwise, if there are existing or new children, diff them:
-	else if &#40;vchildren &amp;&amp; vchildren.length || fc!=null&#41; {
-		innerDiffNode&#40;out, vchildren, context, mountAll, hydrating || props.dangerouslySetInnerHTML!=null&#41;;
+	else if (vchildren &amp;&amp; vchildren.length || fc!=null) {
+		innerDiffNode(out, vchildren, context, mountAll, hydrating || props.dangerouslySetInnerHTML!=null);
 	}
 
 
 	// Apply attributes/props from VNode to the DOM Element:
-	diffAttributes&#40;out, vnode.attributes, props&#41;;
+	diffAttributes(out, vnode.attributes, props);
 
 
-	// restore previous SVG mode: &#40;in case we're exiting an SVG namespace&#41;
+	// restore previous SVG mode: (in case we're exiting an SVG namespace)
 	isSvgMode = prevSvgMode;
 
 	return out;
 }
 </code></pre>
-            <p class="text-left text-muted">2018-12-14 15:56</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2018/12/17/fighting/">上一篇: Keep Learning，Keep Running</a></div>
-                <div class="col-6 text-right"><a href="/p/2018/12/14/simple-comment-api/">下一篇:评论系统接口文档</a></div>
-            </div>
-        </div>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2018-12-14</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2018/12/17/fighting/">上一篇: Keep Learning，Keep Running</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2018/12/14/simple-comment-api/">下一篇: 评论系统接口文档</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2018/12/14/preact-render/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

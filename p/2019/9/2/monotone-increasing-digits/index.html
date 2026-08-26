@@ -3,47 +3,62 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>738. 单调递增的数字 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
-
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">738. 单调递增的数字</h1>
-
-
-
-
-            <h3>题目</h3><p>给定一个非负整数 N，找出小于或等于 N 的最大的整数，同时这个整数需要满足其各个位数上的数字是单调递增。</p><p>（当且仅当每个相邻位数上的数字 x 和 y 满足 x <= y 时，我们称这个整数是单调递增的。）</p><h3>示例</h3><p>输入: N = 10<br /> 输出: 9 </p><p>输入: N = 1234<br /> 输出: 1234</p><p>输入: N = 332<br /> 输出: 299</p><p>说明: N 是在 [0, 10^9] 范围内的一个整数。</p><p><code>题型归类:  循环</code></p><h3>思路一</h3><p>我们要做的是找到小于等于N的最大整数，然后这个整数是从坐到右递增的，也就是从高位到低位递增。</p><p>因为我们一开始，无法直接知道数字的长度，如果要知道又要多一次循环，我想一次循环解决这个问题，那么我们从低位开始，一个数字一个数字获取，如果相邻的数字分别为abcde, 那么首先获取e和d，比较e和d的大小。</p><p>如果 d <= e, 那么满足条件，继续比较后面的d和c；<br /> 如果 d > e, 那么e需要重置为9，d减1，然后再继续比较后面的d和c(e重置为9是保持数字最大化中最近的一个数字)；<br /> 如果在比较到 a 和 b的时候，发现 a > b，那么就要b开始全部重置为9，a减1；<br /> 到了最后一位，因为我们是按顺序计算着来的，最后一位就看是否发生了减1的行为；<br /></p><p>这里面有一种特殊情况，就是例如100, 101, 之类的数字，就是取数相邻两个数字的时候，当前数字为0，一旦遇到有0，那么表示高位数字一定会比当前数字大，那么就还要从当前数字开始，全部重置为9,并且高位-1；</p><pre><code class=".lang-rust">// 代码实现
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">738. 单调递增的数字</h1>
+  <p>###题目</p>
+<p>给定一个非负整数 N，找出小于或等于 N 的最大的整数，同时这个整数需要满足其各个位数上的数字是单调递增。</p>
+<p>（当且仅当每个相邻位数上的数字 x 和 y 满足 x &lt;= y 时，我们称这个整数是单调递增的。）</p>
+<p>###示例</p>
+<p>输入: N = 10<br />
+输出: 9</p>
+<p>输入: N = 1234<br />
+输出: 1234</p>
+<p>输入: N = 332<br />
+输出: 299</p>
+<p>说明: N 是在 [0, 10^9] 范围内的一个整数。</p>
+<p><code>题型归类:  循环</code></p>
+<p>###思路一</p>
+<p>我们要做的是找到小于等于N的最大整数，然后这个整数是从坐到右递增的，也就是从高位到低位递增。</p>
+<p>因为我们一开始，无法直接知道数字的长度，如果要知道又要多一次循环，我想一次循环解决这个问题，那么我们从低位开始，一个数字一个数字获取，如果相邻的数字分别为abcde, 那么首先获取e和d，比较e和d的大小。</p>
+<p>如果 d &lt;= e, 那么满足条件，继续比较后面的d和c；<br />
+如果 d &gt; e, 那么e需要重置为9，d减1，然后再继续比较后面的d和c(e重置为9是保持数字最大化中最近的一个数字)；<br />
+如果在比较到 a 和 b的时候，发现 a &gt; b，那么就要b开始全部重置为9，a减1；<br />
+到了最后一位，因为我们是按顺序计算着来的，最后一位就看是否发生了减1的行为；</p>
+<p>这里面有一种特殊情况，就是例如100, 101, 之类的数字，就是取数相邻两个数字的时候，当前数字为0，一旦遇到有0，那么表示高位数字一定会比当前数字大，那么就还要从当前数字开始，全部重置为9,并且高位-1；</p>
+<pre><code class="language-.lang-rust">// 代码实现
 
 impl Solution {
     /// author arlicle
     /// https://www.debugmyself.com
     /// https://github.com/arlicle
-    pub fn monotone&#95;increasing&#95;digits&#40;n: i32&#41; -&gt; i32 {
+    pub fn monotone_increasing_digits(n: i32) -&gt; i32 {
         let mut n = n;
         let mut result = 0;
-        let &#40;mut n, mut result, mut index, mut extra&#95;sub&#41; = &#40;n, 0, 0, 0&#41;;
+        let (mut n, mut result, mut index, mut extra_sub) = (n, 0, 0, 0);
         while n &gt; 0 {
-            let mut right&#95;num = n % 10 - extra&#95;sub;
+            let mut right_num = n % 10 - extra_sub;
             n = n / 10;
-            let left&#95;num = n % 10;
-            if &#40;n == 0&#41; {
+            let left_num = n % 10;
+            if (n == 0) {
                 // n等于0，表示是最后一位数字了 不用进行任何操作
-            } else if right&#95;num &gt;= left&#95;num &amp;&amp; right&#95;num != 0 {
+            } else if right_num &gt;= left_num &amp;&amp; right_num != 0 {
                 // 后一个数字 大于等于前一个数字
-                extra&#95;sub = 0;
+                extra_sub = 0;
             } else {
                 // 重置数字为9
-                result = 10&#95;i32.pow&#40;index&#41; - 1;
-                right&#95;num = 9;
-                extra&#95;sub = 1;
+                result = 10_i32.pow(index) - 1;
+                right_num = 9;
+                extra_sub = 1;
             }
-            result += right&#95;num &#42; 10&#95;i32.pow&#40;index&#41;;
+            result += right_num * 10_i32.pow(index);
             index += 1;
         }
         result
@@ -51,88 +66,99 @@ impl Solution {
 }
 
 
-#&#91;cfg&#40;test&#41;&#93;
+#[cfg(test)]
 mod test {
     use crate::Solution;
 
-    #&#91;test&#93;
-    pub fn monotone&#95;increasing&#95;digits&#95;test&#40;&#41; {
-        assert&#95;eq!&#40;99, Solution::monotone&#95;increasing&#95;digits&#40;100&#41;&#41;;
-        assert&#95;eq!&#40;99, Solution::monotone&#95;increasing&#95;digits&#40;101&#41;&#41;;
-        assert&#95;eq!&#40;1234, Solution::monotone&#95;increasing&#95;digits&#40;1234&#41;&#41;;
-        assert&#95;eq!&#40;0, Solution::monotone&#95;increasing&#95;digits&#40;0&#41;&#41;;
-        assert&#95;eq!&#40;899999, Solution::monotone&#95;increasing&#95;digits&#40;989998&#41;&#41;;
+    #[test]
+    pub fn monotone_increasing_digits_test() {
+        assert_eq!(99, Solution::monotone_increasing_digits(100));
+        assert_eq!(99, Solution::monotone_increasing_digits(101));
+        assert_eq!(1234, Solution::monotone_increasing_digits(1234));
+        assert_eq!(0, Solution::monotone_increasing_digits(0));
+        assert_eq!(899999, Solution::monotone_increasing_digits(989998));
     }
 }
 
-</code></pre><h4>leetcode执行结果</h4><blockquote><p> 执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户 <br /> 内存消耗 : 2 MB , 在所有 Rust 提交中击败了 100.00% 的用户 </p></blockquote><p>可以看到执行效率很高，几乎为0ms，循环的次数和数字的长度是一样的，算法复杂度是$O(n)$。其实这样又是从外到内的，同样可以使用递归来解决。</p><h3>leetcode相似题型</h3><p><a href='https://leetcode-cn.com/problems/remove-k-digits/'>移掉K位数字</a></p>
-            <p class="text-left text-muted">2019-09-25 07:40</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2019/9/3/implement-queue-using-stacks/">上一篇: 232. 用栈实现队列</a></div>
-                <div class="col-6 text-right"><a href="/p/2019/9/1/add-two-numbers/">下一篇:2. 两数相加</a></div>
-            </div>
-        </div>
+</code></pre>
+<h4>leetcode执行结果</h4>
+<blockquote>
+<p>执行用时 : 0 ms , 在所有 Rust 提交中击败了 100.00% 的用户<br />
+内存消耗 : 2 MB , 在所有 Rust 提交中击败了 100.00% 的用户</p>
+</blockquote>
+<p>可以看到执行效率很高，几乎为0ms，循环的次数和数字的长度是一样的，算法复杂度是$O(n)$。其实这样又是从外到内的，同样可以使用递归来解决。</p>
+<h3>leetcode相似题型</h3>
+<p><a href="https://leetcode-cn.com/problems/remove-k-digits/">移掉K位数字</a></p>
 
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
+  <p class="text-left text-muted">2019-09-02</p>
+</div>
 
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2019/9/3/implement-queue-using-stacks/">上一篇: 232. 用栈实现队列</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2019/9/1/two-sum/">下一篇: 1. 两数之和 - leetcode刷题</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2019/9/2/monotone-increasing-digits/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>

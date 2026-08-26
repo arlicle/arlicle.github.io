@@ -3,89 +3,107 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/js/prism.css">
     <link rel="stylesheet" href="/css/app.css">
     <title>增加了markdown写数学公式的功能 - 叫兽</title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
   </head>
   <body>
+    
+<div class="container bg-white pb-5 px-5 spx-0">
+  <h1 class="post-title">增加了markdown写数学公式的功能</h1>
+  <p>使用mathjax给 ablog 支持了写数学公式</p>
+<p>中途遇到一个小问题，markdown语法和数学公式有冲突了，<code>a^2</code>会被markdown提前编译为<code>a&lt;sup&gt;2&lt;/sup&gt;</code>, <code>w_1</code>编译为<code>w&lt;i&gt;1&lt;/i&gt;</code>, 然后MatchJax就不会进行解析。目前暂时把 markdown 的<code>^ sup </code>标签的部分注释掉了，以后有时间，再给markdown增加一个类似<code>{% raw %}a^2{% endraw %}</code>的语法。</p>
+<p>欣赏一下各种美丽的数学公式</p>
+<p>When $a \ne 0$, there are two solutions to $ax^2 + bx + c = 0$and they are</p>
+<p>会新起一行在中间的数学公式</p>
+<p>$$x = {-b \pm \sqrt{b%^2-4ac} \over 2a}.$$</p>
+<p>$ x = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a} $</p>
+<h2>朴素贝叶斯公式:</h2>
+<p>$$P(w_1 , w_2) = P(w_2|w_1) * P(w_1)$$</p>
+<h2>Double angle formula for Cosines</h2>
+<p>$$\cos(θ+φ)=\cos(θ)\cos(φ)−\sin(θ)\sin(φ)$$</p>
+<h2>Cauchy's Integral Formula</h2>
+<p>$$f(a) = \frac{1}{2\pi i} \oint\frac{f(z)}{z-a}dz$$</p>
+<h2>Curl of a Vector Field</h2>
+<p>$$\vec{\nabla} \times \vec{F} = \left( \frac{\partial F_z}{\partial y} - \frac{\partial F_y}{\partial z} \right) \mathbf{i} + \left( \frac{\partial F_x}{\partial z} - \frac{\partial F_z}{\partial x} \right) \mathbf{j} + \left( \frac{\partial F_y}{\partial x} - \frac{\partial F_x}{\partial y} \right) \mathbf{k}$$</p>
+<h2>Gauss' Divergence Theorem</h2>
+<p>$$\int_D ({\nabla\cdot} F)dV=\int_{\partial D} F\cdot ndS$$</p>
+<h2>Definition of Christoffel Symbols</h2>
+<p>$$ (\nabla_X Y)^k = X^i (\nabla_i Y)^k = X^i \left( \frac{\partial Y^k}{\partial x^i} + \Gamma_{im}^k Y^m \right) $$</p>
+<h2>Standard Deviation</h2>
+<p>$$ \sigma = \sqrt{ \frac{1}{N} \sum_{i=1}^N (x_i -\mu)^2} $$</p>
 
-        <div class="container bg-white pb-5 px-5 spx-0">
-            
-            <h1 class="post-title">增加了markdown写数学公式的功能</h1>
+  <p class="text-left text-muted">2018-12-19</p>
+</div>
 
-
-
-
-            <p>使用mathjax给 ablog 支持了写数学公式</p><p>中途遇到一个小问题，markdown语法和数学公式有冲突了，<code>a&#94;2</code>会被markdown提前编译为<code>a&lt;sup&gt;2&lt;/sup&gt;</code>, <code>w&#95;1</code>编译为<code>w&lt;i&gt;1&lt;/i&gt;</code>, 然后MatchJax就不会进行解析。目前暂时把 markdown 的<code>&#94; sup </code>标签的部分注释掉了，以后有时间，再给markdown增加一个类似<code>{% raw %}a^2{% endraw %}</code>的语法。</p><p>欣赏一下各种美丽的数学公式</p><p>When $a \ne 0$, there are two solutions to $ax^2 + bx + c = 0$and they are</p><p>会新起一行在中间的数学公式</p><p>$$x = {-b \pm \sqrt{b%^2-4ac} \over 2a}.$$</p><p>$ x = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a} $</p><h2>朴素贝叶斯公式:</h2><p>$$P(w_1 , w_2) = P(w_2|w_1) * P(w_1)$$</p><h2>Double angle formula for Cosines</h2><p>$$\cos(θ+φ)=\cos(θ)\cos(φ)−\sin(θ)\sin(φ)$$</p><h2>Cauchy's Integral Formula</h2><p>$$f(a) = \frac{1}{2\pi i} \oint\frac{f(z)}{z-a}dz$$</p><h2>Curl of a Vector Field</h2><p>$$\vec{\nabla} \times \vec{F} = \left( \frac{\partial F_z}{\partial y} - \frac{\partial F_y}{\partial z} \right) \mathbf{i} + \left( \frac{\partial F_x}{\partial z} - \frac{\partial F_z}{\partial x} \right) \mathbf{j} + \left( \frac{\partial F_y}{\partial x} - \frac{\partial F_x}{\partial y} \right) \mathbf{k}$$</p><h2>Gauss' Divergence Theorem</h2><p>$$\int_D ({\nabla\cdot} F)dV=\int_{\partial D} F\cdot ndS$$</p><h2>Definition of Christoffel Symbols</h2><p>$$ (\nabla_X Y)^k = X^i (\nabla_i Y)^k = X^i \left( \frac{\partial Y^k}{\partial x^i} + \Gamma_{im}^k Y^m \right) $$</p><h2>Standard Deviation</h2><p>$$ \sigma = \sqrt{ \frac{1}{N} \sum_{i=1}^N (x_i -\mu)^2} $$</p>
-            <p class="text-left text-muted">2018-12-19 15:42</p>
-        </div>
-        <div class="container">
-            <div class="row mt-4">
-                <div class="col-6 text-left"><a href="/p/2018/12/25/说谎/">上一篇: 说谎</a></div>
-                <div class="col-6 text-right"><a href="/p/2018/12/18/对失败的思考/">下一篇:对失败的思考</a></div>
-            </div>
-        </div>
-
-        <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-        </button>
-        <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
-            <li class="nav-item">
-                <a class="nav-link" href="/">首页</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/list/">所有文章</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/p/about-me/">关于我</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/arlicle">Github</a>
-          </li>
-        </ul>
-
-        
-    <div class="container mt-5">
-        <h3>留言</h3>
-        <div id="commentApp"></div>
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-6 text-left">
+      <a href="/p/2018/12/25/说谎/">上一篇: 说谎</a>
     </div>
+    <div class="col-6 text-right">
+      <a href="/p/2018/12/18/bug/">下一篇: 关于Bug</a>
+    </div>
+  </div>
+</div>
+
+
+    <button class="btn btn-link m-menu-toggle d-md-none fixed-top collapsed" type="button" data-toggle="collapse" data-target="#m-menu" aria-controls="m-menu" aria-expanded="false" aria-label="Toggle docs navigation">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+    </button>
+
+    <ul class="nav flex-column collapse fixed-top site-menu d-md-block" id="m-menu">
+      <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+      <li class="nav-item"><a class="nav-link" href="/p/list/">所有文章</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="/p/about-me/">互联网的世界里，我有一个大大的梦想</a></li>
+      
+      <li class="nav-item"><a class="nav-link" href="https://github.com/arlicle">Github</a></li>
+    </ul>
+
+    
+
+  
+  <div class="container mt-5">
+    <h3>留言</h3>
+    <div class="giscus"></div>
+  </div>
+  <script src="https://giscus.app/client.js"
+          data-repo="arlicle/arlicle.github.io"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkxMTE5Njg2MzA="
+          data-category="Announcements"
+          data-category-id="DIC_kwDOBqyBds4C1t7O"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="0"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="zh-CN"
+          crossorigin="anonymous"
+          async></script>
+  
+
+
+
+    <footer class="footer mt-5 pb-2">
+      <div class="container text-center">
+        <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/js/prism.js"></script>
     <script>
-        var AL_configs = {
-            "post_id":"/p/2018/12/19/支持markdown写数学公式/",
-            "appid":"847e226e8a46f64045d45312245a68ba1368a564"
-        };
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://comment.debugmyself.com/sc.js";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      $(function () { $('[data-toggle="tooltip"]').tooltip(); });
     </script>
-
-
-        <footer class="footer mt-5 pb-2">
-        <div class="container text-center">
-          
-          <p><span class="text-black-50">Powered by <a href="https://github.com/arlicle/ablog">ablog</a> © 2019 叫兽</span></p>
-          <p><span class="text-black-50"><a href="http://beian.miit.gov.cn">滇ICP备2021001043号-1</a></span></p>
-          
-        </div>
-        </footer>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="/js/prism.js"></script>
-        <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-        </script>
-        <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left",scale: 180});
-        </script>
-        <script type="text/javascript" async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG" async>
-        </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}, displayAlign: "left", scale: 180});
+    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_SVG"></script>
   </body>
 </html>
